@@ -1,0 +1,25 @@
+{
+  "name": "pathbound",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Pathbound, a text-first RPG kept as a ledger. Capacitor Android app.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "validate": "node scripts/validate.mjs && tsc --noEmit",
+    "sync": "npm run build && cap sync android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.3",
+    "@capacitor/app": "^8.1.2",
+    "@capacitor/core": "^8.5.3",
+    "@fontsource/im-fell-english": "^5.3.0",
+    "@fontsource/im-fell-french-canon": "^5.3.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.5.3",
+    "typescript": "^5.9.3",
+    "vite": "^8.3.5"
+  }
+}
