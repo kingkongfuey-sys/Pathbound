@@ -3,7 +3,7 @@
 A text-first RPG kept as a ledger. Android app built with Capacitor; every word of story is data, every
 word of chrome is in one voice. Personal project, never published, fully offline.
 
-Current stage: **1 of 8** (scaffold, identity, home screen, APK workflow). Build plan: see the stage report.
+Current stage: **3 of 8** (stats strip, the satchel, equipment and items in scenes, on top of the Stage 2 content pipeline and engine). Build plan: see the stage report.
 
 ## Getting the app onto a phone
 
@@ -47,19 +47,30 @@ centre and burnt radial edges, painted once on a fixed layer behind the content 
   every title. Deterministic wobble, so it looks drawn but never changes between renders.
 - *The margin rule*: a double oxblood line down the left of every page; all text sits to its right.
 - Choices and menu items are italic inline text links with a thin oxblood underline: never buttons.
-- Planned for Stage 3: the chapter indicator in the stats bar is drawn as tally marks.
+- *Tally marks*: the chapter indicator in the stats strip is drawn as tally marks, one stroke per chapter, every
+  fifth slanting across the four before it (`src/ui/tally.ts`). Strokes up to the current chapter are inked, the
+  rest faint, so the reader can see how far the story runs.
+- *Dotted leaders*: in the satchel, each item sits on a ledger line, name, row of dots, action, the way an account
+  book ties a name to its figure. The dots are baseline-aligned (`.leader` in `screens.css`).
 
 ## Folder map and naming
 
 ```
 src/
   main.ts            entry: error handler, font wait, home screen, Android back button
-  app/               router.ts (screen stack), fatal.ts (last-resort error screen)
+  app/               router.ts (screen stack), session.ts (the run as screens hold it), fatal.ts (error screen),
+                     theme.ts (story colours), reader.ts
+  content/           types, token grammar, schema validators, integrity checks, validate.ts, loader.ts
+  engine/            rng, run state, conditions, effects, play (the narrative loop), inventory (equip, use),
+                     status (numbers for the strip); no DOM
   copy/voice.ts      all UI copy
-  screens/           one file per screen, named for the screen (home, shelf, ledger)
-  ui/                dom.ts (element helpers), page.ts (page frame), inkRule.ts
+  screens/           one file per screen (home, shelf, hero, play, satchel, ledger, contentError)
+  ui/                dom.ts, page.ts (page frame), inkRule.ts, typewriter.ts, tally.ts, statsStrip.ts
   styles/            fonts, tokens, paper (texture), screens (layout and type)
-scripts/validate.mjs voice check (content validation joins in Stage 2)
+content/             schemas (content/schema) and stories (content/stories/<id>); see docs/schemas.md
+docs/schemas.md      the content format, token grammar and validator rules
+scripts/validate.mjs voice check plus validation of every story
+scripts/selftest.mjs checks that the validator catches broken content and that the engine behaves
 android/             Capacitor Android project (committed; generated bits are git-ignored)
 .github/workflows/   debug APK build
 ```
@@ -82,4 +93,44 @@ code, so it still works if those are the broken part.
 **Build pipeline.** Vite bundles to `dist/`, `cap sync` copies it into the Android project, Gradle makes the
 debug APK. The manifest requests no permissions (offline-first) and locks portrait.
 
-Subsystems for saves, scenes, RNG and combat are documented here as they are built in their own stages.
+**Content pipeline (`content/`).** A story is validated in three layers: each file is parsed (a syntax error
+names the file), checked against its JSON Schema, and only then run through cross-file integrity checks that
+assume well-shaped data. One implementation serves the app and `npm run validate`: the schemas are passed in
+rather than imported, and the TypeScript is written in Node-runnable form (explicit `.ts` imports, no enums or
+parameter properties), so the build script runs the very code the phone runs. Stories load lazily as raw text so a
+broken file is reported in-app by name instead of failing the whole bundle.
+
+**Engine (`engine/`).** Plain functions over a plain `RunState` (no classes, no DOM), so a run can be copied,
+compared in tests and, from Stage 5, stored as-is. Every change returns a new state. Effects apply before the
+move; HP at zero diverts to the story's default death ending; encounter detours push the real destination on a
+return stack and `$return` pops it.
+
+**Randomness (`engine/rng.ts`).** One seed per run, split into named streams (sfc32, seeded by hashing seed and
+stream name); each stream's state lives in the run. Separate streams mean combat can later roll as often as it
+likes without shifting encounter results, and the same seed with the same choices replays identically.
+`Math.random` is never used; the only unseeded call is generating the seed itself.
+
+**Typewriter (`ui/typewriter.ts`).** The full text is on the page from the first frame and the unwritten part is
+transparent, so revealing never reflows. A frame updates two text nodes in one paragraph. Tapping finishes it;
+reduced-motion skips it.
+
+**Satchel and equipment (`engine/inventory.ts`, `screens/satchel.ts`).** Gear moves between the backpack and the four
+slots by one rule: equipping puts the item in its slot and sends whatever was there back to the backpack, so an item
+is never created or lost by the move, and the tests check the counts. Maximum HP is re-checked after every change,
+because gear can carry an `hp` modifier: wearing it raises the ceiling without healing (otherwise swapping a helm
+in and out would be a free potion), and taking it off pulls current HP down. Consumables heal up to the maximum and
+are only spent when they do something. Each action is told as a short ledger line and also written into the run's
+notes, so the next page of the story records it. The engine returns plain data about what changed; every word the
+reader sees comes from `copy/voice.ts`. A closed entry can still be read but nothing in it can change.
+
+**Stats strip (`ui/statsStrip.ts`, `engine/status.ts`).** Pinned to the top of the story screen: exact HP (set in
+oxblood at a quarter of maximum or less), gold with the story's currency symbol, the chapter as tally marks with its
+title, and the satchel link. `statusOf` does all the arithmetic (equipment folded into the stats); the strip only
+formats it, and is rebuilt every turn so it can never disagree with the run. Its ink is the story's `statsBar` colour.
+
+**Session (`app/session.ts`).** The router rebuilds a screen from scratch when the reader returns to it, so the run
+cannot live in a screen's local variables: going to the satchel and back would have started the scene over. The
+session holds the run plus a turn counter; coming back, a page already read is shown in full at the same scroll
+position instead of being typed out again. Stage 5 saves the run from here.
+
+Subsystems for saves, combat and shops are documented here as they are built in their own stages.
