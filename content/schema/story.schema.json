@@ -1,0 +1,306 @@
+{
+  "$id": "story.schema.json",
+  "title": "story.json: a story's identity, theme, hero archetypes, chapters, lore and endings",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "title",
+    "blurb",
+    "rating",
+    "toneLine",
+    "version",
+    "start",
+    "theme",
+    "currency",
+    "archetypes",
+    "chapters",
+    "loreEntries",
+    "endings",
+    "codexSummary"
+  ],
+  "properties": {
+    "id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 60
+    },
+    "blurb": {
+      "$ref": "common.schema.json#/$defs/text"
+    },
+    "rating": {
+      "enum": [
+        "all-ages",
+        "teen",
+        "mature"
+      ]
+    },
+    "toneLine": {
+      "$ref": "common.schema.json#/$defs/shortText"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "start": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "theme": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "colors",
+        "typefaceFeel"
+      ],
+      "properties": {
+        "colors": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "prose",
+            "choices",
+            "statsBar",
+            "combatLog",
+            "background",
+            "accent"
+          ],
+          "properties": {
+            "prose": {
+              "$ref": "common.schema.json#/$defs/hexColor"
+            },
+            "choices": {
+              "$ref": "common.schema.json#/$defs/hexColor"
+            },
+            "statsBar": {
+              "$ref": "common.schema.json#/$defs/hexColor"
+            },
+            "combatLog": {
+              "$ref": "common.schema.json#/$defs/hexColor"
+            },
+            "background": {
+              "$ref": "common.schema.json#/$defs/hexColor"
+            },
+            "accent": {
+              "$ref": "common.schema.json#/$defs/hexColor"
+            }
+          }
+        },
+        "typefaceFeel": {
+          "enum": [
+            "old-print",
+            "inscribed"
+          ]
+        }
+      }
+    },
+    "currency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "symbol"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 24
+        },
+        "symbol": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 3
+        }
+      }
+    },
+    "archetypes": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "tagline",
+          "stats",
+          "startingSkills",
+          "startingEquipment",
+          "suggestedNames",
+          "pronouns"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 32
+          },
+          "tagline": {
+            "$ref": "common.schema.json#/$defs/shortText"
+          },
+          "stats": {
+            "$ref": "common.schema.json#/$defs/statBlock"
+          },
+          "startingSkills": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 2,
+            "items": {
+              "$ref": "common.schema.json#/$defs/skill"
+            }
+          },
+          "startingEquipment": {
+            "type": "array",
+            "maxItems": 6,
+            "items": {
+              "$ref": "common.schema.json#/$defs/id"
+            }
+          },
+          "suggestedNames": {
+            "type": "array",
+            "minItems": 3,
+            "maxItems": 5,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 24
+            }
+          },
+          "pronouns": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "default",
+              "selectable"
+            ],
+            "properties": {
+              "default": {
+                "enum": [
+                  "they",
+                  "she",
+                  "he"
+                ]
+              },
+              "selectable": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      }
+    },
+    "chapters": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "title",
+          "summary"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60
+          },
+          "summary": {
+            "$ref": "common.schema.json#/$defs/text"
+          }
+        }
+      }
+    },
+    "loreEntries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "title",
+          "text"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60
+          },
+          "text": {
+            "$ref": "common.schema.json#/$defs/longText"
+          }
+        }
+      }
+    },
+    "endings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "victory",
+        "death",
+        "defaultDeath"
+      ],
+      "properties": {
+        "victory": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/endingEntry"
+          }
+        },
+        "death": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/endingEntry"
+          }
+        },
+        "defaultDeath": {
+          "$ref": "common.schema.json#/$defs/id"
+        }
+      }
+    },
+    "codexSummary": {
+      "$ref": "common.schema.json#/$defs/longText"
+    }
+  },
+  "$defs": {
+    "endingEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "sceneId",
+        "title"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "sceneId": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60
+        }
+      }
+    }
+  }
+}

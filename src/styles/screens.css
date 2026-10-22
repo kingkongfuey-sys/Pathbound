@@ -1,0 +1,640 @@
+/* Layout and type for every screen. One page frame: an oxblood double margin rule on the
+   left and a left-aligned text column beside it. Nothing is centred. */
+
+#app {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.page {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  animation: settle 180ms ease-out both;
+}
+
+/* The margin rule: two thin oxblood lines, like a ledger's red margin. */
+.page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--safe-left) + var(--margin-rule-x));
+  width: 4px;
+  border-left: 1px solid var(--oxblood);
+  border-right: 1px solid var(--oxblood);
+  opacity: 0.72;
+}
+
+.column {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  min-height: inherit;
+  padding: 0 calc(var(--safe-right) + var(--column-right)) 0 calc(var(--safe-left) + var(--column-left));
+}
+
+/* ---- type ---- */
+.title,
+.page-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.title {
+  font-size: clamp(42px, 14vw, 64px);
+  line-height: 1.05;
+  letter-spacing: 0.005em;
+}
+.page-title {
+  font-size: clamp(32px, 10.5vw, 42px);
+  line-height: 1.1;
+}
+
+.epigraph,
+.prose {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.55;
+}
+.epigraph {
+  margin-top: calc(var(--line) * 0.75);
+  max-width: 15em;
+  font-style: italic;
+  color: var(--ink-faded);
+}
+.prose + .prose {
+  margin-top: var(--line);
+}
+.prose-quiet {
+  font-style: italic;
+  color: var(--ink-faded);
+}
+.fatal-detail {
+  font-family: var(--font-text);
+  color: var(--oxblood);
+  overflow-wrap: anywhere;
+}
+
+/* ---- the signature rule ---- */
+.ink-rule {
+  display: block;
+  width: 100%;
+  max-width: 360px;
+  height: auto;
+  margin-top: 6px;
+  overflow: visible;
+}
+.ink-rule-main,
+.ink-rule-second {
+  fill: none;
+  stroke: var(--ink);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.ink-rule-main {
+  stroke-width: 1.7;
+}
+.ink-rule-second {
+  stroke-width: 0.8;
+  opacity: 0.7;
+}
+.ink-rule-pool {
+  fill: var(--ink);
+}
+
+/* ---- links: set type, never buttons ---- */
+.link {
+  display: flex;
+  align-items: flex-end;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: calc(var(--line) * 2);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-style: italic;
+  font-size: 26px;
+  line-height: var(--line);
+  text-align: left;
+  color: var(--choice, var(--ink));
+  cursor: pointer;
+}
+.link-text {
+  padding-bottom: 6px;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--oxblood) 55%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 5px;
+}
+.link:active .link-text {
+  color: var(--oxblood-wet);
+  text-decoration-color: var(--oxblood-wet);
+}
+.link:focus-visible {
+  outline: 2px solid var(--oxblood);
+  outline-offset: 2px;
+}
+.link-quiet {
+  min-height: 48px;
+  font-size: 18px;
+  align-items: center;
+  color: var(--ink-faded);
+}
+.link-quiet .link-text {
+  padding-bottom: 0;
+}
+
+/* ---- home ---- */
+.page-home .masthead {
+  padding-top: calc(var(--safe-top) + 14vh);
+  padding-top: calc(var(--safe-top) + 14dvh);
+}
+.choices {
+  margin-top: auto;
+}
+/* Ruled lines run behind the choices, one line unit apart; each row is two lines tall. */
+.ruled {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--rule) 0,
+    var(--rule) 1px,
+    transparent 1px,
+    transparent var(--line)
+  );
+  border-bottom: 1px solid var(--rule);
+}
+.choice-row {
+  height: calc(var(--line) * 2);
+}
+.colophon {
+  padding: var(--line) 0 calc(var(--safe-bottom) + var(--line) * 0.75);
+  font-size: 15px;
+  font-style: italic;
+  color: var(--ink-faded);
+}
+
+/* ---- inner screens ---- */
+.back-row {
+  padding-top: calc(var(--safe-top) + 12px);
+}
+.page-head {
+  padding: calc(var(--line) * 0.75) 0 var(--line);
+}
+
+@keyframes settle {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .page {
+    animation: none;
+  }
+}
+
+/* ---- story shelf ---- */
+.shelf-list {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--rule);
+}
+.story-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  margin: 0;
+  padding: calc(var(--line) * 0.5) 0;
+  border: 0;
+  border-bottom: 1px solid var(--rule);
+  background: none;
+  font: inherit;
+  text-align: left;
+  color: var(--ink);
+  cursor: pointer;
+}
+.story-title {
+  font-family: var(--font-display);
+  font-size: 30px;
+  line-height: 1.15;
+}
+.story-blurb {
+  font-size: 18px;
+  line-height: 1.45;
+}
+.story-meta {
+  font-size: 16px;
+  font-style: italic;
+  color: var(--ink-faded);
+}
+.story-row:active .story-title {
+  color: var(--oxblood-wet);
+}
+.story-row:focus-visible {
+  outline: 2px solid var(--oxblood);
+  outline-offset: 2px;
+}
+
+/* ---- hero creation ---- */
+.archetypes {
+  display: flex;
+  flex-direction: column;
+  margin-top: var(--line);
+  border-top: 1px solid var(--rule);
+}
+.archetype {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  margin: 0;
+  padding: calc(var(--line) * 0.5) 0;
+  border: 0;
+  border-bottom: 1px solid var(--rule);
+  background: none;
+  font: inherit;
+  text-align: left;
+  color: var(--ink);
+  cursor: pointer;
+  opacity: 0.78;
+}
+.archetype[aria-pressed='true'] {
+  opacity: 1;
+}
+.arch-name {
+  font-family: var(--font-display);
+  font-size: 28px;
+  line-height: 1.15;
+}
+.archetype[aria-pressed='true'] .arch-name {
+  text-decoration: underline;
+  text-decoration-color: var(--oxblood);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 5px;
+}
+.arch-tagline {
+  font-size: 18px;
+  font-style: italic;
+  line-height: 1.4;
+}
+.arch-stats {
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--ink-faded);
+}
+.archetype:focus-visible {
+  outline: 2px solid var(--oxblood);
+  outline-offset: 2px;
+}
+.name-block,
+.pronouns,
+.begin-row {
+  margin-top: var(--line);
+}
+.field-label {
+  margin: 0;
+  font-size: 16px;
+  font-style: italic;
+  color: var(--ink-faded);
+}
+.name-field {
+  box-sizing: border-box;
+  width: 100%;
+  margin: 4px 0 0;
+  padding: 8px 0;
+  border: 0;
+  border-bottom: 1px solid var(--ink);
+  border-radius: 0;
+  background: transparent;
+  font-family: var(--font-text);
+  font-style: italic;
+  font-size: 28px;
+  color: var(--ink);
+  user-select: text;
+  -webkit-user-select: text;
+}
+.name-field:focus {
+  outline: none;
+  border-bottom: 2px solid var(--oxblood);
+}
+.form-error {
+  min-height: var(--line);
+  margin: 6px 0 0;
+  font-size: 17px;
+  font-style: italic;
+  color: var(--oxblood);
+}
+.suggestions,
+.pronouns {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 20px;
+}
+.suggestions .field-label,
+.pronouns .field-label {
+  flex-basis: 100%;
+}
+.link-small {
+  width: auto;
+  min-height: 44px;
+  font-size: 22px;
+  align-items: center;
+}
+.link-small[aria-pressed='true'] .link-text {
+  text-decoration-thickness: 2px;
+  text-decoration-color: var(--oxblood);
+}
+.link-small[aria-pressed='false'] {
+  opacity: 0.75;
+}
+.begin-row {
+  padding-bottom: calc(var(--safe-bottom) + var(--line) * 1.5);
+}
+
+/* ---- reading ---- */
+.reading-block {
+  margin-top: calc(var(--line) * 0.5);
+}
+.reading {
+  font-size: 20px;
+  line-height: 1.6;
+  color: var(--ink);
+}
+.reading + .reading {
+  margin-top: calc(var(--line) * 0.7);
+}
+:root[data-feel='inscribed'] .reading {
+  font-family: var(--font-display);
+}
+.unwritten {
+  color: transparent;
+}
+.asides {
+  margin-top: calc(var(--line) * 0.5);
+}
+.aside {
+  margin: 0 0 6px;
+  font-size: 17px;
+  font-style: italic;
+  line-height: 1.45;
+  color: var(--ink-faded);
+}
+.options {
+  margin-top: var(--line);
+  padding-bottom: calc(var(--safe-bottom) + var(--line));
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 220ms ease-out;
+}
+.options.shown {
+  opacity: 1;
+  pointer-events: auto;
+}
+@media (prefers-reduced-motion: reduce) {
+  .options {
+    transition: none;
+  }
+}
+.link.option {
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 10px;
+  min-height: 56px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: 21px;
+  line-height: 1.35;
+}
+.options > .link.option:first-child {
+  border-top: 1px solid var(--rule);
+}
+.hint {
+  font-size: 15px;
+  color: var(--ink-faded);
+}
+.hint::before {
+  content: '(';
+}
+.hint::after {
+  content: ')';
+}
+.ending-line {
+  margin: var(--line) 0 calc(var(--line) * 0.5);
+  font-size: 19px;
+  font-style: italic;
+  color: var(--ink-faded);
+}
+.option-row .link.option {
+  border-bottom: 1px solid var(--rule);
+  border-top: 1px solid var(--rule);
+}
+
+/* ---- leave-the-entry prompt ---- */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  align-items: flex-end;
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+}
+.overlay-card {
+  box-sizing: border-box;
+  width: 100%;
+  padding: var(--line) calc(var(--safe-right) + var(--column-right)) calc(var(--safe-bottom) + var(--line)) calc(var(--safe-left) + var(--column-left));
+  border-top: 1px solid var(--rule);
+  background: var(--paper);
+}
+.overlay-row {
+  border-bottom: 1px solid var(--rule);
+}
+
+/* ---- content problems ---- */
+.problems {
+  margin: var(--line) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.problem {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 0;
+  border-top: 1px solid var(--rule);
+  overflow-wrap: anywhere;
+}
+.problem-file {
+  font-size: 15px;
+  font-style: italic;
+  color: var(--ink-faded);
+}
+.problem-message {
+  font-size: 18px;
+  line-height: 1.4;
+  color: var(--oxblood);
+}
+
+/* ---- stats strip (pinned to the top of the story screen) ---- */
+.strip {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  padding: calc(var(--safe-top) + 4px) 0 6px;
+  border-bottom: 1px solid var(--rule);
+  background: color-mix(in srgb, var(--paper) 95%, transparent);
+  color: var(--stats-bar);
+}
+.strip-numbers {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  min-height: 40px;
+}
+.strip-hp,
+.strip-gold {
+  font-size: 21px;
+  line-height: 1;
+  font-variant-numeric: lining-nums;
+  white-space: nowrap;
+}
+.strip-low {
+  color: var(--oxblood);
+}
+.link.strip-link {
+  width: auto;
+  min-height: 40px;
+  margin-left: auto;
+  align-items: center;
+  font-size: 20px;
+  color: var(--stats-bar);
+}
+.strip-link .link-text {
+  padding-bottom: 0;
+}
+.strip-chapter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 24px;
+}
+.tally {
+  display: block;
+  flex: none;
+  height: 20px;
+  overflow: visible;
+}
+.tally-stroke {
+  fill: none;
+  stroke: var(--stats-bar);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+.tally-ahead {
+  opacity: 0.28;
+}
+.strip-chapter-title {
+  overflow: hidden;
+  font-size: 15px;
+  font-style: italic;
+  color: var(--ink-faded);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.leave-row {
+  padding-top: 2px;
+}
+
+/* ---- the satchel ---- */
+.reckoning {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.45;
+  color: var(--ink-faded);
+}
+.satchel-line {
+  min-height: calc(var(--line) * 1.5);
+  margin: 8px 0 0;
+  font-size: 17px;
+  font-style: italic;
+  line-height: 1.45;
+  color: var(--ink-faded);
+}
+.ledger-label {
+  margin: calc(var(--line) * 0.75) 0 0;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--ink);
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1.2;
+}
+.entries {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.slot {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--rule);
+  list-style: none;
+}
+.slot-label {
+  margin: 0;
+  font-size: 15px;
+  font-style: italic;
+  color: var(--ink-faded);
+}
+.entry {
+  padding: 4px 0 8px;
+  border-bottom: 1px solid var(--rule);
+}
+.slot .entry {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+/* Name, dotted leader, action: baseline-aligned so the dots run along the foot of the type, as in an account book. */
+.entry-head {
+  display: flex;
+  align-items: baseline;
+  min-height: 44px;
+}
+.entry-name {
+  font-family: var(--font-display);
+  font-size: 23px;
+  line-height: 1.2;
+}
+.entry-empty {
+  font-family: var(--font-text);
+  font-size: 19px;
+  font-style: italic;
+  color: var(--ink-faded);
+}
+.leader {
+  flex: 1;
+  min-width: 16px;
+  height: 0;
+  margin: 0 10px;
+  border-bottom: 1px dotted var(--ink-faded);
+}
+.entry-head .link-small {
+  flex: none;
+}
+.entry-detail {
+  margin: 0;
+  font-size: 16px;
+  font-style: italic;
+  line-height: 1.4;
+  color: var(--ink-faded);
+}
+.page-foot {
+  height: calc(var(--safe-bottom) + var(--line) * 2);
+}

@@ -1,0 +1,180 @@
+{
+  "id": "saltwick",
+  "title": "Low Tide at Saltwick",
+  "blurb": "A causeway, a bell, and a tide that keeps better time than you do. A short crossing, and the first tale on the shelf.",
+  "rating": "all-ages",
+  "toneLine": "Damp, quiet and mostly polite about it.",
+  "version": 1,
+  "start": "saltwick-causeway",
+  "theme": {
+    "colors": {
+      "prose": "#1d2a2c",
+      "choices": "#254c4a",
+      "statsBar": "#2a3a3c",
+      "combatLog": "#3b4b49",
+      "background": "#d3d7c1",
+      "accent": "#7a3b2e"
+    },
+    "typefaceFeel": "old-print"
+  },
+  "currency": {
+    "name": "pennies",
+    "symbol": "p"
+  },
+  "archetypes": [
+    {
+      "id": "tidewarden",
+      "name": "Tidewarden",
+      "tagline": "Keeps the causeway, and the causeway keeps a few things back.",
+      "stats": {
+        "hp": 18,
+        "attack": 3,
+        "defense": 2,
+        "wits": 2,
+        "nerve": 3
+      },
+      "startingSkills": [
+        {
+          "id": "braced-stance",
+          "name": "Braced stance",
+          "description": "Plant the oar-hook and take the worst of a blow.",
+          "stance": "guard",
+          "effect": {
+            "kind": "reduceDamage",
+            "amount": 3
+          },
+          "cooldown": 3
+        }
+      ],
+      "startingEquipment": [
+        "oar-hook",
+        "oilskin-coat"
+      ],
+      "suggestedNames": [
+        "Maren",
+        "Osk",
+        "Bryn",
+        "Tamsin"
+      ],
+      "pronouns": {
+        "default": "they",
+        "selectable": true
+      }
+    },
+    {
+      "id": "wrecker",
+      "name": "Wrecker",
+      "tagline": "Salvages what the sea has finished with, and sometimes what it hasn’t.",
+      "stats": {
+        "hp": 14,
+        "attack": 3,
+        "defense": 1,
+        "wits": 3,
+        "nerve": 2
+      },
+      "startingSkills": [
+        {
+          "id": "soft-place",
+          "name": "The soft place",
+          "description": "Spot the weak seam in whatever it is, and go straight for it.",
+          "stance": "feint",
+          "effect": {
+            "kind": "bonusDamage",
+            "amount": 3
+          },
+          "cooldown": 3
+        }
+      ],
+      "startingEquipment": [
+        "gull-knife",
+        "brine-tonic"
+      ],
+      "suggestedNames": [
+        "Jory",
+        "Wen",
+        "Pell",
+        "Dacey",
+        "Ines"
+      ],
+      "pronouns": {
+        "default": "he",
+        "selectable": true
+      }
+    },
+    {
+      "id": "marksreader",
+      "name": "Marksreader",
+      "tagline": "Reads the old tide marks the way other people read a face.",
+      "stats": {
+        "hp": 12,
+        "attack": 1,
+        "defense": 1,
+        "wits": 5,
+        "nerve": 3
+      },
+      "startingSkills": [
+        {
+          "id": "steady-count",
+          "name": "Steady count",
+          "description": "Count the breath, count the wave, and let both settle.",
+          "stance": "any",
+          "effect": {
+            "kind": "heal",
+            "amount": 4
+          },
+          "cooldown": 4
+        }
+      ],
+      "startingEquipment": [
+        "driftwood-staff"
+      ],
+      "suggestedNames": [
+        "Sabine",
+        "Corwen",
+        "Lio",
+        "Hesper"
+      ],
+      "pronouns": {
+        "default": "she",
+        "selectable": true
+      }
+    }
+  ],
+  "chapters": [
+    {
+      "id": "the-causeway",
+      "title": "The Causeway",
+      "summary": "The only road to Saltwick is a strip of stone and sand that the sea takes back twice a day."
+    }
+  ],
+  "loreEntries": [
+    {
+      "id": "keepers-marks",
+      "title": "The keepers’ marks",
+      "text": "Cut into every fifth stone of the Saltwick causeway are small lines, one for each hour the sand stays dry beneath it. The keepers cut them with chisels that are no longer made. Those who can read them cross in the dark."
+    },
+    {
+      "id": "tide-bell",
+      "title": "The tide bell",
+      "text": "Saltwick’s bell rings the turn of the tide, and has done since before the causeway had stones. It is rung by hand, the keepers say, and by nothing at all on the nights that matter."
+    }
+  ],
+  "endings": {
+    "victory": [
+      {
+        "id": "across-before-the-turn",
+        "sceneId": "saltwick-gate-open",
+        "title": "Across before the turn"
+      }
+    ],
+    "death": [
+      {
+        "id": "the-deep-channel",
+        "sceneId": "saltwick-drowned",
+        "title": "The deep channel"
+      }
+    ],
+    "defaultDeath": "the-deep-channel"
+  },
+  "codexSummary": "A short crossing of a tidal causeway to the island of Saltwick, written as the first tale on the shelf and as a test of everything the page can do."
+}

@@ -1,0 +1,439 @@
+{
+  "$id": "common.schema.json",
+  "title": "Shared definitions used by every Pathbound content file",
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{1,47}$"
+    },
+    "target": {
+      "type": "string",
+      "pattern": "^([a-z][a-z0-9-]{1,47}|\\$return)$"
+    },
+    "hexColor": {
+      "type": "string",
+      "pattern": "^#[0-9a-fA-F]{6}$"
+    },
+    "shortText": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 140
+    },
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1200
+    },
+    "longText": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4000
+    },
+    "hint": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 24
+    },
+    "statBlock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "hp",
+        "attack",
+        "defense",
+        "wits",
+        "nerve"
+      ],
+      "properties": {
+        "hp": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 99
+        },
+        "attack": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20
+        },
+        "defense": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20
+        },
+        "wits": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20
+        },
+        "nerve": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20
+        }
+      }
+    },
+    "statModifiers": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "hp": {
+          "type": "integer",
+          "minimum": -20,
+          "maximum": 20
+        },
+        "attack": {
+          "type": "integer",
+          "minimum": -9,
+          "maximum": 9
+        },
+        "defense": {
+          "type": "integer",
+          "minimum": -9,
+          "maximum": 9
+        },
+        "wits": {
+          "type": "integer",
+          "minimum": -9,
+          "maximum": 9
+        },
+        "nerve": {
+          "type": "integer",
+          "minimum": -9,
+          "maximum": 9
+        }
+      }
+    },
+    "comparator": {
+      "enum": [
+        ">=",
+        "<=",
+        ">",
+        "<",
+        "==",
+        "!="
+      ]
+    },
+    "condition": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "stat",
+            "op",
+            "value"
+          ],
+          "properties": {
+            "type": {
+              "const": "stat"
+            },
+            "stat": {
+              "enum": [
+                "hp",
+                "attack",
+                "defense",
+                "wits",
+                "nerve"
+              ]
+            },
+            "op": {
+              "$ref": "#/$defs/comparator"
+            },
+            "value": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 999
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "op",
+            "value"
+          ],
+          "properties": {
+            "type": {
+              "const": "gold"
+            },
+            "op": {
+              "$ref": "#/$defs/comparator"
+            },
+            "value": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 99999
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "itemId"
+          ],
+          "properties": {
+            "type": {
+              "const": "item"
+            },
+            "itemId": {
+              "$ref": "#/$defs/id"
+            },
+            "has": {
+              "type": "boolean"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "flag"
+          ],
+          "properties": {
+            "type": {
+              "const": "flag"
+            },
+            "flag": {
+              "$ref": "#/$defs/id"
+            },
+            "is": {
+              "type": "boolean"
+            }
+          }
+        }
+      ],
+      "discriminator": {
+        "propertyName": "type"
+      },
+      "type": "object"
+    },
+    "conditions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/condition"
+      },
+      "minItems": 1,
+      "maxItems": 6
+    },
+    "effect": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "stat",
+            "delta",
+            "note"
+          ],
+          "properties": {
+            "type": {
+              "const": "stat"
+            },
+            "stat": {
+              "enum": [
+                "hp",
+                "attack",
+                "defense",
+                "wits",
+                "nerve"
+              ]
+            },
+            "delta": {
+              "type": "integer",
+              "minimum": -9,
+              "maximum": 9,
+              "not": {
+                "const": 0
+              }
+            },
+            "note": {
+              "$ref": "#/$defs/shortText"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "delta",
+            "note"
+          ],
+          "properties": {
+            "type": {
+              "const": "hp"
+            },
+            "delta": {
+              "type": "integer",
+              "minimum": -99,
+              "maximum": 99,
+              "not": {
+                "const": 0
+              }
+            },
+            "note": {
+              "$ref": "#/$defs/shortText"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "delta",
+            "note"
+          ],
+          "properties": {
+            "type": {
+              "const": "gold"
+            },
+            "delta": {
+              "type": "integer",
+              "minimum": -99999,
+              "maximum": 99999,
+              "not": {
+                "const": 0
+              }
+            },
+            "note": {
+              "$ref": "#/$defs/shortText"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "itemId",
+            "change",
+            "note"
+          ],
+          "properties": {
+            "type": {
+              "const": "item"
+            },
+            "itemId": {
+              "$ref": "#/$defs/id"
+            },
+            "change": {
+              "enum": [
+                "give",
+                "take"
+              ]
+            },
+            "quantity": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 99
+            },
+            "note": {
+              "$ref": "#/$defs/shortText"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "flag",
+            "value"
+          ],
+          "properties": {
+            "type": {
+              "const": "flag"
+            },
+            "flag": {
+              "$ref": "#/$defs/id"
+            },
+            "value": {
+              "type": "boolean"
+            }
+          }
+        }
+      ],
+      "discriminator": {
+        "propertyName": "type"
+      },
+      "type": "object"
+    },
+    "effects": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/effect"
+      },
+      "minItems": 1,
+      "maxItems": 8
+    },
+    "skill": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "description",
+        "stance",
+        "effect",
+        "cooldown"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "description": {
+          "$ref": "#/$defs/shortText"
+        },
+        "stance": {
+          "enum": [
+            "strike",
+            "guard",
+            "feint",
+            "any"
+          ]
+        },
+        "effect": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "amount"
+          ],
+          "properties": {
+            "kind": {
+              "enum": [
+                "bonusDamage",
+                "reduceDamage",
+                "heal"
+              ]
+            },
+            "amount": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 99
+            }
+          }
+        },
+        "cooldown": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9
+        }
+      }
+    }
+  }
+}

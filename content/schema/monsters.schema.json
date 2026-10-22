@@ -1,0 +1,159 @@
+{
+  "$id": "monsters.schema.json",
+  "title": "monsters.json: a story's bestiary",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "monsters"
+  ],
+  "properties": {
+    "monsters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "codexEntry",
+          "hp",
+          "damage",
+          "styleTendencies",
+          "skills",
+          "lootTable",
+          "boss"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40
+          },
+          "codexEntry": {
+            "$ref": "common.schema.json#/$defs/longText"
+          },
+          "hp": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 999
+          },
+          "damage": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "min",
+              "max"
+            ],
+            "properties": {
+              "min": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 99
+              },
+              "max": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 99
+              }
+            }
+          },
+          "styleTendencies": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "strike",
+              "guard",
+              "feint"
+            ],
+            "properties": {
+              "strike": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 10
+              },
+              "guard": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 10
+              },
+              "feint": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 10
+              }
+            }
+          },
+          "skills": {
+            "type": "array",
+            "maxItems": 2,
+            "items": {
+              "$ref": "common.schema.json#/$defs/skill"
+            }
+          },
+          "lootTable": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "items",
+              "gold"
+            ],
+            "properties": {
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "itemId",
+                    "weight"
+                  ],
+                  "properties": {
+                    "itemId": {
+                      "$ref": "common.schema.json#/$defs/id"
+                    },
+                    "weight": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 1000
+                    }
+                  }
+                }
+              },
+              "noneWeight": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000
+              },
+              "gold": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "min",
+                  "max"
+                ],
+                "properties": {
+                  "min": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 99999
+                  },
+                  "max": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 99999
+                  }
+                }
+              }
+            }
+          },
+          "boss": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  }
+}

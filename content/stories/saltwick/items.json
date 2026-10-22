@@ -1,0 +1,89 @@
+{
+  "items": [
+    {
+      "id": "gull-knife",
+      "name": "Gull knife",
+      "flavor": "A short blade, nicked from cutting weed and rope.",
+      "codexEntry": "Nobody remembers who first called it the gull knife. It is small, quick and rude, which is how gulls are generally described.",
+      "type": "weapon",
+      "modifiers": {
+        "attack": 1
+      },
+      "value": 6,
+      "purchasable": true
+    },
+    {
+      "id": "driftwood-staff",
+      "name": "Driftwood staff",
+      "flavor": "Bleached, straight and surprisingly good for pointing.",
+      "codexEntry": "A walking staff worn smooth by someone else’s hands. It is better at indicating the correct direction than at hitting anything.",
+      "type": "weapon",
+      "modifiers": {
+        "wits": 1
+      },
+      "value": 5,
+      "purchasable": true
+    },
+    {
+      "id": "oar-hook",
+      "name": "Oar hook",
+      "flavor": "Meant for catching boats. Catches other things.",
+      "codexEntry": "A long iron hook on an ash pole, kept by every tidewarden for pulling in what the sea sends and pushing off what it shouldn’t.",
+      "type": "weapon",
+      "modifiers": {
+        "attack": 2
+      },
+      "value": 9,
+      "purchasable": true
+    },
+    {
+      "id": "oilskin-coat",
+      "name": "Oilskin coat",
+      "flavor": "Stiff, yellow and smelling faithfully of fish.",
+      "codexEntry": "Waxed canvas, patched at both elbows. It turns rain, spray and the occasional opinion.",
+      "type": "body",
+      "modifiers": {
+        "defense": 1
+      },
+      "value": 8,
+      "purchasable": true
+    },
+    {
+      "id": "salt-lantern",
+      "name": "Salt lantern",
+      "flavor": "Warm to hold, even unlit.",
+      "codexEntry": "The lantern from the Saltwick signal post. It is said to be warm because someone, somewhere, is thinking of whoever carries it.",
+      "type": "trinket",
+      "modifiers": {
+        "wits": 1
+      },
+      "value": 0,
+      "purchasable": false
+    },
+    {
+      "id": "brine-tonic",
+      "name": "Brine tonic",
+      "flavor": "Tastes of the sea. Works anyway.",
+      "codexEntry": "A cloudy tonic sold in stoppered bottles on the Saltwick quay. The recipe is a secret mainly because nobody wants to claim it.",
+      "type": "consumable",
+      "use": {
+        "kind": "heal",
+        "amount": 6
+      },
+      "value": 4,
+      "purchasable": true
+    },
+    {
+      "id": "tarred-souwester",
+      "name": "Tarred sou’wester",
+      "flavor": "Brimmed, stiff and still faintly damp from someone else’s day.",
+      "codexEntry": "A sailor’s hat, tarred until it shed water the way a duck sheds opinions. This one has been hung on a causeway marker to dry for longer than the tar suggests.",
+      "type": "head",
+      "modifiers": {
+        "nerve": 1
+      },
+      "value": 3,
+      "purchasable": true
+    }
+  ]
+}

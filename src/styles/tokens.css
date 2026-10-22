@@ -1,0 +1,29 @@
+/* Design tokens for the base (parchment) theme. Stories override the colour roles at play time.
+   Colours: foxed paper, iron-gall ink, oxblood for the margin rule and anything the reader acts on.
+   Type: French Canon for titles (display), English for everything read (text).
+   Rhythm: one ruled-line unit (32px) governs vertical spacing, like a ledger's lines. */
+:root {
+  --paper: #e1d8b6;
+  --paper-lit: #eee7cd;
+  --paper-burn: #b8a97b;
+  --ink: #22201c;
+  --ink-faded: #5b5340;
+  --rule: #a89a6c;
+  --oxblood: #6b1e24;
+  --oxblood-wet: #8e2e35;
+  /* Ink for the stats strip; a story's statsBar colour replaces it while that story is read. */
+  --stats-bar: var(--ink);
+
+  --font-display: 'IM Fell French Canon', 'Iowan Old Style', Georgia, serif;
+  --font-text: 'IM Fell English', 'Iowan Old Style', Georgia, serif;
+
+  --line: 32px;
+  --margin-rule-x: 40px;
+  --column-left: 66px;
+  --column-right: 28px;
+
+  --safe-top: var(--safe-area-inset-top, env(safe-area-inset-top, 0px));
+  --safe-right: var(--safe-area-inset-right, env(safe-area-inset-right, 0px));
+  --safe-bottom: var(--safe-area-inset-bottom, env(safe-area-inset-bottom, 0px));
+  --safe-left: var(--safe-area-inset-left, env(safe-area-inset-left, 0px));
+}

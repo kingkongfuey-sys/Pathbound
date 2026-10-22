@@ -1,0 +1,23 @@
+/* Two bundled typefaces, Latin subset only, loaded from the app itself (no network).
+   font-display: block so the page never flashes in a fallback face. */
+@font-face {
+  font-family: 'IM Fell French Canon';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('../../node_modules/@fontsource/im-fell-french-canon/files/im-fell-french-canon-latin-400-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'IM Fell English';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('../../node_modules/@fontsource/im-fell-english/files/im-fell-english-latin-400-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'IM Fell English';
+  font-style: italic;
+  font-weight: 400;
+  font-display: block;
+  src: url('../../node_modules/@fontsource/im-fell-english/files/im-fell-english-latin-400-italic.woff2') format('woff2');
+}

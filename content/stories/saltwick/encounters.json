@@ -1,0 +1,14 @@
+{
+  "pools": [
+    {
+      "chapterId": "the-causeway",
+      "entries": [
+        {
+          "type": "flavor",
+          "sceneId": "saltwick-gull",
+          "weight": 1
+        }
+      ]
+    }
+  ]
+}

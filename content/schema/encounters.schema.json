@@ -1,0 +1,122 @@
+{
+  "$id": "encounters.schema.json",
+  "title": "encounters.json: one weighted random-encounter pool per chapter",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "pools"
+  ],
+  "properties": {
+    "pools": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "chapterId",
+          "entries"
+        ],
+        "properties": {
+          "chapterId": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "entries": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/$defs/entry"
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "weight": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 1000
+    },
+    "entry": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "monsterId",
+            "weight"
+          ],
+          "properties": {
+            "type": {
+              "const": "fight"
+            },
+            "monsterId": {
+              "$ref": "common.schema.json#/$defs/id"
+            },
+            "weight": {
+              "$ref": "#/$defs/weight"
+            },
+            "conditions": {
+              "$ref": "common.schema.json#/$defs/conditions"
+            },
+            "fleeEffects": {
+              "$ref": "common.schema.json#/$defs/effects"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "sceneId",
+            "weight"
+          ],
+          "properties": {
+            "type": {
+              "const": "discovery"
+            },
+            "sceneId": {
+              "$ref": "common.schema.json#/$defs/id"
+            },
+            "weight": {
+              "$ref": "#/$defs/weight"
+            },
+            "conditions": {
+              "$ref": "common.schema.json#/$defs/conditions"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "sceneId",
+            "weight"
+          ],
+          "properties": {
+            "type": {
+              "const": "flavor"
+            },
+            "sceneId": {
+              "$ref": "common.schema.json#/$defs/id"
+            },
+            "weight": {
+              "$ref": "#/$defs/weight"
+            },
+            "conditions": {
+              "$ref": "common.schema.json#/$defs/conditions"
+            }
+          }
+        }
+      ],
+      "discriminator": {
+        "propertyName": "type"
+      },
+      "type": "object"
+    }
+  }
+}

@@ -1,0 +1,225 @@
+{
+  "scenes": [
+    {
+      "id": "saltwick-causeway",
+      "chapterId": "the-causeway",
+      "type": "narrative",
+      "unlocksLore": [
+        "keepers-marks"
+      ],
+      "prose": [
+        "The tide has gone out as far as it ever does, and the causeway to Saltwick lies bare and shining in the grey light. {player.name} stands at its landward end with the wind at {their} back, counting what is left of the day.",
+        "Two ways across present themselves. The old stone markers run straight out over the sand, each one the height of a child and furred with weed. Beside them the wet sand shines, firmer-looking and a good deal shorter. A sou’wester hangs on the first marker, drying optimistically, and a length of driftwood lies across the second, straight as a ruler.",
+        "The bell on Saltwick is already ringing the turn of the tide. It rings, {player.name} decides, a little more urgently than is polite."
+      ],
+      "choices": [
+        {
+          "text": "Keep to the stone markers",
+          "target": "saltwick-midway",
+          "encounterChance": 50,
+          "effects": [
+            {
+              "type": "flag",
+              "flag": "kept-to-stones",
+              "value": true
+            }
+          ]
+        },
+        {
+          "text": "Cut across the wet sand",
+          "hint": "risky",
+          "target": "saltwick-midway",
+          "effects": [
+            {
+              "type": "hp",
+              "delta": -3,
+              "note": "The wet sand clutches at {their} boots. It costs {them} 3 HP to pull free."
+            }
+          ]
+        },
+        {
+          "text": "Take the sou’wester from the first marker",
+          "target": "saltwick-causeway",
+          "conditions": [
+            {
+              "type": "item",
+              "itemId": "tarred-souwester",
+              "has": false
+            }
+          ],
+          "effects": [
+            {
+              "type": "item",
+              "itemId": "tarred-souwester",
+              "change": "give",
+              "note": "{player.name} {v:unhook|unhooks} the sou’wester from the marker. It is stiff with tar and has opinions about the weather."
+            }
+          ]
+        },
+        {
+          "text": "Pick up the length of driftwood",
+          "target": "saltwick-causeway",
+          "conditions": [
+            {
+              "type": "item",
+              "itemId": "driftwood-staff",
+              "has": false
+            }
+          ],
+          "effects": [
+            {
+              "type": "item",
+              "itemId": "driftwood-staff",
+              "change": "give",
+              "note": "The driftwood is bleached, straight and light. {player.name} {v:find|finds} it fits {their} hand."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "saltwick-midway",
+      "chapterId": "the-causeway",
+      "type": "narrative",
+      "unlocksLore": [
+        "tide-bell"
+      ],
+      "prose": [
+        "Halfway out, a fog comes up off the water without any fuss, the way a bill arrives. The gate of Saltwick is a smudge of lamplight somewhere ahead. Behind, the shore has quietly resigned.",
+        "A signal post leans at the edge of the channel with a lantern hanging from its hook. To the left the deep channel runs dark and quick. The tide marks cut into the stones, for anyone who can read them, carry on past the fog. A tin locker is bolted to the post’s foot, rusted shut at the corners."
+      ],
+      "choices": [
+        {
+          "text": "Read the keepers’ marks and follow them in",
+          "hint": "wits 4",
+          "target": "saltwick-gate-open",
+          "conditions": [
+            {
+              "type": "stat",
+              "stat": "wits",
+              "op": ">=",
+              "value": 4
+            }
+          ]
+        },
+        {
+          "text": "Lift the lantern from the signal post",
+          "target": "saltwick-midway",
+          "conditions": [
+            {
+              "type": "item",
+              "itemId": "salt-lantern",
+              "has": false
+            }
+          ],
+          "effects": [
+            {
+              "type": "item",
+              "itemId": "salt-lantern",
+              "change": "give",
+              "note": "{player.name} {v:lift|lifts} the lantern from its hook. It is heavier than it looks, and warm."
+            }
+          ]
+        },
+        {
+          "text": "Walk on by the lantern’s light",
+          "target": "saltwick-gate-open",
+          "conditions": [
+            {
+              "type": "item",
+              "itemId": "salt-lantern"
+            }
+          ]
+        },
+        {
+          "text": "Trust the stones you kept to",
+          "hint": "stones",
+          "target": "saltwick-gate-open",
+          "conditions": [
+            {
+              "type": "flag",
+              "flag": "kept-to-stones"
+            }
+          ]
+        },
+        {
+          "text": "Wade the deep channel and be done with it",
+          "hint": "deep water",
+          "target": "saltwick-drowned"
+        },
+        {
+          "text": "Prise open the tin locker at the post’s foot",
+          "target": "saltwick-midway",
+          "conditions": [
+            {
+              "type": "flag",
+              "flag": "opened-locker",
+              "is": false
+            }
+          ],
+          "effects": [
+            {
+              "type": "item",
+              "itemId": "brine-tonic",
+              "change": "give",
+              "note": "Inside the locker, kept dry by luck and tin, is a stoppered bottle of brine tonic."
+            },
+            {
+              "type": "flag",
+              "flag": "opened-locker",
+              "value": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "saltwick-gull",
+      "chapterId": "the-causeway",
+      "type": "narrative",
+      "prose": [
+        "A gull is walking the causeway ahead of {player.name}, unhurried, as though the tide were an opinion it had not been asked for.",
+        "It stops, regards {them} with one flat yellow eye, and goes back to its business, which appears to involve a crab."
+      ],
+      "choices": [
+        {
+          "text": "Follow it for a while",
+          "target": "$return"
+        },
+        {
+          "text": "Look where the gull was standing",
+          "target": "$return",
+          "effects": [
+            {
+              "type": "gold",
+              "delta": 2,
+              "note": "Under the weed {they} {v:find|finds} two {currency.name}, green with salt."
+            }
+          ]
+        },
+        {
+          "text": "Let it be",
+          "target": "$return"
+        }
+      ]
+    },
+    {
+      "id": "saltwick-gate-open",
+      "chapterId": "the-causeway",
+      "type": "ending",
+      "prose": [
+        "The gate of Saltwick opens before {player.name} has finished knocking. A keeper in an oilskin coat looks {them} up and down, then at the rising water behind, and remarks that most people leave it later than this.",
+        "Inside there is soup, and a fire, and a ledger in which {their} name has already been written in a stranger’s patient hand. {They} {v:sit|sits} down. Outside, the tide comes in over the causeway and covers every trace of the crossing."
+      ]
+    },
+    {
+      "id": "saltwick-drowned",
+      "chapterId": "the-causeway",
+      "type": "ending",
+      "prose": [
+        "The channel is colder than it looks and a great deal faster. {player.name} manages three strides before it takes {their} feet, and a fourth before it takes everything else.",
+        "The bell on Saltwick goes on ringing the turn of the tide. It is not a bell that expects to be thanked, and it is not thanked."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,111 @@
+{
+  "$id": "items.schema.json",
+  "title": "items.json: every item a story defines",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "items"
+  ],
+  "properties": {
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "flavor",
+          "codexEntry",
+          "type",
+          "value",
+          "purchasable"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40
+          },
+          "flavor": {
+            "$ref": "common.schema.json#/$defs/shortText"
+          },
+          "codexEntry": {
+            "$ref": "common.schema.json#/$defs/longText"
+          },
+          "type": {
+            "enum": [
+              "weapon",
+              "head",
+              "body",
+              "trinket",
+              "consumable"
+            ]
+          },
+          "modifiers": {
+            "$ref": "common.schema.json#/$defs/statModifiers"
+          },
+          "use": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "amount"
+            ],
+            "properties": {
+              "kind": {
+                "const": "heal"
+              },
+              "amount": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 99
+              }
+            }
+          },
+          "value": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 99999
+          },
+          "purchasable": {
+            "type": "boolean"
+          }
+        },
+        "if": {
+          "properties": {
+            "type": {
+              "const": "consumable"
+            }
+          },
+          "required": [
+            "type"
+          ]
+        },
+        "then": {
+          "required": [
+            "use"
+          ],
+          "not": {
+            "required": [
+              "modifiers"
+            ]
+          }
+        },
+        "else": {
+          "required": [
+            "modifiers"
+          ],
+          "not": {
+            "required": [
+              "use"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

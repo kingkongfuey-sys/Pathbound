@@ -1,0 +1,265 @@
+{
+  "$id": "scenes.schema.json",
+  "title": "scenes/*.json: a file holding any number of scene nodes",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "scenes"
+  ],
+  "properties": {
+    "scenes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/scene"
+      }
+    }
+  },
+  "$defs": {
+    "prose": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 6,
+      "items": {
+        "$ref": "common.schema.json#/$defs/text"
+      }
+    },
+    "lore": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "common.schema.json#/$defs/id"
+      }
+    },
+    "choice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "text",
+        "target"
+      ],
+      "properties": {
+        "text": {
+          "$ref": "common.schema.json#/$defs/shortText"
+        },
+        "hint": {
+          "$ref": "common.schema.json#/$defs/hint"
+        },
+        "target": {
+          "$ref": "common.schema.json#/$defs/target"
+        },
+        "conditions": {
+          "$ref": "common.schema.json#/$defs/conditions"
+        },
+        "effects": {
+          "$ref": "common.schema.json#/$defs/effects"
+        },
+        "encounterChance": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        }
+      }
+    },
+    "outcome": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sceneId"
+      ],
+      "properties": {
+        "sceneId": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "effects": {
+          "$ref": "common.schema.json#/$defs/effects"
+        }
+      }
+    },
+    "scene": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "chapterId",
+            "type",
+            "prose",
+            "choices"
+          ],
+          "properties": {
+            "id": {
+              "$ref": "common.schema.json#/$defs/id"
+            },
+            "chapterId": {
+              "$ref": "common.schema.json#/$defs/id"
+            },
+            "type": {
+              "const": "narrative"
+            },
+            "prose": {
+              "$ref": "#/$defs/prose"
+            },
+            "unlocksLore": {
+              "$ref": "#/$defs/lore"
+            },
+            "choices": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 8,
+              "items": {
+                "$ref": "#/$defs/choice"
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "chapterId",
+            "type",
+            "prose",
+            "fight"
+          ],
+          "properties": {
+            "id": {
+              "$ref": "common.schema.json#/$defs/id"
+            },
+            "chapterId": {
+              "$ref": "common.schema.json#/$defs/id"
+            },
+            "type": {
+              "const": "fight"
+            },
+            "prose": {
+              "$ref": "#/$defs/prose"
+            },
+            "unlocksLore": {
+              "$ref": "#/$defs/lore"
+            },
+            "fight": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "monsterId",
+                "onVictory",
+                "onFlee"
+              ],
+              "properties": {
+                "monsterId": {
+                  "$ref": "common.schema.json#/$defs/id"
+                },
+                "onVictory": {
+                  "$ref": "#/$defs/outcome"
+                },
+                "onFlee": {
+                  "$ref": "#/$defs/outcome"
+                },
+                "onDefeat": {
+                  "$ref": "common.schema.json#/$defs/id"
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "chapterId",
+            "type",
+            "prose",
+            "shop"
+          ],
+          "properties": {
+            "id": {
+              "$ref": "common.schema.json#/$defs/id"
+            },
+            "chapterId": {
+              "$ref": "common.schema.json#/$defs/id"
+            },
+            "type": {
+              "const": "shop"
+            },
+            "prose": {
+              "$ref": "#/$defs/prose"
+            },
+            "unlocksLore": {
+              "$ref": "#/$defs/lore"
+            },
+            "shop": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "stock",
+                "leaveSceneId"
+              ],
+              "properties": {
+                "stock": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "itemId",
+                      "price"
+                    ],
+                    "properties": {
+                      "itemId": {
+                        "$ref": "common.schema.json#/$defs/id"
+                      },
+                      "price": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 99999
+                      }
+                    }
+                  }
+                },
+                "leaveSceneId": {
+                  "$ref": "common.schema.json#/$defs/id"
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "chapterId",
+            "type",
+            "prose"
+          ],
+          "properties": {
+            "id": {
+              "$ref": "common.schema.json#/$defs/id"
+            },
+            "chapterId": {
+              "$ref": "common.schema.json#/$defs/id"
+            },
+            "type": {
+              "const": "ending"
+            },
+            "prose": {
+              "$ref": "#/$defs/prose"
+            },
+            "unlocksLore": {
+              "$ref": "#/$defs/lore"
+            }
+          }
+        }
+      ],
+      "discriminator": {
+        "propertyName": "type"
+      },
+      "type": "object"
+    }
+  }
+}
