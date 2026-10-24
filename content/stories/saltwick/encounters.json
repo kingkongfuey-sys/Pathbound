@@ -7,6 +7,31 @@
           "type": "flavor",
           "sceneId": "saltwick-gull",
           "weight": 1
+        },
+        {
+          "type": "fight",
+          "monsterId": "wreck-gull",
+          "weight": 2,
+          "fleeEffects": [
+            {
+              "type": "stat",
+              "stat": "nerve",
+              "delta": -1,
+              "note": "The gull’s laughter follows {them} for some time. It dents {their} nerve by a point."
+            }
+          ]
+        },
+        {
+          "type": "discovery",
+          "sceneId": "saltwick-crate",
+          "weight": 1,
+          "conditions": [
+            {
+              "type": "flag",
+              "flag": "found-crate",
+              "is": false
+            }
+          ]
         }
       ]
     }

@@ -1,3 +1,88 @@
 {
-  "monsters": []
+  "monsters": [
+    {
+      "id": "stone-crab",
+      "name": "Stone crab",
+      "codexEntry": "A crab the size of a hat and the temperament of a tax inspector. It lives on the signal post because someone once left a locker there, and it has taken the locker's side ever since. It favours its shell, so patient hands are rewarded; an attempt to strike it head-on mostly meets the shell.",
+      "hp": 12,
+      "damage": {
+        "min": 2,
+        "max": 4
+      },
+      "styleTendencies": {
+        "strike": 2,
+        "guard": 5,
+        "feint": 1
+      },
+      "skills": [
+        {
+          "id": "shell-up",
+          "name": "Shell up",
+          "description": "Pulls in behind the shell and lets the blow find nothing.",
+          "stance": "guard",
+          "effect": {
+            "kind": "reduceDamage",
+            "amount": 2
+          },
+          "cooldown": 3
+        }
+      ],
+      "lootTable": {
+        "items": [
+          {
+            "itemId": "brine-tonic",
+            "weight": 3
+          }
+        ],
+        "noneWeight": 3,
+        "gold": {
+          "min": 2,
+          "max": 5
+        }
+      },
+      "boss": false
+    },
+    {
+      "id": "wreck-gull",
+      "name": "Wreck-gull",
+      "codexEntry": "A gull that has learned the causeway is where the dropped things are, and that travellers are dropped things with pockets. It dives rather than waits, and it feints when it senses it is being watched. It is not malicious, merely convinced.",
+      "hp": 8,
+      "damage": {
+        "min": 1,
+        "max": 3
+      },
+      "styleTendencies": {
+        "strike": 4,
+        "guard": 1,
+        "feint": 4
+      },
+      "skills": [
+        {
+          "id": "gull-dive",
+          "name": "Gull dive",
+          "description": "A long drop out of the grey with the beak leading.",
+          "stance": "strike",
+          "effect": {
+            "kind": "bonusDamage",
+            "amount": 2
+          },
+          "cooldown": 3
+        }
+      ],
+      "lootTable": {
+        "items": [
+          {
+            "itemId": "gull-feather-charm",
+            "weight": 1
+          }
+        ],
+        "noneWeight": 4,
+        "gold": {
+          "min": 1,
+          "max": 3
+        }
+      },
+      "boss": false
+    }
+  ]
 }

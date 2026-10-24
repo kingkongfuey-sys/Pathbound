@@ -85,8 +85,8 @@
         "tide-bell"
       ],
       "prose": [
-        "Halfway out, a fog comes up off the water without any fuss, the way a bill arrives. The gate of Saltwick is a smudge of lamplight somewhere ahead. Behind, the shore has quietly resigned.",
-        "A signal post leans at the edge of the channel with a lantern hanging from its hook. To the left the deep channel runs dark and quick. The tide marks cut into the stones, for anyone who can read them, carry on past the fog. A tin locker is bolted to the post’s foot, rusted shut at the corners."
+        "Halfway out, a fog comes up off the water without any fuss, the way a bill arrives. The gate of Saltwick is a smudge of lamplight somewhere ahead. Behind, the shore has quietly resigned. Off the post’s landward side a skiff rides at a rope, and its peddler is plainly in no hurry.",
+        "A signal post leans at the edge of the channel with a lantern hanging from its hook. To the left the deep channel runs dark and quick. The tide marks cut into the stones, for anyone who can read them, carry on past the fog. A tin locker is bolted to the post’s foot, rusted shut at the corners and guarded by a stone crab with the air of a long-standing tenant."
       ],
       "choices": [
         {
@@ -155,6 +155,10 @@
               "type": "flag",
               "flag": "opened-locker",
               "is": false
+            },
+            {
+              "type": "flag",
+              "flag": "crab-beaten"
             }
           ],
           "effects": [
@@ -170,6 +174,23 @@
               "value": true
             }
           ]
+        },
+        {
+          "text": "Ask the crab to leave the locker",
+          "hint": "a fight",
+          "target": "saltwick-stone-crab",
+          "conditions": [
+            {
+              "type": "flag",
+              "flag": "crab-beaten",
+              "is": false
+            }
+          ]
+        },
+        {
+          "text": "Hail the peddler’s skiff",
+          "hint": "a shop",
+          "target": "saltwick-peddler"
         }
       ]
     },
@@ -219,6 +240,131 @@
       "prose": [
         "The channel is colder than it looks and a great deal faster. {player.name} manages three strides before it takes {their} feet, and a fourth before it takes everything else.",
         "The bell on Saltwick goes on ringing the turn of the tide. It is not a bell that expects to be thanked, and it is not thanked."
+      ]
+    },
+    {
+      "id": "saltwick-stone-crab",
+      "chapterId": "the-causeway",
+      "type": "fight",
+      "prose": [
+        "The crab does not so much block the way as hold a position. It raises one claw, then the other, with the air of an official consulting two forms.",
+        "{They} {v:have|has} dealt with worse. Possibly. The claws open and shut in a rhythm that is almost, but not quite, friendly."
+      ],
+      "fight": {
+        "monsterId": "stone-crab",
+        "onVictory": {
+          "sceneId": "saltwick-crab-won",
+          "effects": [
+            {
+              "type": "flag",
+              "flag": "crab-beaten",
+              "value": true
+            }
+          ]
+        },
+        "onFlee": {
+          "sceneId": "saltwick-crab-fled",
+          "effects": [
+            {
+              "type": "stat",
+              "stat": "nerve",
+              "delta": -1,
+              "note": "The crab’s opinion of {them} has been noted, and so has {their} own. It costs {them} a point of nerve."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "saltwick-crab-won",
+      "chapterId": "the-causeway",
+      "type": "narrative",
+      "prose": [
+        "The crab withdraws into the channel with great dignity and a noticeable lack of haste. The locker, abandoned, ticks as the metal cools.",
+        "It is, {player.name} reflects, a good deal easier to be brave when the other party has gone."
+      ],
+      "choices": [
+        {
+          "text": "Return to the post",
+          "target": "saltwick-midway"
+        }
+      ]
+    },
+    {
+      "id": "saltwick-crab-fled",
+      "chapterId": "the-causeway",
+      "type": "narrative",
+      "prose": [
+        "{They} {v:back|backs} away from the post with {their} hands where the crab can see them. The crab does not pursue. It does not need to.",
+        "From a safe distance, the locker looks smaller and the tide a little louder."
+      ],
+      "choices": [
+        {
+          "text": "Return to the post, with dignity",
+          "target": "saltwick-midway"
+        }
+      ]
+    },
+    {
+      "id": "saltwick-peddler",
+      "chapterId": "the-causeway",
+      "type": "shop",
+      "prose": [
+        "The peddler sells from a skiff that has not moved in some time, and from a crate that has never been opened in daylight. Everything on it is damp, and nothing on it is apologetic.",
+        "“Tonic, tackle, a hat,” the peddler says, in the voice of someone reading a list they wrote themselves. “And I’ll take what you’ve got, if it’s worth the bother.”"
+      ],
+      "shop": {
+        "stock": [
+          {
+            "itemId": "brine-tonic",
+            "price": 5
+          },
+          {
+            "itemId": "ship-biscuit",
+            "price": 3
+          },
+          {
+            "itemId": "tarred-souwester",
+            "price": 4
+          },
+          {
+            "itemId": "oilskin-coat",
+            "price": 10
+          }
+        ],
+        "leaveSceneId": "saltwick-midway"
+      }
+    },
+    {
+      "id": "saltwick-crate",
+      "chapterId": "the-causeway",
+      "type": "narrative",
+      "prose": [
+        "A crate has fetched up against a marker, lid sprung, packed in straw and apparently forgotten by everyone who matters.",
+        "It is the sort of thing that is either somebody’s livelihood or somebody’s joke."
+      ],
+      "choices": [
+        {
+          "text": "Look inside",
+          "target": "$return",
+          "effects": [
+            {
+              "type": "item",
+              "itemId": "ship-biscuit",
+              "change": "give",
+              "note": "Under the straw {they} {v:find|finds} a ship’s biscuit, as hard and patient as ever."
+            },
+            {
+              "type": "flag",
+              "flag": "found-crate",
+              "value": true
+            }
+          ]
+        },
+        {
+          "text": "Leave it for the tide",
+          "target": "$return"
+        }
       ]
     }
   ]

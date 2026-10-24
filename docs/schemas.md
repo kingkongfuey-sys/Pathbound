@@ -105,13 +105,45 @@ worn gear counts as held, so the pickup stays hidden whether the item is in the 
 continuing to the choice's real target. A discovery or flavor scene must be a narrative scene of that chapter,
 must send every choice to `$return` (resume the interrupted route), and may not be linked from anywhere else.
 
+## How a fight plays
+
+A `fight` scene shows its `prose` as the opening, then the duel. Victory goes to `onVictory.sceneId` (effects applied
+first), flight to `onFlee.sceneId`, defeat to the `onDefeat` death ending or `defaultDeath`. Write the victory and flee
+scenes as ordinary narrative scenes; the round-by-round numbers and the spoils are told by the app above them.
+A `fight` entry in an encounter pool has no prose of its own (the app writes one neutral line), resumes the
+interrupted route on victory, and on flight applies its `fleeEffects` first. Rules a monster author can use:
+
+- `styleTendencies` are weights, not secrets: a monster that guards 5 of 8 times rewards a player who learns it,
+  and a hero's wits let them read it some of the time.
+- `damage` is the foe's blow before the hero's defense (never reduced below 1). The hero's blow is attack + 1 + 0 to 2.
+- A monster skill fires when the foe's stance for the round fits and it is off cooldown; a `heal` skill waits until the
+  foe is hurt. `cooldown` is rounds of waiting after use.
+- `lootTable`: gold between `min` and `max`, then one item chosen by weight (`noneWeight` is the chance of nothing).
+- Fleeing always lands a small parting blow (the foe's `damage.min` less defense, at least 1, never fatal), so make
+  `onFlee.effects` the story's price for running, not the only one.
+
 ## What the validator enforces beyond the schemas
 
 Every id points at something that exists and is unique; every item is obtainable (starting gear, a `give` effect,
 a loot table or a shop); every monster is used; every lore entry is unlocked; every flag that is read is set
 somewhere; text tokens parse; every scene is reachable from `start` (death endings and encounter scenes have
-their own rules); no reachable scene is a trap (each has an always-available path to an ending); `$return` appears
+their own rules); every fight scene is reached from somewhere and leads onward; no reachable scene is a trap (each has an always-available path to an ending); `$return` appears
 only in encounter scenes.
+
+## Growth, shops and colours
+
+Experience: a foe is worth `(hp + damage.max * 2) * (boss ? 2 : 1)`. Level thresholds are 20, 50, 90, 140 (levels 2 to 5);
+level 5 is the cap. Each level adds 3 HP, plus 1 attack on even levels or 1 defense on odd levels. These are engine rules
+(`src/engine/growth.ts`), not content.
+
+Shops: a `shop` scene lists `stock` (item id and price, in story order, never exhausted) and `leaveSceneId`. A player buys at
+the stock price and sells a carried item at `floor(value / 2)`. The validator requires every price to be at least
+`floor(value / 2)` and no item to be stocked twice.
+
+Theme colours: `prose`, `choices`, `statsBar` and `combatLog` must reach 4.5 to 1 against `background`; `accent` must reach 3 to 1.
+
+Discoveries: an encounter-pool entry that points at a scene; the scene returns to the route with `$return`. Give it a
+`conditions` entry on a flag (set by the scene) to make it happen once.
 
 ## Beyond the original spec
 

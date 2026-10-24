@@ -84,6 +84,31 @@
       },
       "value": 3,
       "purchasable": true
+    },
+    {
+      "id": "gull-feather-charm",
+      "name": "Gull-feather charm",
+      "flavor": "A grey feather on a knotted cord, still faintly smug.",
+      "codexEntry": "Wreckers tie one of these to a belt and swear it lets them see a dive before it starts. The gulls are said to resent the practice, which proves nothing either way.",
+      "type": "trinket",
+      "modifiers": {
+        "wits": 1
+      },
+      "value": 0,
+      "purchasable": false
+    },
+    {
+      "id": "ship-biscuit",
+      "name": "Ship’s biscuit",
+      "flavor": "Hard enough to be a weapon, if only it were any heavier.",
+      "codexEntry": "Baked once, dried twice and forgiven never. Sailors say it keeps for years, which is not the same as saying it improves.",
+      "type": "consumable",
+      "use": {
+        "kind": "heal",
+        "amount": 3
+      },
+      "value": 2,
+      "purchasable": true
     }
   ]
 }
