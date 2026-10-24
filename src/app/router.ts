@@ -20,6 +20,12 @@ export class Navigator {
     this.show();
   }
 
+  /** Replace the whole stack with one screen. For moving from the first screen (or an error) to home. */
+  reset(build: ScreenBuilder): void {
+    this.stack.length = 0;
+    this.push(build);
+  }
+
   /** Go back one screen. Returns false when already on the first screen (nothing to pop). */
   pop(): boolean {
     if (this.guard?.()) return true;

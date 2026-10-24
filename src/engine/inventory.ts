@@ -21,6 +21,7 @@ function itemOf(loaded: LoadedStory, itemId: string): Item {
 
 function requireOpen(run: RunState): void {
   if (run.status === 'ended') throw new Error('This entry is closed; nothing in the satchel can change now.');
+  if (run.combat) throw new Error('The satchel is shut while a fight is on; use the fight\'s own items.');
 }
 
 function requireCarried(run: RunState, item: Item): void {

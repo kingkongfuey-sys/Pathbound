@@ -1,6 +1,6 @@
 {
   "name": "pathbound",
-  "version": "0.3.0",
+  "version": "0.7.0",
   "private": true,
   "type": "module",
   "description": "Pathbound, a text-first RPG kept as a ledger. Capacitor Android app.",
@@ -9,9 +9,10 @@
     "build": "tsc --noEmit && vite build",
     "validate": "node --experimental-strip-types --no-warnings scripts/validate.mjs && tsc --noEmit",
     "sync": "npm run build && cap sync android",
-    "selftest": "node --experimental-strip-types --no-warnings scripts/selftest.mjs"
+    "selftest": "node --experimental-strip-types --no-warnings scripts/selftest.mjs && node --experimental-strip-types --no-warnings scripts/savetest.mjs"
   },
   "dependencies": {
+    "@capacitor-community/sqlite": "^8.1.1",
     "@capacitor/android": "^8.5.3",
     "@capacitor/app": "^8.1.2",
     "@capacitor/core": "^8.5.3",

@@ -2,6 +2,7 @@
 // Everything is exact (HP 12/20); equipment is already folded into `stats` and `maxHp`.
 import type { LoadedStory, StatBlock } from '../content/types.ts';
 import { effectiveStats } from './conditions.ts';
+import { xpToNext } from './growth.ts';
 import type { RunState } from './types.ts';
 
 export interface Status {
@@ -13,6 +14,10 @@ export interface Status {
   chapter: { index: number; count: number; title: string };
   /** Base stats plus equipment. */
   stats: StatBlock;
+  level: number;
+  xp: number;
+  /** Experience still needed for the next level, or null at the top. */
+  xpToNext: number | null;
 }
 
 export function statusOf(loaded: LoadedStory, run: RunState): Status {
@@ -30,5 +35,8 @@ export function statusOf(loaded: LoadedStory, run: RunState): Status {
     currencySymbol: loaded.story.currency.symbol,
     chapter: { index, count: chapters.length, title: chapter.title },
     stats,
+    level: run.level,
+    xp: run.xp,
+    xpToNext: xpToNext(run),
   };
 }

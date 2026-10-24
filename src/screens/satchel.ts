@@ -1,40 +1,19 @@
 // The satchel: a full page of the hero's belongings, set out like a ledger. Four fixed slots (weapon, head, body,
 // trinket) are listed under "Worn", the backpack under "Carried"; each line is the item's name, a row of dotted
 // leader, and the one thing that can be done with it. Changes go straight into the shared session, and each
-// one is also written into the run's notes, so the next page of the story records it. A closed entry can be read
-// but not changed.
+// one is also written into the run's notes, so the next page of the story records it, and saved at once. A closed
+// entry can be read but not changed.
+import { commit } from '../app/book.ts';
 import { applyTheme } from '../app/theme.ts';
 import type { Navigator } from '../app/router.ts';
 import type { Session } from '../app/session.ts';
 import { voice } from '../copy/voice.ts';
-import type { Item, LoadedStory, StatName } from '../content/types.ts';
+import type { LoadedStory } from '../content/types.ts';
 import { addNote, backpackOf, equip, SLOT_ORDER, unequip, useItem } from '../engine/inventory.ts';
 import { statusOf } from '../engine/status.ts';
 import { el, link } from '../ui/dom.ts';
+import { itemEntry } from '../ui/itemText.ts';
 import { page, pageHead } from '../ui/page.ts';
-
-const STAT_ORDER: StatName[] = ['hp', 'attack', 'defense', 'wits', 'nerve'];
-
-/** "Attack +2, Wits +1." or "Restores 6 HP." or nothing, followed by the item's flavour line. */
-function describe(item: Item): string {
-  const parts: string[] = [];
-  const modifiers = item.modifiers ?? {};
-  for (const stat of STAT_ORDER) {
-    const delta = modifiers[stat];
-    if (delta) parts.push(voice.satchel.change(voice.statNames[stat], delta));
-  }
-  const effect = parts.length > 0 ? `${parts.join(', ')}.` : item.use ? voice.satchel.heals(item.use.amount) : '';
-  return effect === '' ? item.flavor : `${effect} ${item.flavor}`;
-}
-
-function entry(name: string, item: Item | null, action: HTMLElement | null): HTMLElement {
-  return el(
-    'li',
-    'entry',
-    el('div', 'entry-head', el('span', item ? 'entry-name' : 'entry-name entry-empty', name), action ? el('span', 'leader') : null, action),
-    item ? el('p', 'entry-detail', describe(item)) : null,
-  );
-}
 
 export function satchelScreen(loaded: LoadedStory, session: Session) {
   return (nav: Navigator): HTMLElement => {
@@ -48,9 +27,10 @@ export function satchelScreen(loaded: LoadedStory, session: Session) {
     const record = (text: string): void => {
       line = text;
       session.run = addNote(session.run, text);
+      commit(loaded, session);
       refresh();
     };
-    const open = (): boolean => session.run.status === 'playing';
+    const open = (): boolean => session.run.status === 'playing' && session.run.combat === null;
 
     const wornList = (): HTMLElement =>
       el(
@@ -71,7 +51,7 @@ export function satchelScreen(loaded: LoadedStory, session: Session) {
             'li',
             'slot',
             el('p', 'slot-label', voice.satchel.slots[slot]),
-            el('ul', 'entries', entry(item ? item.name : voice.satchel.slotEmpty, item, action)),
+            el('ul', 'entries', itemEntry(item ? item.name : voice.satchel.slotEmpty, item, action)),
           );
         }),
       );
@@ -104,7 +84,7 @@ export function satchelScreen(loaded: LoadedStory, session: Session) {
               record(result.replacedId === null ? said : `${said} ${voice.satchel.returned(itemName(result.replacedId))}`);
             }, 'link-small');
           }
-          return entry(count > 1 ? `${item.name} ${voice.satchel.count(count)}` : item.name, item, action);
+          return itemEntry(count > 1 ? `${item.name} ${voice.satchel.count(count)}` : item.name, item, action);
         }),
       );
     };
@@ -115,7 +95,8 @@ export function satchelScreen(loaded: LoadedStory, session: Session) {
         el('div', 'back-row', link(voice.satchel.close, () => nav.pop(), 'link-quiet')),
         pageHead(voice.satchel.heading),
         el('p', 'reckoning', voice.satchel.reckoning(status.hp, status.maxHp, status.stats)),
-        el('p', 'satchel-line', open() ? line : voice.satchel.closed),
+        el('p', 'reckoning', voice.satchel.standing(status.level, status.xp, status.xpToNext)),
+        el('p', 'satchel-line', open() ? line : session.run.combat ? voice.satchel.inFight : voice.satchel.closed),
         el('h2', 'ledger-label', voice.satchel.worn),
         wornList(),
         el('h2', 'ledger-label', voice.satchel.carried),

@@ -1,12 +1,18 @@
 // Hero creation: pick one of the story's three archetypes, name the hero, and (if the archetype allows) choose
-// pronouns. The name is only ever shown as text, never parsed, so any name is safe. From here a run begins.
+// pronouns, in the story's own colours. The name is only ever shown as text, never parsed, so any name is safe. From here a run begins, and its
+// first page is saved before the reader sees it. If another entry is still open, beginning closes it unfinished,
+// so the reader is asked first.
+import { currentEntry, keepUnreadable, startEntry } from '../app/book.ts';
+import { showFatal } from '../app/fatal.ts';
 import type { Navigator } from '../app/router.ts';
 import { newSession } from '../app/session.ts';
+import { applyTheme } from '../app/theme.ts';
 import { voice } from '../copy/voice.ts';
 import type { LoadedStory, PronounSetId } from '../content/types.ts';
 import { startRun } from '../engine/play.ts';
 import { makeSeed } from '../engine/rng.ts';
 import { el, link } from '../ui/dom.ts';
+import { questionCard } from '../ui/overlay.ts';
 import { backLink, page, pageHead } from '../ui/page.ts';
 import { playScreen } from './play.ts';
 
@@ -14,6 +20,7 @@ const PRONOUN_IDS: PronounSetId[] = ['they', 'she', 'he'];
 
 export function heroScreen(loaded: LoadedStory) {
   return (nav: Navigator): HTMLElement => {
+    nav.onLeave(applyTheme(loaded.story));
     const archetypes = loaded.story.archetypes;
     let selected = archetypes[0];
     if (!selected) throw new Error('The story has no archetypes.');
@@ -92,6 +99,26 @@ export function heroScreen(loaded: LoadedStory) {
     };
     refresh();
 
+    const section = page();
+    let question: HTMLElement | null = null;
+    const closeQuestion = (): void => {
+      question?.remove();
+      question = null;
+    };
+
+    /** Write the entry down and open its first page. An unreadable entry still open is put in the drawer first. */
+    const write = (name: string): void => {
+      closeQuestion();
+      keepUnreadable()
+        .then(() => {
+          const run = startRun(loaded, { archetypeId: selected?.id ?? '', name, pronouns, seed: makeSeed() });
+          const session = newSession(run);
+          startEntry(loaded, session);
+          nav.push(playScreen(loaded, session));
+        })
+        .catch((reason: unknown) => showFatal(document.getElementById('app') as HTMLElement, reason));
+    };
+
     const begin = link(voice.hero.begin, () => {
       const name = input.value.trim();
       if (name === '') {
@@ -99,14 +126,20 @@ export function heroScreen(loaded: LoadedStory) {
         input.focus();
         return;
       }
-      const run = startRun(loaded, { archetypeId: selected?.id ?? '', name, pronouns, seed: makeSeed() });
-      nav.push(playScreen(loaded, newSession(run)));
+      const open = currentEntry();
+      if (open && !open.closed) {
+        question = questionCard({ lead: voice.hero.openLead, yes: voice.hero.openYes, no: voice.hero.openNo, onYes: () => write(name), onNo: closeQuestion });
+        section.append(question);
+      } else {
+        write(name);
+      }
     });
 
     const nameLabel = el('label', 'field-label', voice.hero.nameLabel);
     nameLabel.htmlFor = 'hero-name';
 
-    return page(
+    const column = section.firstElementChild as HTMLElement;
+    column.append(
       backLink(nav),
       pageHead(voice.hero.heading),
       el('p', 'prose', voice.hero.lead),
@@ -115,5 +148,11 @@ export function heroScreen(loaded: LoadedStory) {
       pronounBlock,
       el('div', 'begin-row', begin),
     );
+    nav.setGuard(() => {
+      if (!question) return false;
+      closeQuestion();
+      return true;
+    });
+    return section;
   };
 }

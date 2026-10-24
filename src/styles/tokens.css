@@ -13,6 +13,8 @@
   --oxblood-wet: #8e2e35;
   /* Ink for the stats strip; a story's statsBar colour replaces it while that story is read. */
   --stats-bar: var(--ink);
+  /* Ink for the account of a fight; a story's combatLog colour replaces it while that story is read. */
+  --combat-log: var(--ink-faded);
 
   --font-display: 'IM Fell French Canon', 'Iowan Old Style', Georgia, serif;
   --font-text: 'IM Fell English', 'Iowan Old Style', Georgia, serif;

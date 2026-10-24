@@ -1,4 +1,4 @@
-// Seeded randomness. Every run has one seed; each kind of roll (encounters now; combat and loot later) draws
+// Seeded randomness. Every run has one seed; each kind of roll (encounters, combat, a stream for what the hero can read in a foe, and loot) draws
 // from its own named stream derived from that seed. Separate streams mean changing how much one system rolls
 // never shifts the results of another, and the same seed with the same choices always plays out the same way.
 // The state of every stream lives in the run, so a saved run resumes mid-sequence. Math.random is never used.
@@ -50,9 +50,27 @@ export function drawInt(run: RunState, stream: string, max: number): [number, Ru
   return [Math.floor(value * max), { ...run, rng: { ...run.rng, [stream]: state } }];
 }
 
+/** Pick an index with probability proportional to `weights` (non-negative whole numbers, not all zero). */
+export function drawWeighted(run: RunState, stream: string, weights: number[]): [number, RunState] {
+  const total = weights.reduce((sum, w) => sum + w, 0);
+  if (total < 1) throw new Error('drawWeighted needs at least one positive weight.');
+  let [pick, next] = drawInt(run, stream, total);
+  for (let i = 0; i < weights.length; i += 1) {
+    const weight = weights[i] ?? 0;
+    if (pick < weight) return [i, next];
+    pick -= weight;
+  }
+  throw new Error('drawWeighted ran past its weights; this cannot happen.');
+}
+
 /** A fresh seed for a new run. The only place unseeded randomness is allowed, and it is stored in the run. */
 export function makeSeed(): string {
   const bytes = new Uint32Array(2);
   crypto.getRandomValues(bytes);
   return Array.from(bytes, (n) => n.toString(16).padStart(8, '0')).join('');
+}
+
+/** An id for a run in the record book. Kept apart from the seed so two runs given the same seed never collide. */
+export function makeRunId(): string {
+  return `${Date.now().toString(36)}-${makeSeed().slice(0, 8)}`;
 }

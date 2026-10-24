@@ -638,3 +638,221 @@
 .page-foot {
   height: calc(var(--safe-bottom) + var(--line) * 2);
 }
+
+/* ---- the fight ---- */
+.combat-panel {
+  padding-bottom: calc(var(--safe-bottom) + var(--line));
+}
+.foe-line {
+  display: flex;
+  align-items: baseline;
+  min-height: 44px;
+  border-top: 1px solid var(--ink);
+}
+.foe-name {
+  font-family: var(--font-display);
+  font-size: 26px;
+  line-height: 1.2;
+}
+.foe-hp {
+  font-size: 24px;
+  font-variant-numeric: lining-nums;
+}
+.round-label {
+  margin: 0;
+  font-size: 15px;
+  font-style: italic;
+  color: var(--ink-faded);
+}
+.tell {
+  margin: 2px 0 var(--line);
+  font-size: 19px;
+  font-style: italic;
+  line-height: 1.45;
+  color: var(--ink-faded);
+}
+.stance-mark {
+  flex: none;
+  align-self: center;
+  margin-right: 12px;
+}
+.stance-stroke {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.stance-drop {
+  fill: var(--ink);
+}
+.option-off {
+  margin: 0;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: 21px;
+  font-style: italic;
+  line-height: 1.35;
+  color: var(--ink-faded);
+  opacity: 0.7;
+}
+.link.option[aria-pressed='true'] .link-text {
+  text-decoration-thickness: 2px;
+  text-decoration-color: var(--oxblood);
+}
+.combat-note {
+  min-height: calc(var(--line) * 1.25);
+  margin: 8px 0 0;
+  font-size: 17px;
+  font-style: italic;
+  color: var(--oxblood);
+}
+
+/* The account: a ruled column of rounds, the round number in the margin, newest at the foot. */
+.account {
+  max-height: 38vh;
+  max-height: 38dvh;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+  border-top: 1px solid var(--rule);
+  color: var(--combat-log);
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+.account-flat {
+  max-height: none;
+  overflow: visible;
+}
+.account-entry {
+  display: flex;
+  gap: 14px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.account-round {
+  flex: none;
+  width: 26px;
+  font-family: var(--font-display);
+  font-size: 24px;
+  line-height: 1.1;
+  text-align: right;
+  color: var(--oxblood);
+}
+.account-lines {
+  flex: 1;
+  min-width: 0;
+}
+.account-line {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.45;
+}
+.asides .account {
+  margin-bottom: 10px;
+}
+
+/* ---- the open entry (home) ---- */
+.home-lower {
+  margin-top: auto;
+}
+.home-lower .choices {
+  margin-top: 0;
+}
+.open-line {
+  margin: 0 0 8px;
+  font-size: 17px;
+  font-style: italic;
+  line-height: 1.4;
+  color: var(--ink-faded);
+}
+
+/* ---- setting the entry down, or abandoning it ---- */
+.leave-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.leave-row .link {
+  width: auto;
+}
+.aside-trouble {
+  color: var(--oxblood);
+}
+
+/* ---- the closing account ---- */
+.closing-tally {
+  margin: calc(var(--line) * 0.75) 0 calc(var(--line) * 0.25);
+}
+.closing-rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.closing-row {
+  display: flex;
+  align-items: baseline;
+  min-height: 44px;
+  padding: 4px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.closing-label {
+  flex: none;
+  font-size: 18px;
+  font-style: italic;
+  color: var(--ink-faded);
+}
+.closing-value {
+  flex: none;
+  max-width: 62%;
+  font-size: 20px;
+  line-height: 1.25;
+  text-align: right;
+  font-variant-numeric: lining-nums;
+}
+.closing-kept {
+  margin-top: var(--line);
+}
+
+/* ---- ledger history ---- */
+.entry-tag {
+  flex: none;
+  font-size: 17px;
+  font-style: italic;
+  color: var(--ink-faded);
+}
+.entry-tag-dark {
+  color: var(--oxblood);
+}
+
+/* ---- shops ---- */
+.shop-panel {
+  padding-bottom: calc(var(--safe-bottom) + var(--line));
+}
+.deal-note {
+  min-height: calc(var(--line) * 1.25);
+  margin: 6px 0 0;
+  font-size: 17px;
+  font-style: italic;
+  line-height: 1.45;
+  color: var(--ink-faded);
+}
+.link-dim {
+  opacity: 0.55;
+}
+
+/* ---- the codex and house rules ---- */
+.codex-menu-row .link {
+  min-height: 44px;
+}
+.codex-detail {
+  margin: 4px 0 var(--line);
+}
+.codex-detail[hidden] {
+  display: none;
+}
+.codex-sample {
+  min-height: calc(var(--line) * 2);
+}

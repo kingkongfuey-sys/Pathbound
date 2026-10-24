@@ -3,7 +3,7 @@
 // that already uses the tokens picks them up with no extra code.
 import type { Story } from '../content/types.ts';
 
-const VARIABLES = ['--paper', '--ink', '--choice', '--oxblood', '--ink-faded', '--stats-bar'] as const;
+const VARIABLES = ['--paper', '--ink', '--choice', '--oxblood', '--ink-faded', '--stats-bar', '--combat-log'] as const;
 
 export function applyTheme(story: Story): () => void {
   const root = document.documentElement;
@@ -13,6 +13,7 @@ export function applyTheme(story: Story): () => void {
   root.style.setProperty('--choice', colors.choices);
   root.style.setProperty('--oxblood', colors.accent);
   root.style.setProperty('--stats-bar', colors.statsBar);
+  root.style.setProperty('--combat-log', colors.combatLog);
   root.style.setProperty('--ink-faded', `color-mix(in srgb, ${colors.prose} 70%, ${colors.background})`);
   root.dataset.feel = typefaceFeel;
   return () => {

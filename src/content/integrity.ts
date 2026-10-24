@@ -1,5 +1,6 @@
 // Cross-file checks that a JSON schema can't express: every id points at something that exists, every defined
-// thing is used, no scene is orphaned, trapped or a dead end. Runs after the schemas pass (so shapes are known
+// thing is used, no scene is orphaned, trapped or a dead end, no shop is a money machine, and every theme colour is readable
+// against the background. Runs after the schemas pass (so shapes are known
 // good) and is shared by the app loader and `npm run validate`.
 import { tokenProblems } from './tokens.ts';
 import type {
@@ -22,6 +23,30 @@ export interface Candidate {
 }
 
 const SLOTS = ['weapon', 'head', 'body', 'trinket'];
+
+/** WCAG relative luminance of a #rrggbb colour. */
+function luminance(hex: string): number {
+  const channel = (start: number): number => {
+    const c = parseInt(hex.slice(start, start + 2), 16) / 255;
+    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  };
+  return 0.2126 * channel(1) + 0.7152 * channel(3) + 0.0722 * channel(5);
+}
+
+/** WCAG contrast ratio between two #rrggbb colours, 1 to 21. */
+export function contrastRatio(a: string, b: string): number {
+  const [light, dark] = [luminance(a), luminance(b)].sort((x, y) => y - x) as [number, number];
+  return (light + 0.05) / (dark + 0.05);
+}
+
+/** The smallest contrast each colour role must have against the story's background, so a palette can never make the text unreadable. */
+const READABLE: Array<{ role: 'prose' | 'choices' | 'statsBar' | 'combatLog' | 'accent'; least: number }> = [
+  { role: 'prose', least: 4.5 },
+  { role: 'choices', least: 4.5 },
+  { role: 'statsBar', least: 4.5 },
+  { role: 'combatLog', least: 4.5 },
+  { role: 'accent', least: 3 },
+];
 
 export function checkIntegrity(c: Candidate): ContentProblem[] {
   const out: ContentProblem[] = [];
@@ -99,6 +124,13 @@ export function checkIntegrity(c: Candidate): ContentProblem[] {
   };
 
   // ---- story.json ----
+  const background = story.theme.colors.background;
+  for (const { role, least } of READABLE) {
+    const ratio = contrastRatio(story.theme.colors[role], background);
+    if (ratio < least) {
+      add(paths.story, `theme.colors.${role}`, `contrast against the background is ${ratio.toFixed(1)} to 1; it needs at least ${least} to 1 to be readable`);
+    }
+  }
   const start = scenes.get(story.start);
   if (!start) add(paths.story, 'start', `the start scene "${story.start}" doesn't exist`);
   else if (start.scene.type === 'ending') add(paths.story, 'start', `the start scene "${story.start}" is an ending`);
@@ -261,6 +293,9 @@ export function checkIntegrity(c: Candidate): ContentProblem[] {
         else {
           obtainable.add(entry.itemId);
           if (!item.purchasable) add(file, sw, `the item "${entry.itemId}" is marked purchasable: false`);
+          const buyBack = Math.floor(item.value / 2);
+          if (entry.price < buyBack) add(file, sw, `"${entry.itemId}" costs ${entry.price}, but the stall pays ${buyBack} for one (half its value of ${item.value}), so it could be bought and sold for profit`);
+          if (scene.shop.stock.findIndex((e) => e.itemId === entry.itemId) !== i) add(file, sw, `"${entry.itemId}" is stocked twice in this shop`);
         }
       });
       if (needScene(file, `${where}.shop.leaveSceneId`, scene.shop.leaveSceneId)) {

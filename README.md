@@ -3,7 +3,7 @@
 A text-first RPG kept as a ledger. Android app built with Capacitor; every word of story is data, every
 word of chrome is in one voice. Personal project, never published, fully offline.
 
-Current stage: **3 of 8** (stats strip, the satchel, equipment and items in scenes, on top of the Stage 2 content pipeline and engine). Build plan: see the stage report.
+Current stage: **7 of 8** (the codex and House rules: bestiary, items, lore, tales and run history unlocking as met, and a writing-speed setting; on top of Stage 6 growth, Stage 5 saves and Stage 4 combat). Build plan: see the stage report.
 
 ## Getting the app onto a phone
 
@@ -17,7 +17,7 @@ No local Android tools are needed. To preview in a desktop browser instead: `npm
 
 **Voice: the Weary Chronicler.** A tired scribe keeping your record. Dry, wry, quietly fond. Plain sentences,
 sentence case, no exclamation marks, no emoji, no apologies, no "welcome", no "loading". Menus are named like
-a ledger: *Begin an entry*, *The ledger*, *House rules* (settings, Stage 7). Dying closes an entry. All UI copy
+a ledger: *Begin an entry*, *The ledger*, *House rules* (settings). Dying closes an entry. All UI copy
 lives in `src/copy/voice.ts`; `npm run validate` rejects banned phrases, exclamation marks, emoji and straight
 apostrophes in it.
 
@@ -50,6 +50,9 @@ centre and burnt radial edges, painted once on a fixed layer behind the content 
 - *Tally marks*: the chapter indicator in the stats strip is drawn as tally marks, one stroke per chapter, every
   fifth slanting across the four before it (`src/ui/tally.ts`). Strokes up to the current chapter are inked, the
   rest faint, so the reader can see how far the story runs.
+- *Stance marks and the account*: in a fight each stance carries a small hand-inked mark (a slash with a pooled drop, a
+  shield, a looping hook; `src/ui/stanceMark.ts`), and the combat log is "the account": ruled entries with the round
+  number in oxblood in the margin (`src/ui/combatLog.ts`).
 - *Dotted leaders*: in the satchel, each item sits on a ledger line, name, row of dots, action, the way an account
   book ties a name to its figure. The dots are baseline-aligned (`.leader` in `screens.css`).
 
@@ -58,19 +61,26 @@ centre and burnt radial edges, painted once on a fixed layer behind the content 
 ```
 src/
   main.ts            entry: error handler, font wait, home screen, Android back button
-  app/               router.ts (screen stack), session.ts (the run as screens hold it), fatal.ts (error screen),
-                     theme.ts (story colours), reader.ts
+  app/               router.ts (screen stack), session.ts (the run as screens hold it), settings.ts (house rules as data), codex.ts (what the codex shows), book.ts (the record book as the
+                     app uses it: write queue, resume, history), fatal.ts (error screen), theme.ts (story colours)
+  save/              types, snapshot (save envelope, integrity gates), record (history row, unlocks, what a save writes),
+                     sqliteStore (all the SQL), capacitorDriver (the plugin glue), documentStore (browser preview only)
   content/           types, token grammar, schema validators, integrity checks, validate.ts, loader.ts
-  engine/            rng, run state, conditions, effects, play (the narrative loop), inventory (equip, use),
-                     status (numbers for the strip); no DOM
+  engine/            rng, run state, conditions, effects, play (the narrative loop), combat (the duel), inventory
+                     (equip, use), growth (experience and levels), shop (buy and sell), status (numbers for the strip); no DOM
   copy/voice.ts      all UI copy
-  screens/           one file per screen (home, shelf, hero, play, satchel, ledger, contentError)
-  ui/                dom.ts, page.ts (page frame), inkRule.ts, typewriter.ts, tally.ts, statsStrip.ts
+  screens/           one file per screen (home, shelf, hero, play, satchel, closing, ledger, codex, entries, houseRules, resumeProblem, bookTrouble,
+                     contentError)
+  ui/                dom.ts, page.ts (page frame), inkRule.ts, typewriter.ts, tally.ts, statsStrip.ts,
+                     stanceMark.ts, combatLog.ts (the account), combatPanel.ts (the fight panel), shopPanel.ts (the stall),
+                     itemText.ts (one way of describing an item, shared by satchel and stall)
   styles/            fonts, tokens, paper (texture), screens (layout and type)
 content/             schemas (content/schema) and stories (content/stories/<id>); see docs/schemas.md
 docs/schemas.md      the content format, token grammar and validator rules
+docs/saves.md        the record book: tables, save format, the integrity gates, recovery
 scripts/validate.mjs voice check plus validation of every story
 scripts/selftest.mjs checks that the validator catches broken content and that the engine behaves
+scripts/savetest.mjs checks the record book: the real SQL (Node's built-in SQLite), integrity gates, save/reload soak
 android/             Capacitor Android project (committed; generated bits are git-ignored)
 .github/workflows/   debug APK build
 ```
@@ -133,4 +143,81 @@ cannot live in a screen's local variables: going to the satchel and back would h
 session holds the run plus a turn counter; coming back, a page already read is shown in full at the same scroll
 position instead of being typed out again. Stage 5 saves the run from here.
 
-Subsystems for saves, combat and shops are documented here as they are built in their own stages.
+**Combat (`engine/combat.ts`, `ui/combatPanel.ts`).** A duel is rock-paper-scissors with the foe's hand already dealt.
+At the start of every round the engine draws the foe's stance from its `styleTendencies` and stores it in the run
+(`intent`); the hero's wits may let them read it (`tell`: 10% per point of wits, capped at 80%, and never a lie). Because
+the stance is fixed before the hero chooses, closing and reopening the app cannot reroll it, and a saved fight is always
+a whole round. Strike beats feint, feint beats guard, guard beats strike. The winner lands a blow, a tie costs both sides
+half; a round spent on an item leaves the hero open, and only a guarding foe cannot punish that. Blows are exact:
+hero = attack + 1 + a 0 to 2 roll; foe = its damage range; defense takes points off (never below 1), skills turn some
+aside. Skills ride on a stance (or any stance, armed first) and then cool down for their stated rounds; foes use theirs
+when their stance fits, with no extra dice. Randomness uses three named streams (`combat`, `read`, `loot`), always
+drawn in the same order whatever happens, so identical seed and actions replay identically and a fight never shifts the
+encounter stream. Flight is always open: the foe lands one parting blow (its weakest hit less defense, at least 1, never
+enough to kill), then the story's own flee consequences apply. If hero and foe fall together the hero's entry is the
+one that closes. A fight's whole state is plain data in the run, `combatProblem` checks it for soundness (Stage 5 runs
+it on every loaded save), and the satchel is shut while a fight is on so gear can't be swapped for free.
+
+**Spoils.** Victory draws gold and one item (or nothing) from the monster's loot table on the `loot` stream and tells it
+at the top of the next page with the final round. Loot was pulled forward from Stage 6 because a fight that paid
+nothing would have been a stub; XP, levels and shops remain Stage 6.
+
+**The record book (`save/`, `app/book.ts`).** One SQLite database holds four things, and every save changes them in a
+single transaction: the open entry (the whole run as JSON, in a single-slot table so there is never doubt which run
+resumes), a history row (exact figures, so the ledger lists runs without loading stories), codex unlocks (tale, foes,
+items, lore: only ever added, never removed, which is why a death keeps everything earned on the way to it), and a drawer
+for saves that could not be read. A crash leaves the book at the old state or the new one. The design is write-behind but
+strictly ordered: a screen changes the run and calls `commit`; the write joins one queue, so two saves can't land out of
+order and the page never waits on the disk. Resuming, the ledger and the closing account wait for the queue first. All the
+SQL sits in `sqliteStore.ts`, written against a four-line driver interface so the same statements run on the phone (through
+the Capacitor plugin) and in the self-test (through Node). A desktop browser has no SQLite, so `documentStore.ts` keeps
+the same book as one JSON document there; the phone never uses it. Schema changes are numbered migrations; a book from a
+newer build is refused untouched.
+
+**Save integrity (`save/snapshot.ts`).** A save is an envelope: save-format number, app version, run. Reading one back
+passes four gates and stops at the first failure: is it from the future (newer save format, or made against newer story
+content), does it parse, is it the right shape, does it still make sense against the story (every id exists, gear fits its
+slot, HP is within the maximum, a closed entry's ending is one the story lists, a fight in progress passes `combatProblem`).
+A failure comes back as a verdict, never a crash, and leads to a screen that explains it; the only way forward is to set
+the entry aside, which keeps its text in the drawer. The same check guards every write, so a corrupt mid-fight state is
+refused before it can replace the last good save. Content that is merely older than the save is carried forward if it still
+fits. Bumping a story's `version` is therefore a decision: if the change could strand a save, write a migration.
+
+**Run history and unlocks.** The history row is created with the run and updated at every save, so an entry is in the ledger
+from its first page, however it ends: victory, death, abandoned (confirmed, or by beginning another entry over it), or lost
+(set aside). Unlocks are derived from the run at each save, and saves happen after every change, so nothing met can slip
+between two saves. The seed is stored in the save and in the history row (it is shown only in dev mode, Stage 8).
+
+**The codex (`screens/ledger.ts`, `codex.ts`, `entries.ts`, `app/codex.ts`).** "The ledger" is the codex's front page: the
+tales, the bestiary, items, lore, and the history of entries, each with how much is written. It reads the same
+`codex_unlocks` the saves already fill, so nothing new is recorded to make it work: unlocks are derived from the run at every
+save, only ever added, and survive death and abandonment. `codexOf` (pure, tested) works out, per story, what has been met in
+the story's own order and how many there are in all. A section lists only what has been met, by name, and merely counts the
+rest ("3 more are still unwritten"), so the codex gives nothing away. Entries open in place instead of becoming screens. An
+unlock under an id the story no longer defines is left out of the view and kept in the book.
+
+**House rules (`screens/houseRules.ts`, `app/settings.ts`).** Settings live in a `settings` table (schema 3) as plain text under
+a key. Reading them back never trusts them: `settingsFrom` falls back to the default for anything missing or unknown, so a bad
+value can't break a page. The one rule so far is writing speed (slow, steady, quick, instant), which feeds the typewriter; it
+takes effect at once, is written to the book, and previews itself by writing a sample line at the chosen pace. Stage 8's hidden
+dev switch goes in the same table.
+
+**The closing account (`screens/closing.ts`).** Victory and death end on the same page: dotted leaders from label to exact
+figure, the chapter reached as tally marks, and a line of what is new to the ledger. The run is finalised when its last page
+is saved, not when this page is read; reading it (or leaving it) only lets the entry stop being resumable.
+
+**Growth (`engine/growth.ts`).** Experience is plain arithmetic, no dice: a foe is worth its HP plus twice its heaviest blow
+(doubled for a boss), so what a fight is worth can be read off the bestiary. Thresholds are 20, 50, 90 and 140 for levels 2
+to 5, and five is the cap (experience still counts after it, nothing more is added). Each level adds 3 HP, and 1 attack on
+even levels or 1 defense on odd ones; the HP a level adds is healed at once, no more. The numbers live in one file so
+a story can be balanced by reading it. Levels are told in the account as "experience" and "level" lines, in the voice.
+
+**Shops (`engine/shop.ts`).** A stall is a scene of type `shop`; it has no choices, only a panel and one way out. Stock is
+never exhausted. You buy at the stock price and sell at half the item's value, rounded down, so buying and selling the same
+thing can never make money; the validator refuses a stall whose price is below what it would pay back. Worn gear is not
+sold (take it off first); items worth under 2 are not bought at all. Each deal is recorded in the account. Leaving carries
+only the deals to the next page, and nothing else.
+
+**Per-story colours.** `story.theme.colors` is applied by `app/theme.ts` while a story is played, and on the hero screen.
+The validator checks the contrast of every readable role against the background (4.5 to 1 for text, 3 to 1 for the accent),
+so a story cannot ship a palette that cannot be read.
