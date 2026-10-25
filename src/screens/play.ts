@@ -7,13 +7,14 @@
 // good and leads on to the closing account.
 import { abandonEntry, commit, currentSettings } from '../app/book.ts';
 import { showFatal } from '../app/fatal.ts';
-import { speedCps } from '../app/settings.ts';
+import { devEffective, speedCps } from '../app/settings.ts';
 import type { Navigator } from '../app/router.ts';
 import { applyTheme } from '../app/theme.ts';
 import type { Session } from '../app/session.ts';
 import { voice } from '../copy/voice.ts';
 import type { LoadedStory } from '../content/types.ts';
 import { choose, fleeFight, fightAction, leaveShop, viewOf } from '../engine/play.ts';
+import type { DevOptions } from '../engine/play.ts';
 import { buy, sell } from '../engine/shop.ts';
 import type { DealResult } from '../engine/shop.ts';
 import type { FightResult } from '../engine/play.ts';
@@ -29,6 +30,7 @@ import { statsStrip } from '../ui/statsStrip.ts';
 import { typewrite } from '../ui/typewriter.ts';
 import type { Typewriter } from '../ui/typewriter.ts';
 import { closingScreen } from './closing.ts';
+import { devScreen } from './dev.ts';
 import { satchelScreen } from './satchel.ts';
 
 export function playScreen(loaded: LoadedStory, session: Session) {
@@ -41,6 +43,12 @@ export function playScreen(loaded: LoadedStory, session: Session) {
     const section = page();
     const column = section.firstElementChild as HTMLElement;
     const fatal = (error: unknown): void => showFatal(document.getElementById('app') as HTMLElement, error);
+
+    /** What dev mode asks of the engine this moment: nothing at all unless the hidden switch is on. */
+    const devOptions = (): DevOptions => {
+      const now = currentSettings();
+      return { god: devEffective(now).god, ...(now.dev && session.devForce !== null ? { force: session.devForce } : {}) };
+    };
 
     const closeConfirm = (): void => {
       confirm?.remove();
@@ -74,6 +82,12 @@ export function playScreen(loaded: LoadedStory, session: Session) {
       nav.push(satchelScreen(loaded, session));
     };
 
+    const openDev = (): void => {
+      session.revealedTurn = session.turn;
+      session.scrollY = window.scrollY;
+      nav.push(devScreen(loaded, session));
+    };
+
     const refreshStrip = (): void => {
       column.querySelector('.strip')?.replaceWith(statsStrip(statusOf(loaded, session.run), openSatchel));
     };
@@ -85,11 +99,11 @@ export function playScreen(loaded: LoadedStory, session: Session) {
       if (!view) return;
       host.replaceChildren(
         combatPanel(loaded, view, status.maxHp, {
-          stance: (stance, skillId) => act(() => fightAction(loaded, session.run, skillId === undefined ? { kind: 'stance', stance } : { kind: 'stance', stance, skillId }), skillId !== undefined),
-          item: (itemId) => act(() => fightAction(loaded, session.run, { kind: 'item', itemId }), false),
+          stance: (stance, skillId) => act(() => fightAction(loaded, session.run, skillId === undefined ? { kind: 'stance', stance } : { kind: 'stance', stance, skillId }, devOptions()), skillId !== undefined),
+          item: (itemId) => act(() => fightAction(loaded, session.run, { kind: 'item', itemId }, devOptions()), false),
           flee: () => {
             try {
-              session.run = fleeFight(loaded, session.run);
+              session.run = fleeFight(loaded, session.run, devOptions());
               session.turn += 1;
               commit(loaded, session);
               render();
@@ -166,6 +180,14 @@ export function playScreen(loaded: LoadedStory, session: Session) {
       const paragraphs = view.combat && view.combat.intro === 'encounter' ? [voice.combat.ambush(view.combat.monsterName)] : view.paragraphs;
       const prose = paragraphs.map(() => el('p', 'prose reading'));
       const options = el('div', 'options');
+      const readingBlock = el('div', 'reading-block', ...prose);
+      // Dev mode: keep a scene's prose behind a tap so the choices are right there. Fights and shops always show theirs.
+      const skipped = devEffective(currentSettings()).skipText && !alreadyRead && !view.combat && !view.shop && !view.ending && paragraphs.length > 0;
+      const showText = link(voice.dev.showText, () => {
+        readingBlock.hidden = false;
+        showText.remove();
+      }, 'link-quiet');
+      readingBlock.hidden = skipped;
       const strip = statsStrip(statusOf(loaded, run), openSatchel);
 
       if (view.shop) {
@@ -191,7 +213,10 @@ export function playScreen(loaded: LoadedStory, session: Session) {
         for (const choice of view.choices) {
           const button = link(choice.text, () => {
             try {
-              session.run = choose(loaded, session.run, choice.index);
+              const before = session.run;
+              session.run = choose(loaded, before, choice.index, devOptions());
+              // A forced encounter is spent once it has happened: it left something waiting to resume.
+              if (session.run.returnStack.length > before.returnStack.length) session.devForce = null;
               session.turn += 1;
               commit(loaded, session);
               render();
@@ -209,8 +234,11 @@ export function playScreen(loaded: LoadedStory, session: Session) {
         'leave-row',
         view.ending ? null : link(voice.play.leave, () => nav.popToRoot(), 'link-quiet'),
         view.ending ? null : link(voice.play.abandon, openConfirm, 'link-quiet'),
+        view.ending || !currentSettings().dev ? null : link(voice.dev.link, openDev, 'link-quiet'),
       );
       const asideBlocks: HTMLElement[] = [];
+      const dev = devEffective(currentSettings());
+      if (dev.god) asideBlocks.push(el('p', 'dev-banner', voice.dev.godBanner));
       if (session.saveTrouble) asideBlocks.push(el('p', 'aside aside-trouble', session.saveTrouble));
       if (view.aftermath.length > 0) asideBlocks.push(accountList(loaded, statusOf(loaded, run).maxHp, view.aftermath, true));
       asideBlocks.push(...view.notes.map((n) => el('p', 'aside', n)));
@@ -218,14 +246,15 @@ export function playScreen(loaded: LoadedStory, session: Session) {
         strip,
         top,
         ...(asideBlocks.length > 0 ? [el('div', 'asides', ...asideBlocks)] : []),
-        el('div', 'reading-block', ...prose),
+        ...(skipped ? [showText] : []),
+        readingBlock,
         options,
       );
       if (alreadyRead) requestAnimationFrame(() => window.scrollTo(0, session.scrollY));
       else window.scrollTo(0, 0);
 
       writer?.finish();
-      writer = typewrite(prose, paragraphs, alreadyRead ? 0 : speedCps(currentSettings().typewriter), () => options.classList.add('shown'));
+      writer = typewrite(prose, paragraphs, alreadyRead || skipped ? 0 : speedCps(currentSettings().typewriter), () => options.classList.add('shown'));
       column.addEventListener('pointerdown', () => writer?.finish(), { once: true });
     };
 

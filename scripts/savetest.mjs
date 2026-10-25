@@ -198,6 +198,9 @@ check('sqlite: the drawer holds the set-aside body', (await sqlDriver.rows('SELE
   check('gate: a closed entry with no ending, or a live one with an ending, is damaged', verdict(mutate((r) => { r.status = 'ended'; })) === 'damaged' && verdict(mutate((r) => { r.ending = { id: 'x', kind: 'death', title: 't' }; })) === 'damaged');
   check('gate: a broken random stream is damaged', verdict(mutate((r) => { r.rng = { combat: [1, 2] }; })) === 'damaged');
 
+  const returning = [...loaded.scenes.values()].find((sc) => sc.type === 'narrative' && sc.choices.some((c) => c.target === '$return'));
+  check('gate: a scene that returns from an encounter, with nothing to return to, is damaged', returning !== undefined && verdict(mutate((r) => { r.sceneId = returning.id; r.returnStack = []; })) === 'damaged' && verdict(mutate((r) => { r.sceneId = returning.id; r.returnStack = [loaded.story.start]; })) === 'ok');
+
   // Older content that still fits carries forward.
   const olderStory = { ...loaded, story: { ...loaded.story, version: 2 } };
   const carried = openSave(row, olderStory);

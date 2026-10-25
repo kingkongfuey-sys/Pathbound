@@ -41,7 +41,7 @@ export function createDocumentStore(storage: TextStorage): Store {
     book = parsed as Book;
     // Entries kept before levels existed (Stage 5) have no level; they stood at level 1.
     for (const kept of book.entries) kept.level ??= 1;
-    // A book kept before house rules existed has none.
+    // A book kept before settings existed has none.
     book.settings ??= {};
   }
 

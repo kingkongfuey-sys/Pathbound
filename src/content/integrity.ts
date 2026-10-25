@@ -25,7 +25,7 @@ export interface Candidate {
 const SLOTS = ['weapon', 'head', 'body', 'trinket'];
 
 /** WCAG relative luminance of a #rrggbb colour. */
-function luminance(hex: string): number {
+export function luminance(hex: string): number {
   const channel = (start: number): number => {
     const c = parseInt(hex.slice(start, start + 2), 16) / 255;
     return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;

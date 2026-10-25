@@ -11,6 +11,7 @@ export interface Validators {
   monsters: ValidateFunction;
   items: ValidateFunction;
   encounters: ValidateFunction;
+  theme: ValidateFunction;
 }
 
 export function createValidators(schemas: SchemaFiles): Validators {
@@ -27,7 +28,20 @@ export function createValidators(schemas: SchemaFiles): Validators {
     monsters: get('monsters'),
     items: get('items'),
     encounters: get('encounters'),
+    theme: get('theme'),
   };
+}
+
+/** Just the binding schema (and the shared definitions it points at), so the app can check bindings at start without compiling every story schema. */
+export function createThemeValidator(schemas: SchemaFiles): ValidateFunction {
+  const ajv = new Ajv({ allErrors: true, strict: true, strictRequired: false });
+  for (const schema of Object.values(schemas)) {
+    const id = (schema as { $id?: string }).$id;
+    if (id === 'common.schema.json' || id === 'theme.schema.json') ajv.addSchema(schema);
+  }
+  const validate = ajv.getSchema('theme.schema.json');
+  if (!validate) throw new Error('The schema "theme.schema.json" is missing from content/schema.');
+  return validate;
 }
 
 function readable(error: ErrorObject): string {
@@ -39,6 +53,8 @@ function readable(error: ErrorObject): string {
       return `missing the field "${String(params.missingProperty)}"`;
     case 'enum':
       return `must be one of: ${(params.allowedValues as unknown[]).map(String).join(', ')}`;
+    case 'not':
+      return "isn't allowed here";
     case 'const':
       return `must be exactly ${JSON.stringify(params.allowedValue)}`;
     case 'minItems':

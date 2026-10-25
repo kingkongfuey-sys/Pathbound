@@ -7,7 +7,8 @@ reporting the file and the place in it.
 
 ```
 content/
-  schema/            common, story, scenes, monsters, items, encounters (.schema.json)
+  schema/            common, story, scenes, monsters, items, encounters, theme (.schema.json)
+  themes/<id>.json   the app's bindings (its look), not part of any story: see docs/themes.md
   stories/<id>/
     story.json       identity, theme, archetypes, chapters, lore, endings
     scenes/*.json    any number of files, each { "scenes": [ ... ] }
@@ -141,6 +142,7 @@ the stock price and sells a carried item at `floor(value / 2)`. The validator re
 `floor(value / 2)` and no item to be stocked twice.
 
 Theme colours: `prose`, `choices`, `statsBar` and `combatLog` must reach 4.5 to 1 against `background`; `accent` must reach 3 to 1.
+A story's colours are worn over any binding while it is played, unless the reader has ticked "Always keep my binding" in Settings: see `docs/themes.md`.
 
 Discoveries: an encounter-pool entry that points at a scene; the scene returns to the route with `$return`. Give it a
 `conditions` entry on a flag (set by the scene) to make it happen once.

@@ -55,7 +55,7 @@ const MIGRATIONS: string[] = [
   );`,
   // Schema 2 (Stage 6): the level the hero stood at. Entries kept before levels existed stand at level 1.
   'ALTER TABLE runs ADD COLUMN level INTEGER NOT NULL DEFAULT 1;',
-  // Schema 3 (Stage 7): house rules, one row per setting.
+  // Schema 3 (Stage 7): settings, one row per setting.
   'CREATE TABLE settings (key TEXT PRIMARY KEY, value TEXT NOT NULL);',
 ];
 

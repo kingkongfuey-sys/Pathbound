@@ -154,6 +154,42 @@ export interface LoadedStory {
   pools: Map<string, EncounterEntry[]>;
 }
 
+/** A colour with a strength, for the washes that make a surface: `color` is #rrggbb, `alpha` runs 0 to 1. */
+export interface Wash {
+  color: string;
+  alpha: number;
+}
+
+/**
+ * A binding: the whole look of the app's own chrome, from content/themes/<id>.json. Mirrors theme.schema.json by hand.
+ * It never touches a story's words or rules, only how the book is dressed.
+ */
+export interface Theme {
+  id: string;
+  name: string;
+  note: string;
+  order: number;
+  default?: true;
+  scheme: 'light' | 'dark';
+  colors: {
+    paper: string;
+    ink: string;
+    inkFaded: string;
+    rule: string;
+    accent: string;
+    accentWet: string;
+    choices?: string;
+    statsBar?: string;
+    combatLog?: string;
+    inkRule?: string;
+    marginRule?: string;
+  };
+  fonts: { display: string; text: string; load: string[] };
+  type: { emphasis: 'italic' | 'normal'; scale: number; displayScale: number; figures?: 'lining' | 'oldstyle' };
+  surface: { kind: 'paper' | 'screen' | 'glade'; lit: Wash; edge: Wash; trace?: Wash };
+  marks: { rule: 'hand' | 'laser' | 'vine'; leader: 'dotted' | 'dashed'; glow: number; underline: number };
+}
+
 /** One thing wrong with one content file: which file, where inside it, and what. */
 export interface ContentProblem {
   file: string;

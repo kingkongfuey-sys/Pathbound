@@ -2,7 +2,7 @@
 // pronouns, in the story's own colours. The name is only ever shown as text, never parsed, so any name is safe. From here a run begins, and its
 // first page is saved before the reader sees it. If another entry is still open, beginning closes it unfinished,
 // so the reader is asked first.
-import { currentEntry, keepUnreadable, startEntry } from '../app/book.ts';
+import { currentEntry, currentSettings, keepUnreadable, startEntry } from '../app/book.ts';
 import { showFatal } from '../app/fatal.ts';
 import type { Navigator } from '../app/router.ts';
 import { newSession } from '../app/session.ts';
@@ -106,12 +106,23 @@ export function heroScreen(loaded: LoadedStory) {
       question = null;
     };
 
+    // Dev mode only: a seed to begin with, so a run can be replayed exactly. Blank means a fresh random one.
+    const seedField = el('input', 'name-field');
+    seedField.type = 'text';
+    seedField.maxLength = 32;
+    seedField.autocomplete = 'off';
+    seedField.spellcheck = false;
+    seedField.id = 'hero-seed';
+    const seedLabel = el('label', 'field-label', voice.dev.heroSeed);
+    seedLabel.htmlFor = 'hero-seed';
+    const seedFor = (): string => (seedField.value.trim() === '' ? makeSeed() : seedField.value.trim());
+
     /** Write the entry down and open its first page. An unreadable entry still open is put in the drawer first. */
     const write = (name: string): void => {
       closeQuestion();
       keepUnreadable()
         .then(() => {
-          const run = startRun(loaded, { archetypeId: selected?.id ?? '', name, pronouns, seed: makeSeed() });
+          const run = startRun(loaded, { archetypeId: selected?.id ?? '', name, pronouns, seed: seedFor() });
           const session = newSession(run);
           startEntry(loaded, session);
           nav.push(playScreen(loaded, session));
@@ -146,8 +157,9 @@ export function heroScreen(loaded: LoadedStory) {
       archetypeList,
       el('div', 'name-block', nameLabel, input, error, suggestionRow),
       pronounBlock,
-      el('div', 'begin-row', begin),
     );
+    if (currentSettings().dev) column.append(el('div', 'name-block', seedLabel, seedField, el('p', 'prose prose-quiet', voice.dev.heroSeedHint)));
+    column.append(el('div', 'begin-row', begin));
     nav.setGuard(() => {
       if (!question) return false;
       closeQuestion();

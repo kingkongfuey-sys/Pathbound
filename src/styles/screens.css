@@ -1,5 +1,7 @@
 /* Layout and type for every screen. One page frame: an oxblood double margin rule on the
-   left and a left-aligned text column beside it. Nothing is centred. */
+   left and a left-aligned text column beside it. Nothing is centred.
+   Nothing here names a colour, a typeface or an italic: those are variables, set by whichever binding is in use
+   (content/themes, applied by app/theme.ts). Italic is `var(--emph)`: a binding may set its asides and links upright. */
 
 #app {
   min-height: 100vh;
@@ -13,7 +15,7 @@
   animation: settle 180ms ease-out both;
 }
 
-/* The margin rule: two thin oxblood lines, like a ledger's red margin. */
+/* The margin rule: two thin oxblood lines, like a ledger's red margin. A binding may colour it on its own (--margin-rule). */
 .page::before {
   content: '';
   position: absolute;
@@ -21,9 +23,11 @@
   bottom: 0;
   left: calc(var(--safe-left) + var(--margin-rule-x));
   width: 4px;
-  border-left: 1px solid var(--oxblood);
-  border-right: 1px solid var(--oxblood);
+  border-left: 1px solid var(--margin-rule, var(--oxblood));
+  border-right: 1px solid var(--margin-rule, var(--oxblood));
   opacity: 0.72;
+  /* A binding with a glow lights its margin rule too; with none the shadow is nothing at all. */
+  box-shadow: 0 0 calc(var(--glow) * 10px) color-mix(in srgb, var(--margin-rule, var(--oxblood)) calc(var(--glow) * 100%), transparent);
 }
 
 .column {
@@ -42,34 +46,36 @@
   font-weight: 400;
   color: var(--ink);
   white-space: nowrap;
+  text-shadow: 0 0 calc(var(--glow) * 14px) color-mix(in srgb, var(--oxblood) calc(var(--glow) * 100%), transparent);
 }
+/* The titles keep their own responsive sizes; a binding only scales them (its display face may run wider or narrower). */
 .title {
-  font-size: clamp(42px, 14vw, 64px);
+  font-size: calc(clamp(42px, 14vw, 64px) * var(--display-scale));
   line-height: 1.05;
   letter-spacing: 0.005em;
 }
 .page-title {
-  font-size: clamp(32px, 10.5vw, 42px);
+  font-size: calc(clamp(32px, 10.5vw, 42px) * var(--display-scale));
   line-height: 1.1;
 }
 
 .epigraph,
 .prose {
   margin: 0;
-  font-size: 20px;
+  font-size: calc(20px * var(--text-scale));
   line-height: 1.55;
 }
 .epigraph {
   margin-top: calc(var(--line) * 0.75);
   max-width: 15em;
-  font-style: italic;
+  font-style: var(--emph);
   color: var(--ink-faded);
 }
 .prose + .prose {
   margin-top: var(--line);
 }
 .prose-quiet {
-  font-style: italic;
+  font-style: var(--emph);
   color: var(--ink-faded);
 }
 .fatal-detail {
@@ -87,10 +93,14 @@
   margin-top: 6px;
   overflow: visible;
 }
+/* Only a binding that glows pays for a filter (the root carries data-glow then). */
+:root[data-glow] .ink-rule {
+  filter: drop-shadow(0 0 calc(var(--glow) * 5px) color-mix(in srgb, var(--ink-rule, var(--ink)) calc(var(--glow) * 100%), transparent));
+}
 .ink-rule-main,
 .ink-rule-second {
   fill: none;
-  stroke: var(--ink);
+  stroke: var(--ink-rule, var(--ink));
   stroke-linecap: round;
   stroke-linejoin: round;
 }
@@ -102,7 +112,25 @@
   opacity: 0.7;
 }
 .ink-rule-pool {
-  fill: var(--ink);
+  fill: var(--ink-rule, var(--ink));
+}
+/* The laser rule (a binding with marks.rule "laser"): drawn dead straight, its second line broken into dashes like a
+   run of data, and the pooled drop of ink is a square node (inkRule.ts builds it). */
+:root[data-rule='laser'] .ink-rule-main,
+:root[data-rule='laser'] .ink-rule-second {
+  stroke-linecap: butt;
+  stroke-linejoin: miter;
+}
+:root[data-rule='laser'] .ink-rule-second {
+  stroke-dasharray: 7 5;
+}
+
+/* The vine rule (a binding with marks.rule "vine"): a stem that sways, shoots ending in leaves, a curl at the end. It is
+   drawn from the same two strokes and a fill as the other rules (inkRule.ts builds the shapes), so nothing else is needed
+   here but a finer second stroke: the shoots are thinner than the stem. */
+:root[data-rule='vine'] .ink-rule-second {
+  stroke-width: 1;
+  opacity: 0.85;
 }
 
 /* ---- links: set type, never buttons ---- */
@@ -117,8 +145,8 @@
   border: 0;
   background: none;
   font: inherit;
-  font-style: italic;
-  font-size: 26px;
+  font-style: var(--emph);
+  font-size: calc(26px * var(--text-scale));
   line-height: var(--line);
   text-align: left;
   color: var(--choice, var(--ink));
@@ -127,13 +155,14 @@
 .link-text {
   padding-bottom: 6px;
   text-decoration: underline;
-  text-decoration-color: color-mix(in srgb, var(--oxblood) 55%, transparent);
+  text-decoration-color: color-mix(in srgb, var(--oxblood) var(--underline), transparent);
   text-decoration-thickness: 1px;
   text-underline-offset: 5px;
 }
 .link:active .link-text {
   color: var(--oxblood-wet);
   text-decoration-color: var(--oxblood-wet);
+  text-shadow: 0 0 calc(var(--glow) * 12px) color-mix(in srgb, var(--oxblood-wet) calc(var(--glow) * 100%), transparent);
 }
 .link:focus-visible {
   outline: 2px solid var(--oxblood);
@@ -141,7 +170,7 @@
 }
 .link-quiet {
   min-height: 48px;
-  font-size: 18px;
+  font-size: calc(18px * var(--text-scale));
   align-items: center;
   color: var(--ink-faded);
 }
@@ -173,8 +202,8 @@
 }
 .colophon {
   padding: var(--line) 0 calc(var(--safe-bottom) + var(--line) * 0.75);
-  font-size: 15px;
-  font-style: italic;
+  font-size: calc(15px * var(--text-scale));
+  font-style: var(--emph);
   color: var(--ink-faded);
 }
 
@@ -223,16 +252,16 @@
 }
 .story-title {
   font-family: var(--font-display);
-  font-size: 30px;
+  font-size: calc(30px * var(--text-scale));
   line-height: 1.15;
 }
 .story-blurb {
-  font-size: 18px;
+  font-size: calc(18px * var(--text-scale));
   line-height: 1.45;
 }
 .story-meta {
-  font-size: 16px;
-  font-style: italic;
+  font-size: calc(16px * var(--text-scale));
+  font-style: var(--emph);
   color: var(--ink-faded);
 }
 .story-row:active .story-title {
@@ -271,7 +300,7 @@
 }
 .arch-name {
   font-family: var(--font-display);
-  font-size: 28px;
+  font-size: calc(28px * var(--text-scale));
   line-height: 1.15;
 }
 .archetype[aria-pressed='true'] .arch-name {
@@ -281,12 +310,12 @@
   text-underline-offset: 5px;
 }
 .arch-tagline {
-  font-size: 18px;
-  font-style: italic;
+  font-size: calc(18px * var(--text-scale));
+  font-style: var(--emph);
   line-height: 1.4;
 }
 .arch-stats {
-  font-size: 15px;
+  font-size: calc(15px * var(--text-scale));
   line-height: 1.4;
   color: var(--ink-faded);
 }
@@ -301,8 +330,8 @@
 }
 .field-label {
   margin: 0;
-  font-size: 16px;
-  font-style: italic;
+  font-size: calc(16px * var(--text-scale));
+  font-style: var(--emph);
   color: var(--ink-faded);
 }
 .name-field {
@@ -315,8 +344,8 @@
   border-radius: 0;
   background: transparent;
   font-family: var(--font-text);
-  font-style: italic;
-  font-size: 28px;
+  font-style: var(--emph);
+  font-size: calc(28px * var(--text-scale));
   color: var(--ink);
   user-select: text;
   -webkit-user-select: text;
@@ -328,8 +357,8 @@
 .form-error {
   min-height: var(--line);
   margin: 6px 0 0;
-  font-size: 17px;
-  font-style: italic;
+  font-size: calc(17px * var(--text-scale));
+  font-style: var(--emph);
   color: var(--oxblood);
 }
 .suggestions,
@@ -346,7 +375,7 @@
 .link-small {
   width: auto;
   min-height: 44px;
-  font-size: 22px;
+  font-size: calc(22px * var(--text-scale));
   align-items: center;
 }
 .link-small[aria-pressed='true'] .link-text {
@@ -365,7 +394,7 @@
   margin-top: calc(var(--line) * 0.5);
 }
 .reading {
-  font-size: 20px;
+  font-size: calc(20px * var(--text-scale));
   line-height: 1.6;
   color: var(--ink);
 }
@@ -383,8 +412,8 @@
 }
 .aside {
   margin: 0 0 6px;
-  font-size: 17px;
-  font-style: italic;
+  font-size: calc(17px * var(--text-scale));
+  font-style: var(--emph);
   line-height: 1.45;
   color: var(--ink-faded);
 }
@@ -411,14 +440,14 @@
   min-height: 56px;
   padding: 10px 0;
   border-bottom: 1px solid var(--rule);
-  font-size: 21px;
+  font-size: calc(21px * var(--text-scale));
   line-height: 1.35;
 }
 .options > .link.option:first-child {
   border-top: 1px solid var(--rule);
 }
 .hint {
-  font-size: 15px;
+  font-size: calc(15px * var(--text-scale));
   color: var(--ink-faded);
 }
 .hint::before {
@@ -429,8 +458,8 @@
 }
 .ending-line {
   margin: var(--line) 0 calc(var(--line) * 0.5);
-  font-size: 19px;
-  font-style: italic;
+  font-size: calc(19px * var(--text-scale));
+  font-style: var(--emph);
   color: var(--ink-faded);
 }
 .option-row .link.option {
@@ -473,12 +502,12 @@
   overflow-wrap: anywhere;
 }
 .problem-file {
-  font-size: 15px;
-  font-style: italic;
+  font-size: calc(15px * var(--text-scale));
+  font-style: var(--emph);
   color: var(--ink-faded);
 }
 .problem-message {
-  font-size: 18px;
+  font-size: calc(18px * var(--text-scale));
   line-height: 1.4;
   color: var(--oxblood);
 }
@@ -501,7 +530,7 @@
 }
 .strip-hp,
 .strip-gold {
-  font-size: 21px;
+  font-size: calc(21px * var(--text-scale));
   line-height: 1;
   font-variant-numeric: lining-nums;
   white-space: nowrap;
@@ -514,7 +543,7 @@
   min-height: 40px;
   margin-left: auto;
   align-items: center;
-  font-size: 20px;
+  font-size: calc(20px * var(--text-scale));
   color: var(--stats-bar);
 }
 .strip-link .link-text {
@@ -543,8 +572,8 @@
 }
 .strip-chapter-title {
   overflow: hidden;
-  font-size: 15px;
-  font-style: italic;
+  font-size: calc(15px * var(--text-scale));
+  font-style: var(--emph);
   color: var(--ink-faded);
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -556,15 +585,15 @@
 /* ---- the satchel ---- */
 .reckoning {
   margin: 0;
-  font-size: 17px;
+  font-size: calc(17px * var(--text-scale));
   line-height: 1.45;
   color: var(--ink-faded);
 }
 .satchel-line {
   min-height: calc(var(--line) * 1.5);
   margin: 8px 0 0;
-  font-size: 17px;
-  font-style: italic;
+  font-size: calc(17px * var(--text-scale));
+  font-style: var(--emph);
   line-height: 1.45;
   color: var(--ink-faded);
 }
@@ -573,7 +602,7 @@
   padding-bottom: 4px;
   border-bottom: 1px solid var(--ink);
   font-family: var(--font-display);
-  font-size: 24px;
+  font-size: calc(24px * var(--text-scale));
   font-weight: 400;
   line-height: 1.2;
 }
@@ -589,8 +618,8 @@
 }
 .slot-label {
   margin: 0;
-  font-size: 15px;
-  font-style: italic;
+  font-size: calc(15px * var(--text-scale));
+  font-style: var(--emph);
   color: var(--ink-faded);
 }
 .entry {
@@ -609,13 +638,13 @@
 }
 .entry-name {
   font-family: var(--font-display);
-  font-size: 23px;
+  font-size: calc(23px * var(--text-scale));
   line-height: 1.2;
 }
 .entry-empty {
   font-family: var(--font-text);
-  font-size: 19px;
-  font-style: italic;
+  font-size: calc(19px * var(--text-scale));
+  font-style: var(--emph);
   color: var(--ink-faded);
 }
 .leader {
@@ -623,15 +652,15 @@
   min-width: 16px;
   height: 0;
   margin: 0 10px;
-  border-bottom: 1px dotted var(--ink-faded);
+  border-bottom: 1px var(--leader) var(--ink-faded);
 }
 .entry-head .link-small {
   flex: none;
 }
 .entry-detail {
   margin: 0;
-  font-size: 16px;
-  font-style: italic;
+  font-size: calc(16px * var(--text-scale));
+  font-style: var(--emph);
   line-height: 1.4;
   color: var(--ink-faded);
 }
@@ -651,23 +680,23 @@
 }
 .foe-name {
   font-family: var(--font-display);
-  font-size: 26px;
+  font-size: calc(26px * var(--text-scale));
   line-height: 1.2;
 }
 .foe-hp {
-  font-size: 24px;
+  font-size: calc(24px * var(--text-scale));
   font-variant-numeric: lining-nums;
 }
 .round-label {
   margin: 0;
-  font-size: 15px;
-  font-style: italic;
+  font-size: calc(15px * var(--text-scale));
+  font-style: var(--emph);
   color: var(--ink-faded);
 }
 .tell {
   margin: 2px 0 var(--line);
-  font-size: 19px;
-  font-style: italic;
+  font-size: calc(19px * var(--text-scale));
+  font-style: var(--emph);
   line-height: 1.45;
   color: var(--ink-faded);
 }
@@ -690,8 +719,8 @@
   margin: 0;
   padding: 10px 0;
   border-bottom: 1px solid var(--rule);
-  font-size: 21px;
-  font-style: italic;
+  font-size: calc(21px * var(--text-scale));
+  font-style: var(--emph);
   line-height: 1.35;
   color: var(--ink-faded);
   opacity: 0.7;
@@ -703,8 +732,8 @@
 .combat-note {
   min-height: calc(var(--line) * 1.25);
   margin: 8px 0 0;
-  font-size: 17px;
-  font-style: italic;
+  font-size: calc(17px * var(--text-scale));
+  font-style: var(--emph);
   color: var(--oxblood);
 }
 
@@ -735,7 +764,7 @@
   flex: none;
   width: 26px;
   font-family: var(--font-display);
-  font-size: 24px;
+  font-size: calc(24px * var(--text-scale));
   line-height: 1.1;
   text-align: right;
   color: var(--oxblood);
@@ -746,7 +775,7 @@
 }
 .account-line {
   margin: 0;
-  font-size: 17px;
+  font-size: calc(17px * var(--text-scale));
   line-height: 1.45;
 }
 .asides .account {
@@ -762,8 +791,8 @@
 }
 .open-line {
   margin: 0 0 8px;
-  font-size: 17px;
-  font-style: italic;
+  font-size: calc(17px * var(--text-scale));
+  font-style: var(--emph);
   line-height: 1.4;
   color: var(--ink-faded);
 }
@@ -771,12 +800,14 @@
 /* ---- setting the entry down, or abandoning it ---- */
 .leave-row {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 4px 16px;
 }
 .leave-row .link {
   width: auto;
+  white-space: nowrap;
 }
 .aside-trouble {
   color: var(--oxblood);
@@ -800,14 +831,16 @@
 }
 .closing-label {
   flex: none;
-  font-size: 18px;
-  font-style: italic;
+  font-size: calc(18px * var(--text-scale));
+  font-style: var(--emph);
   color: var(--ink-faded);
 }
 .closing-value {
-  flex: none;
+  /* Shrinks (and so wraps) only when label and value together are wider than the line, which a wider typeface can cause. */
+  flex: 0 1 auto;
+  min-width: 0;
   max-width: 62%;
-  font-size: 20px;
+  font-size: calc(20px * var(--text-scale));
   line-height: 1.25;
   text-align: right;
   font-variant-numeric: lining-nums;
@@ -819,8 +852,8 @@
 /* ---- ledger history ---- */
 .entry-tag {
   flex: none;
-  font-size: 17px;
-  font-style: italic;
+  font-size: calc(17px * var(--text-scale));
+  font-style: var(--emph);
   color: var(--ink-faded);
 }
 .entry-tag-dark {
@@ -834,8 +867,8 @@
 .deal-note {
   min-height: calc(var(--line) * 1.25);
   margin: 6px 0 0;
-  font-size: 17px;
-  font-style: italic;
+  font-size: calc(17px * var(--text-scale));
+  font-style: var(--emph);
   line-height: 1.45;
   color: var(--ink-faded);
 }
@@ -855,4 +888,21 @@
 }
 .codex-sample {
   min-height: calc(var(--line) * 2);
+}
+
+/* ---- dev mode (hidden) ---- */
+.colophon-state {
+  display: block;
+  color: var(--oxblood);
+}
+.dev-seed {
+  margin: 0;
+  font-variant-numeric: lining-nums;
+  word-break: break-all;
+}
+.dev-banner {
+  margin: 0 0 6px;
+  font-size: calc(16px * var(--text-scale));
+  font-style: var(--emph);
+  color: var(--oxblood);
 }

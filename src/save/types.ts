@@ -92,7 +92,7 @@ export interface Store {
   entry(runId: string): Promise<EntryRecord | null>;
   /** Everything unlocked so far, for the codex. */
   unlocks(): Promise<Unlock[]>;
-  /** House rules as stored: plain text under a key. Reading them back is `settingsFrom`'s job. */
+  /** Settings as stored: plain text under a key. Reading them back is `settingsFrom`'s job. */
   settings(): Promise<Record<string, string>>;
   setSetting(key: string, value: string): Promise<void>;
   /** Everything unlocked so far, or only what the given run was the first to meet. */

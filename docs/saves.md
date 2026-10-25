@@ -10,7 +10,7 @@ Where entries are kept. Implementation: `src/save/`, `src/app/book.ts`. Design r
 | `active_run` | At most one row (`slot = 1`): run id, story id, save format, app version, content version, saved-at, and `body` (the envelope as JSON) |
 | `runs` | One history row per entry: hero, calling, story, seed, started/ended, outcome (`open`, `victory`, `death`, `abandoned`, `lost`), ending title, chapter reached, choices, rounds, foes felled, flights, gold, level |
 | `codex_unlocks` | `(story, kind, entry)` unique; kind is `story`, `monster`, `item` or `lore`; records the first run to meet it |
-| `settings` | House rules, one row per rule: a key and its text value (schema 3). Read back through `settingsFrom`, which defaults anything unknown |
+| `settings` | Settings, one row per setting: a key and its text value (schema 3). Keys: `typewriter`, `textSize`, `theme` (a binding's id), `dev`, `god`, `skipText`. Read back through `settingsFrom`, which defaults anything missing or unknown (a `theme` the build doesn't have reads as `parchment`) |
 | `damaged_saves` | Bodies of entries that could not be read and were set aside. Never deleted by the app |
 
 ## Save format 2
@@ -36,4 +36,4 @@ Where entries are kept. Implementation: `src/save/`, `src/app/book.ts`. Design r
 
 1. Stage 5: `active_run`, `runs`, `codex_unlocks`, `damaged_saves`.
 2. Stage 6: `runs.level`.
-3. Stage 7: `settings`.
+3. Stage 7: `settings` (also holds Stage 8's `textSize`, `dev`, `god` and `skipText`, and the later `theme`; no schema change, since it is key and value).

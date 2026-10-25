@@ -1,6 +1,13 @@
-/* The paper itself. Texture technique: two tiled SVG turbulence layers (fine grain + large
-   soft foxing blotches), a lamp-lit centre and burnt edges from radial gradients, all painted
-   once on a fixed layer behind the content so scrolling never repaints them. */
+/* The surface the page is written on, painted once on a fixed layer behind the content so scrolling never repaints it.
+   Two kinds, chosen by a binding's surface.kind (the root's data-surface):
+   paper  : two tiled SVG turbulence layers (fine grain + large soft foxing blotches), a lamp-lit centre and burnt edges
+            from radial gradients.
+   screen : a glow at the top of the page, a dark vignette, and scanlines. No grain, nothing that moves.
+   glade  : slanting shafts of light from above that die away before the page's foot, two tiled turbulence layers (dark
+            dapple of leaf shade, faint lichen), a dark vignette, and a few fireflies. The fireflies are fixed points, never
+            animated: nothing moves, and the page costs the battery nothing.
+   Whichever kind, the lit and edge washes (and the trace: the screen's scanlines, the glade's fireflies) come from the
+   binding, as variables. */
 html {
   /* The flat paper colour lives on html only: a body background would paint over the texture layer below. */
   background: var(--paper);
@@ -12,6 +19,7 @@ body {
   height: 100%;
   color: var(--ink);
   font-family: var(--font-text);
+  font-variant-numeric: var(--figures);
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
   overscroll-behavior: none;
@@ -27,9 +35,37 @@ body::before {
   z-index: -1;
   pointer-events: none;
   background-image:
-    radial-gradient(ellipse 80% 55% at 36% 28%, rgba(255, 249, 220, 0.5), transparent 70%),
-    radial-gradient(ellipse 95% 80% at 50% 50%, transparent 50%, rgba(92, 64, 24, 0.34) 100%),
+    radial-gradient(ellipse 80% 55% at 36% 28%, var(--surface-lit), transparent 70%),
+    radial-gradient(ellipse 95% 80% at 50% 50%, transparent 50%, var(--surface-edge) 100%),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='520' height='520'%3E%3Cfilter id='f' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.007' numOctaves='3' seed='11' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.42 0 0 0 0 0.28 0 0 0 0 0.1 0 1.1 0 0 -0.5'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E"),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.3 0 0 0 0 0.22 0 0 0 0 0.1 0.7 0 0 0 -0.26'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
   background-size: auto, auto, 520px 520px, 180px 180px;
+}
+
+:root[data-surface='screen'] body::before {
+  background-image:
+    radial-gradient(ellipse 90% 45% at 30% 0%, var(--surface-lit), transparent 72%),
+    radial-gradient(ellipse 95% 80% at 50% 50%, transparent 45%, var(--surface-edge) 100%),
+    repeating-linear-gradient(to bottom, var(--surface-trace) 0, var(--surface-trace) 1px, transparent 1px, transparent 3px);
+  background-size: auto, auto, auto;
+}
+
+/* Layers, top to bottom: fireflies (five single-point tiles of different sizes, so they never fall into a grid), the
+   vignette, dapple (darkens only, so it can never cost text its contrast), lichen (barely lightens; the validator
+   checks text against the lit wash, which is brighter), the fade that lets the paper colour take the page's foot, and
+   the shafts. The baked colours of the two turbulence tiles are the surface's grain, as on paper; the washes are data. */
+:root[data-surface='glade'] body::before {
+  background-image:
+    radial-gradient(circle, var(--surface-trace) 0, var(--surface-trace) 1px, transparent 3.2px),
+    radial-gradient(circle, var(--surface-trace) 0, var(--surface-trace) 0.8px, transparent 2.6px),
+    radial-gradient(circle, var(--surface-trace) 0, var(--surface-trace) 1.2px, transparent 3.6px),
+    radial-gradient(circle, var(--surface-trace) 0, var(--surface-trace) 0.7px, transparent 2.4px),
+    radial-gradient(circle, var(--surface-trace) 0, var(--surface-trace) 1px, transparent 3px),
+    radial-gradient(ellipse 95% 80% at 50% 50%, transparent 40%, var(--surface-edge) 100%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='480'%3E%3Cfilter id='d' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.011' numOctaves='3' seed='29' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.01 0 0 0 0 0.05 0 0 0 0 0.03 0 1.7 0 0 -0.72'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23d)'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='m' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='3' seed='8' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.24 0 0 0 0 0.4 0 0 0 0 0.18 0 0.85 0 0 -0.5'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E"),
+    linear-gradient(to bottom, transparent 0, transparent 18%, var(--paper) 82%),
+    linear-gradient(106deg, transparent 6%, var(--surface-lit) 13%, transparent 23%, transparent 37%, var(--surface-lit) 43%, transparent 51%, transparent 65%, var(--surface-lit) 69%, transparent 75%, transparent 88%, var(--surface-lit) 92%, transparent 98%);
+  background-size: 347px 311px, 293px 359px, 401px 283px, 263px 397px, 331px 337px, auto, 480px 480px, 200px 200px, auto, auto;
+  background-position: 61px 83px, 207px 29px, 97px 211px, 171px 149px, 23px 263px, 0 0, 0 0, 0 0, 0 0, 0 0;
 }

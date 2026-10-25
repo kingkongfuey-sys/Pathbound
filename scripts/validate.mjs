@@ -1,8 +1,10 @@
-// Build-time validator. Two jobs: (1) check the app's own copy against the voice rules, so tone drift is
-// caught here rather than by eye; (2) run every story in content/stories through the same schema and
-// integrity checks the app runs when a story is opened, naming the file and place of each problem.
+// Build-time validator. Three jobs: (1) check the app's own copy against the voice rules, so tone drift is
+// caught here rather than by eye; (2) check every binding in content/themes (schema, readable colours, typefaces that
+// are really bundled, and the words they carry against the same voice rules); (3) run every story in content/stories
+// through the same schema and integrity checks the app runs when a story is opened, naming the file and place of each problem.
 import { readFileSync } from 'node:fs';
-import { makeValidators, readStories, validateStory } from './content.mjs';
+import { declaredFonts, makeValidators, readStories, readThemes, validateStory, validateThemes } from './content.mjs';
+import { voiceProblems } from './voice.mjs';
 
 const file = new URL('../src/copy/voice.ts', import.meta.url);
 const source = readFileSync(file, 'utf-8');
@@ -11,18 +13,7 @@ const source = readFileSync(file, 'utf-8');
 const strings = [...source.matchAll(/'((?:[^'\\]|\\.)*)'|`((?:[^`\\]|\\.)*)`/g)].map((m) => m[1] ?? m[2] ?? '');
 const copy = strings.filter((s) => /\s/.test(s) || /^[A-Z]/.test(s));
 
-const bannedPhrases = ['welcome', 'loading', 'oops', 'tap to continue', 'something went wrong', 'please wait'];
-const emoji = /\p{Extended_Pictographic}/u;
-
-const problems = [];
-for (const text of copy) {
-  if (text.includes('!')) problems.push(`exclamation mark in: "${text}"`);
-  if (emoji.test(text)) problems.push(`emoji in: "${text}"`);
-  if (text.includes("\\'") || /\w'\w/.test(text)) problems.push(`straight apostrophe (use ’) in: "${text}"`);
-  for (const phrase of bannedPhrases) {
-    if (text.toLowerCase().includes(phrase)) problems.push(`banned phrase "${phrase}" in: "${text}"`);
-  }
-}
+const problems = voiceProblems(copy);
 
 if (problems.length > 0) {
   console.error('Voice check failed:');
@@ -32,8 +23,30 @@ if (problems.length > 0) {
 console.log(`Voice check passed (${copy.length} strings read).`);
 
 const validators = makeValidators();
-const stories = readStories();
 let failed = false;
+
+// Bindings: every file in content/themes, checked like a story, plus the words they carry against the same voice rules.
+const bindingFiles = readThemes();
+const binding = validateThemes(bindingFiles, validators.theme, declaredFonts());
+const bindingWords = Object.values(bindingFiles).flatMap((text) => {
+  try {
+    const data = JSON.parse(text);
+    return [data.name, data.note].filter((word) => typeof word === 'string');
+  } catch {
+    return [];
+  }
+});
+const bindingVoice = voiceProblems(bindingWords);
+if (binding.problems.length > 0 || bindingVoice.length > 0) {
+  failed = true;
+  console.error(`Bindings have ${binding.problems.length + bindingVoice.length} problem(s):`);
+  for (const p of binding.problems) console.error(`  ${p.file}  ${p.where}\n    ${p.message}`);
+  for (const p of bindingVoice) console.error(`  voice: ${p}`);
+} else {
+  console.log(`Bindings passed (${binding.themes.map((t) => t.name).join(', ')}).`);
+}
+
+const stories = readStories();
 for (const raw of stories) {
   const { problems, loaded } = validateStory(raw, validators);
   if (problems.length > 0) {

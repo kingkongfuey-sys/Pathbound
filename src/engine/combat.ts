@@ -145,9 +145,9 @@ function lootFor(monster: Monster, start: RunState): { run: RunState; event: Acc
 /**
  * Play one round. A stance action picks a stance (and optionally a skill that fits it); an item action spends the
  * round on a consumable. Refusals that the screen can explain come back as `ok: false` and change nothing; misuse
- * (an unknown skill, a skill that doesn't fit the stance, an item not carried) throws.
+ * (an unknown skill, a skill that doesn't fit the stance, an item not carried) throws. `god` is for dev mode alone.
  */
-export function playRound(loaded: LoadedStory, start: RunState, action: FightAction): RoundOutcome {
+export function playRound(loaded: LoadedStory, start: RunState, action: FightAction, god = false): RoundOutcome {
   if (start.status === 'ended') throw new Error('This entry is closed; there is no fight to play.');
   const combat = combatOf(start);
   const monster = monsterOf(loaded, combat);
@@ -201,6 +201,7 @@ export function playRound(loaded: LoadedStory, start: RunState, action: FightAct
     taken = afterDefense(Math.ceil(foeBlow / 2), stats.defense, kindOf(heroSkill, 'reduceDamage'));
   }
   dealt = Math.max(0, dealt - kindOf(foeSkill, 'reduceDamage'));
+  if (god) taken = 0; // dev mode only: the hero is not hurt, and every draw above still happened, so the stream is unchanged
 
   // Healing lands before damage, on both sides.
   const heroHealed = Math.min(Math.max(0, stats.hp - run.hp), kindOf(heroSkill, 'heal') + (item?.use?.amount ?? 0));

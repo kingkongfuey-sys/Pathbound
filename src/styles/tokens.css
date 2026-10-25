@@ -1,5 +1,8 @@
-/* Design tokens for the base (parchment) theme. Stories override the colour roles at play time.
-   Colours: foxed paper, iron-gall ink, oxblood for the margin rule and anything the reader acts on.
+/* Design tokens. The colour, type and surface values below are the fallback and are Parchment's own: the binding in use
+   (content/themes/<id>.json, written onto the page by app/theme.ts) overrides them, so the page is still itself if a
+   binding can't be read. A story may override the colour roles again while it is played, if the binding allows it.
+   Colours: foxed paper, iron-gall ink, oxblood for the margin rule and anything the reader acts on. The names are the
+   roles' original names; in another binding --oxblood is simply that binding's accent.
    Type: French Canon for titles (display), English for everything read (text).
    Rhythm: one ruled-line unit (32px) governs vertical spacing, like a ledger's lines. */
 :root {
@@ -19,7 +22,28 @@
   --font-display: 'IM Fell French Canon', 'Iowan Old Style', Georgia, serif;
   --font-text: 'IM Fell English', 'Iowan Old Style', Georgia, serif;
 
-  --line: 32px;
+  /* How a binding sets its asides, links and epigraphs (italic or upright), and how large its titles run. */
+  --emph: italic;
+  /* Which figures the text face sets: normal is the face's own; a binding may ask for lining or old-style ones (a typeface
+     whose own are old-style would otherwise set a score of 0p as Op). */
+  --figures: normal;
+  --display-scale: 1;
+  /* The washes the surface is painted from (paper.css), the dash of the leaders, the strength of a glow (0 is none)
+     and how firmly a link is underlined. */
+  --surface-lit: rgba(255, 249, 220, 0.5);
+  --surface-edge: rgba(92, 64, 24, 0.34);
+  --surface-trace: transparent;
+  --leader: dotted;
+  --glow: 0;
+  --underline: 55%;
+
+  /* Reading sizes and the ruled-line rhythm are multiplied by --text-scale, which is two things multiplied together:
+     the reader's text size (--size-scale, set by the Settings page: small .9 to largest 1.3) and the binding's own
+     allowance for how large its typeface reads (--type-scale). */
+  --size-scale: 1;
+  --type-scale: 1;
+  --text-scale: calc(var(--size-scale) * var(--type-scale));
+  --line: calc(32px * var(--text-scale));
   --margin-rule-x: 40px;
   --column-left: 66px;
   --column-right: 28px;

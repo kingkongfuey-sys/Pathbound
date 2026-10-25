@@ -16,9 +16,10 @@ import { openSave } from '../save/snapshot.ts';
 import { createSqlStore } from '../save/sqliteStore.ts';
 import { BookTooNewError } from '../save/types.ts';
 import type { EntryRecord, SaveWrite, Store, UnlockCounts } from '../save/types.ts';
+import { bindingIds } from './bindings.ts';
 import { codexOf } from './codex.ts';
 import type { CodexStory } from './codex.ts';
-import { DEFAULT_SETTINGS, settingsFrom } from './settings.ts';
+import { DEFAULT_SETTINGS, settingsFrom, settingText } from './settings.ts';
 import type { Settings } from './settings.ts';
 import { resumedSession } from './session.ts';
 import type { Session } from './session.ts';
@@ -93,7 +94,7 @@ export async function openBook(): Promise<void> {
   try {
     if (Capacitor.isNativePlatform()) store = await createSqlStore(await openCapacitorDriver());
     else store = createDocumentStore(window.localStorage);
-    settings = settingsFrom(await store.settings());
+    settings = settingsFrom(await store.settings(), bindingIds());
     await refreshOpenEntry();
   } catch (reason) {
     store = null;
@@ -201,7 +202,7 @@ export async function closingView(runId: string): Promise<{ entry: EntryRecord |
   return { entry: await s.entry(runId), fresh: await s.unlockCounts(runId) };
 }
 
-/** The house rules as of the last change. Synchronous, so a screen can read them while it is built. */
+/** The settings as of the last change. Synchronous, so a screen can read them while it is built. */
 export function currentSettings(): Settings {
   return settings;
 }
@@ -209,7 +210,7 @@ export function currentSettings(): Settings {
 /** Change a rule. It takes effect at once; a failure to write it down is reported to the caller. */
 export async function changeSetting<K extends keyof Settings>(key: K, value: Settings[K]): Promise<void> {
   settings = { ...settings, [key]: value };
-  await serial((s) => s.setSetting(key, value));
+  await serial((s) => s.setSetting(key, settingText(value)));
 }
 
 /** The codex: for every story that has anything unlocked, what it defines and which of that has been met. */

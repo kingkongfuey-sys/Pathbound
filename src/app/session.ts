@@ -18,13 +18,15 @@ export interface Session {
   scrollY: number;
   /** Why the last save didn't land, or null when it did. */
   saveTrouble: string | null;
+  /** Dev mode: the encounter-pool entry the next encounter-capable choice is forced to bring, if one is armed. Never saved. */
+  devForce: number | null;
 }
 
 export function newSession(run: RunState): Session {
-  return { run, runId: makeRunId(), startedAt: new Date().toISOString(), turn: 0, revealedTurn: -1, scrollY: 0, saveTrouble: null };
+  return { run, runId: makeRunId(), startedAt: new Date().toISOString(), turn: 0, revealedTurn: -1, scrollY: 0, saveTrouble: null, devForce: null };
 }
 
 /** A session picked up from the record book. Its page counts as already read, so it opens in full. */
 export function resumedSession(run: RunState, runId: string, startedAt: string): Session {
-  return { run, runId, startedAt, turn: 0, revealedTurn: 0, scrollY: 0, saveTrouble: null };
+  return { run, runId, startedAt, turn: 0, revealedTurn: 0, scrollY: 0, saveTrouble: null, devForce: null };
 }

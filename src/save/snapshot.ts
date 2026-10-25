@@ -152,6 +152,9 @@ export function runProblem(loaded: LoadedStory, run: RunState): string | null {
   if (!scene) return `the run stands at the scene "${run.sceneId}", which the story doesn't have`;
   if (!story.chapters.some((c) => c.id === scene.chapterId)) return `the scene "${scene.id}" is in a chapter the story doesn't list`;
   for (const id of run.returnStack) if (!loaded.scenes.has(id)) return `the run means to return to "${id}", which the story doesn't have`;
+  if (scene.type === 'narrative' && run.returnStack.length === 0 && scene.choices.some((c) => c.target === '$return')) {
+    return `the run stands at "${scene.id}", which returns from an encounter, with nothing to return to`;
+  }
 
   for (const id of Object.keys(run.inventory)) if (!loaded.items.has(id)) return `the satchel holds "${id}", which the story doesn't define`;
   for (const slot of SLOTS) {

@@ -17,7 +17,14 @@ import type { PronounSetId } from '../content/types.ts';
 
 const SLOTS: EquipmentSlot[] = ['weapon', 'head', 'body', 'trinket'];
 
-function enter(loaded: LoadedStory, run: RunState, sceneId: string): RunState {
+/** Dev-mode switches the loop honours. `god`: the hero loses no HP. `force`: the next encounter roll is skipped and this entry of the chapter's pool (by index) happens. */
+export interface DevOptions {
+  god?: boolean;
+  force?: number;
+}
+
+/** Put the run in `sceneId`, running what entering it does (open a fight, close an ending, unlock lore). */
+export function enterScene(loaded: LoadedStory, run: RunState, sceneId: string): RunState {
   const scene = loaded.scenes.get(sceneId);
   if (!scene) throw new Error(`Run state points at the scene "${sceneId}", which doesn't exist.`);
 
@@ -41,7 +48,7 @@ function enter(loaded: LoadedStory, run: RunState, sceneId: string): RunState {
 function die(loaded: LoadedStory, run: RunState, endingId: string = loaded.story.endings.defaultDeath): RunState {
   const entry = loaded.story.endings.death.find((e) => e.id === endingId);
   if (!entry) throw new Error(`The death ending "${endingId}" is missing from story.json.`);
-  return enter(loaded, { ...run, hp: 0, combat: null }, entry.sceneId);
+  return enterScene(loaded, { ...run, hp: 0, combat: null }, entry.sceneId);
 }
 
 export function startRun(
@@ -90,7 +97,7 @@ export function startRun(
     ending: null,
   };
   const withGear = { ...base, hp: effectiveStats(loaded, base).hp };
-  return enter(loaded, withGear, loaded.story.start);
+  return enterScene(loaded, withGear, loaded.story.start);
 }
 
 export function viewOf(loaded: LoadedStory, run: RunState): SceneView {
@@ -118,7 +125,7 @@ export function viewOf(loaded: LoadedStory, run: RunState): SceneView {
 }
 
 /** Take the choice at `index` (its position in the scene's choices array). */
-export function choose(loaded: LoadedStory, run: RunState, index: number): RunState {
+export function choose(loaded: LoadedStory, run: RunState, index: number, dev: DevOptions = {}): RunState {
   if (run.status === 'ended') throw new Error('This entry is closed; there is nothing left to choose.');
   if (run.combat) throw new Error('A fight is in progress; it has to be played out or fled first.');
   const scene = loaded.scenes.get(run.sceneId);
@@ -130,6 +137,7 @@ export function choose(loaded: LoadedStory, run: RunState, index: number): RunSt
   const counted: RunState = { ...run, tally: { ...run.tally, choices: run.tally.choices + 1 } };
   const applied = applyEffects(loaded, { ...counted, pendingNotes: [], aftermath: [] }, choice.effects);
   let next = { ...applied.run, pendingNotes: applied.notes };
+  if (dev.god) next = { ...next, hp: Math.max(next.hp, counted.hp) };
   if (next.hp <= 0) return die(loaded, next);
 
   let destination = choice.target;
@@ -140,31 +148,39 @@ export function choose(loaded: LoadedStory, run: RunState, index: number): RunSt
     next = { ...next, returnStack: stack };
     destination = back;
   } else if (choice.encounterChance !== undefined) {
-    let roll: number;
-    [roll, next] = drawInt(next, 'encounter', 100);
     const pool = (loaded.pools.get(scene.chapterId) ?? []).flatMap((entry, entryIndex) =>
       meets(loaded, next, entry.conditions) ? [{ entry, entryIndex }] : [],
     );
-    if (roll < choice.encounterChance && pool.length > 0) {
-      let index: number;
-      [index, next] = drawWeighted(next, 'encounter', pool.map((p) => p.entry.weight));
-      const chosen = pool[index];
-      if (chosen) {
-        next = { ...next, returnStack: [...next.returnStack, destination] };
-        if (chosen.entry.type === 'fight') {
-          return openCombat(loaded, next, chosen.entry.monsterId, { kind: 'encounter', chapterId: scene.chapterId, entryIndex: chosen.entryIndex });
-        }
-        destination = chosen.entry.sceneId;
+    let chosen: (typeof pool)[number] | undefined;
+    const forced = dev.force === undefined ? undefined : loaded.pools.get(scene.chapterId)?.[dev.force];
+    if (forced && dev.force !== undefined) {
+      // Dev mode: skip the roll, so no draw is made, and take the entry asked for whether or not its conditions hold.
+      chosen = { entry: forced, entryIndex: dev.force };
+    } else {
+      let roll: number;
+      [roll, next] = drawInt(next, 'encounter', 100);
+      if (roll < choice.encounterChance && pool.length > 0) {
+        let index: number;
+        [index, next] = drawWeighted(next, 'encounter', pool.map((p) => p.entry.weight));
+        chosen = pool[index];
       }
     }
+    if (chosen) {
+      next = { ...next, returnStack: [...next.returnStack, destination] };
+      if (chosen.entry.type === 'fight') {
+        return openCombat(loaded, next, chosen.entry.monsterId, { kind: 'encounter', chapterId: scene.chapterId, entryIndex: chosen.entryIndex });
+      }
+      destination = chosen.entry.sceneId;
+    }
   }
-  return enter(loaded, next, destination);
+  return enterScene(loaded, next, destination);
 }
 
 /** Move on after a fight: apply the story's effects for how it ended, then go where it leads. */
-function afterFight(loaded: LoadedStory, fought: RunState, outcome: Partial<Outcome>, ended: RunState): RunState {
+function afterFight(loaded: LoadedStory, fought: RunState, outcome: Partial<Outcome>, ended: RunState, god = false): RunState {
   const applied = applyEffects(loaded, { ...ended, pendingNotes: [] }, outcome.effects);
   let next: RunState = { ...applied.run, pendingNotes: applied.notes };
+  if (god) next = { ...next, hp: Math.max(next.hp, ended.hp) };
   if (next.hp <= 0) return die(loaded, next);
   let destination = outcome.sceneId;
   if (destination === undefined) {
@@ -174,7 +190,7 @@ function afterFight(loaded: LoadedStory, fought: RunState, outcome: Partial<Outc
     next = { ...next, returnStack: stack };
     destination = back;
   }
-  return enter(loaded, next, destination);
+  return enterScene(loaded, next, destination);
 }
 
 /** What the story says happens when this fight ends: scene fights name their own scenes, encounter fights resume. */
@@ -200,11 +216,11 @@ function defeatEnding(loaded: LoadedStory, run: RunState): string | undefined {
 export type FightResult = { ok: true; run: RunState } | { ok: false; reason: 'full-health' | 'cooling' };
 
 /** Play one round of the fight in progress. When it ends, the run moves on to wherever the story sends it. */
-export function fightAction(loaded: LoadedStory, run: RunState, action: FightAction): FightResult {
+export function fightAction(loaded: LoadedStory, run: RunState, action: FightAction, dev: DevOptions = {}): FightResult {
   const before = run;
   const outcome = outcomeOf(loaded, before, 'victory');
   const defeat = defeatEnding(loaded, before);
-  const round = playRound(loaded, { ...before, aftermath: [], pendingNotes: [] }, action);
+  const round = playRound(loaded, { ...before, aftermath: [], pendingNotes: [] }, action, dev.god === true);
   if (!round.ok) return round;
   const played: RunState = {
     ...round.run,
@@ -212,14 +228,15 @@ export function fightAction(loaded: LoadedStory, run: RunState, action: FightAct
   };
   if (round.end === null) return { ok: true, run: { ...played, pendingNotes: before.pendingNotes } };
   if (round.end === 'defeat') return { ok: true, run: die(loaded, played, defeat) };
-  return { ok: true, run: afterFight(loaded, before, outcome, played) };
+  return { ok: true, run: afterFight(loaded, before, outcome, played, dev.god === true) };
 }
 
 /** Break off the fight in progress and go where the story sends a fugitive. Always available. */
-export function fleeFight(loaded: LoadedStory, run: RunState): RunState {
+export function fleeFight(loaded: LoadedStory, run: RunState, dev: DevOptions = {}): RunState {
   const outcome = outcomeOf(loaded, run, 'flee');
   const broken = flee(loaded, { ...run, aftermath: [] });
-  return afterFight(loaded, run, outcome, { ...broken, tally: { ...broken.tally, fled: broken.tally.fled + 1 } });
+  const kept = dev.god ? { ...broken, hp: Math.max(broken.hp, run.hp) } : broken;
+  return afterFight(loaded, run, outcome, { ...kept, tally: { ...kept.tally, fled: kept.tally.fled + 1 } }, dev.god === true);
 }
 
 /** Leave the shop for the scene the story names. What was bought and sold is told at the top of the next page. */
@@ -228,5 +245,5 @@ export function leaveShop(loaded: LoadedStory, run: RunState): RunState {
   if (!scene || scene.type !== 'shop') throw new Error(`The run is at "${run.sceneId}", which isn't a shop.`);
   if (run.status === 'ended') throw new Error('This entry is closed; there is no shop to leave.');
   const deals = run.aftermath.filter((e) => e.kind === 'bought' || e.kind === 'sold');
-  return enter(loaded, { ...run, aftermath: deals, pendingNotes: [] }, scene.shop.leaveSceneId);
+  return enterScene(loaded, { ...run, aftermath: deals, pendingNotes: [] }, scene.shop.leaveSceneId);
 }
