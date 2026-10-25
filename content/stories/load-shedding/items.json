@@ -1,0 +1,237 @@
+{
+  "items": [
+    {
+      "id": "lineman-spanner",
+      "name": "Lineman’s spanner",
+      "flavor": "A long steel spanner with a rubber grip that has been bitten by current.",
+      "codexEntry": "Every linewright in Vantry is issued one and none of them gives it back. The jaws are worn bright from a hundred panels, and the handle is wrapped in grip tape that has outlived two marriages. It was built to tighten a bolt on a live board. It will, if asked, do something similar to a person.",
+      "type": "weapon",
+      "modifiers": {
+        "attack": 2
+      },
+      "value": 10,
+      "purchasable": true
+    },
+    {
+      "id": "seam-cutter",
+      "name": "Seam-cutter",
+      "flavor": "A short hooked blade for opening things the city sealed.",
+      "codexEntry": "Couriers use it to open crates, parcels and the occasional locked door, and to be seen holding when it would be wiser not to have to explain. The hook catches on seams, which is the point. It is not a great weapon, but it is a very good argument.",
+      "type": "weapon",
+      "modifiers": {
+        "attack": 1
+      },
+      "value": 6,
+      "purchasable": false
+    },
+    {
+      "id": "tariff-slate",
+      "name": "Tariff slate",
+      "flavor": "A cracked tablet with a steel rim, loaded with four hundred pages nobody asked for.",
+      "codexEntry": "A tab-reader’s slate holds the entire tariff, the Dispatch’s house rules and a great many amendments in a font nobody was meant to read on one. It hits like a ledger, though not very hard. Its value is in what it lets the holder find before anyone else has stopped looking.",
+      "type": "weapon",
+      "modifiers": {
+        "wits": 1
+      },
+      "value": 6,
+      "purchasable": false
+    },
+    {
+      "id": "arc-pike",
+      "name": "Arc-pike",
+      "flavor": "A utility pike that carries a charge long after it has been told to stop.",
+      "codexEntry": "Built to knock hung cable off a pole and left in a cage because the supervisor had a conscience. It hums when held and carries a faint taste of metal in the air around it. The charge does not run out so much as get tired. It prefers to be pointed at something.",
+      "type": "weapon",
+      "modifiers": {
+        "attack": 3
+      },
+      "value": 36,
+      "purchasable": true
+    },
+    {
+      "id": "foreclosure-stamp",
+      "name": "Foreclosure stamp",
+      "flavor": "A brass-bound stamp that makes things official by hitting them.",
+      "codexEntry": "Hobb’s own stamp, the one with the weight in it. Anything it lands on becomes, for legal purposes, somebody else’s. It works on paper, on doors and on the forearm of anyone careless enough to stand in range. The ink never fully dries.",
+      "type": "weapon",
+      "modifiers": {
+        "attack": 2,
+        "wits": 1
+      },
+      "value": 14,
+      "purchasable": false
+    },
+    {
+      "id": "welders-visor",
+      "name": "Welder’s visor",
+      "flavor": "A dark visor that makes the world one shade less urgent.",
+      "codexEntry": "A welder’s visor with the glass scratched to a pleasing opacity. It does not make you braver. It makes it harder for other people to see whether you are, which in a staring match comes to the same thing.",
+      "type": "head",
+      "modifiers": {
+        "nerve": 1
+      },
+      "value": 8,
+      "purchasable": true
+    },
+    {
+      "id": "hardhat-lamp",
+      "name": "Hardhat lamp",
+      "flavor": "A hard hat with a lamp wired to the brim and a dent from someone else’s bad day.",
+      "codexEntry": "The lamp still works if you ask it nicely and keep the battery warm. The hat was issued to a man named in marker pen on the inside, and has outlasted him by a decade. It has a dent in the left side and a kind of local reputation.",
+      "type": "head",
+      "modifiers": {
+        "defense": 1
+      },
+      "value": 12,
+      "purchasable": true
+    },
+    {
+      "id": "reader-lenses",
+      "name": "Reader’s lenses",
+      "flavor": "Thick lenses that make fine print behave itself.",
+      "codexEntry": "A tab-reader’s lenses, ground to a prescription that suits nobody and every clause. Wearers report that paragraphs lie down in front of them. The frames are held together with the same tape the Dispatch uses on its own notices, and for the same reason.",
+      "type": "head",
+      "modifiers": {
+        "wits": 1
+      },
+      "value": 30,
+      "purchasable": true
+    },
+    {
+      "id": "rubber-coat",
+      "name": "Rubber coat",
+      "flavor": "An insulated coat the colour of a wet road, with a collar that stands up on its own.",
+      "codexEntry": "A linewright’s coat, stitched with a mesh that turns current away at the cuff. It is hot in summer and heavier than it looks, and it smells faintly of a switchroom. It has saved a number of lives, and a larger number of dinners.",
+      "type": "body",
+      "modifiers": {
+        "defense": 1
+      },
+      "value": 8,
+      "purchasable": true
+    },
+    {
+      "id": "courier-jacket",
+      "name": "Courier jacket",
+      "flavor": "A quilted jacket with a pocket for every kind of parcel, and a few for the others.",
+      "codexEntry": "The jacket of someone whose job is to be elsewhere. It is quilted at the shoulders for stairs, ripped at the hem for rails, and lined with a foil that is meant to defeat tracking and mostly just crackles. Every pocket has a story. Most of the stories end in a door.",
+      "type": "body",
+      "modifiers": {
+        "defense": 1
+      },
+      "value": 8,
+      "purchasable": false
+    },
+    {
+      "id": "ballistic-quilt",
+      "name": "Ballistic quilt",
+      "flavor": "A stuffed jacket of stacked receipts, bonded and stitched.",
+      "codexEntry": "Somebody in the Resale Yard worked out that enough pressed paper stops almost anything, and that the Stack produces more paper than it can use. The quilt is made of old tariff pages. It is heavy, crinkles, and is in some obscure sense legally binding.",
+      "type": "body",
+      "modifiers": {
+        "defense": 2
+      },
+      "value": 30,
+      "purchasable": true
+    },
+    {
+      "id": "cracked-fob",
+      "name": "Cracked fob",
+      "flavor": "A door fob with a split in its case and a number worn off.",
+      "codexEntry": "Opens nothing now, but its owner carried it for years and it has absorbed their habit of looking calm. Holding it makes you feel, briefly, as if you had a key to the place you are about to enter, which is the beginning of most successful walks.",
+      "type": "trinket",
+      "modifiers": {
+        "nerve": 1
+      },
+      "value": 4,
+      "purchasable": false
+    },
+    {
+      "id": "bent-key",
+      "name": "Bent key",
+      "flavor": "A key bent into a question mark and warm from the pipe.",
+      "codexEntry": "A maintenance key somebody bent in a hurry, probably to hold a door shut and not open one. It still turns in the cage locks beneath the Stack. Carrying it makes you feel slightly like staff, and considerably like a suspect.",
+      "type": "trinket",
+      "modifiers": {
+        "nerve": 1
+      },
+      "value": 0,
+      "purchasable": false
+    },
+    {
+      "id": "lamp-token",
+      "name": "Lamp token",
+      "flavor": "A washer charged for two minutes and scratched with a lamp.",
+      "codexEntry": "Ma Sato gives these out, one per customer who has done her a good turn. Each is a steel washer charged in her rack and marked with a small scratched lamp. In the dark districts below the Stack they glow faintly when something is near that remembers a window. Nobody has explained why.",
+      "type": "trinket",
+      "modifiers": {
+        "wits": 1
+      },
+      "value": 0,
+      "purchasable": false
+    },
+    {
+      "id": "grid-badge",
+      "name": "Grid badge",
+      "flavor": "A staff badge with someone else’s photograph and your name added in pen.",
+      "codexEntry": "A laminated pass that opens the staff doors at the Dispatch, signed over by Assessor Hobb, who does not hand things out. The photograph is of a man who looks rather like Hobb a little earlier in his career. Wearing it turns blows aside, mostly out of respect for the lamination.",
+      "type": "trinket",
+      "modifiers": {
+        "defense": 1
+      },
+      "value": 0,
+      "purchasable": false
+    },
+    {
+      "id": "noodle-flask",
+      "name": "Noodle flask",
+      "flavor": "Hot noodles in a screw-top flask, built to be drunk on the stairs.",
+      "codexEntry": "Ma Sato’s signature, and the main reason Sump Nine still has a pulse. The flask keeps heat longer than it has any right to, and the noodles inside are cut short enough to drink. It is not good for you. It is very good for the hour.",
+      "type": "consumable",
+      "use": {
+        "kind": "heal",
+        "amount": 5
+      },
+      "value": 4,
+      "purchasable": true
+    },
+    {
+      "id": "medgel-strip",
+      "name": "Medgel strip",
+      "flavor": "A foil strip of wound gel, sold by the length.",
+      "codexEntry": "Sticks to anything and stays stuck. Medgel is the Stack’s one honest export, tear-off and indifferent to who is bleeding. It stings for a few seconds and then does not, and what it does in between is nobody’s business but the gel’s.",
+      "type": "consumable",
+      "use": {
+        "kind": "heal",
+        "amount": 9
+      },
+      "value": 12,
+      "purchasable": true
+    },
+    {
+      "id": "battery-tea",
+      "name": "Battery tea",
+      "flavor": "A thin sweet tea brewed on a spent cell.",
+      "codexEntry": "Poured over a dead battery for the last of the heat, and drunk before it goes cold. It tastes of coins and sugar. Old Dov swears by it, and he is eighty-one, and he is wrong about almost everything else.",
+      "type": "consumable",
+      "use": {
+        "kind": "heal",
+        "amount": 3
+      },
+      "value": 2,
+      "purchasable": true
+    },
+    {
+      "id": "sump-brew",
+      "name": "Sump brew",
+      "flavor": "A dark, bitter brew that someone in Sump Nine ferments in a bucket.",
+      "codexEntry": "Ferments in a sealed bucket under the second landing, and is rationed by the cup. It tastes like a rumour of coffee. It restores more than it has a right to, and nobody will say what is in it, and on the whole that seems wise.",
+      "type": "consumable",
+      "use": {
+        "kind": "heal",
+        "amount": 7
+      },
+      "value": 6,
+      "purchasable": false
+    }
+  ]
+}

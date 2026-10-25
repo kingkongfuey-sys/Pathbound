@@ -1,0 +1,43 @@
+{
+  "id": "cyberpunk",
+  "name": "Cyberpunk",
+  "note": "The same ledger, kept on a screen that hums. I am told this is progress.",
+  "order": 2,
+  "scheme": "dark",
+  "colors": {
+    "paper": "#0b0a14",
+    "ink": "#dde7f1",
+    "inkFaded": "#8d9bb5",
+    "rule": "#2f2b5c",
+    "accent": "#ff2e88",
+    "accentWet": "#ff8bbd",
+    "choices": "#4be8f5",
+    "statsBar": "#4be8f5",
+    "inkRule": "#ff2e88"
+  },
+  "fonts": {
+    "display": "'Tektur', 'Share Tech Mono', 'Courier New', monospace",
+    "text": "'Jura', 'Trebuchet MS', 'Segoe UI', sans-serif",
+    "load": [
+      "64px \"Tektur\"",
+      "500 20px \"Jura\""
+    ]
+  },
+  "type": {
+    "emphasis": "normal",
+    "scale": 0.92,
+    "displayScale": 0.78
+  },
+  "surface": {
+    "kind": "screen",
+    "lit": { "color": "#5a2dff", "alpha": 0.2 },
+    "edge": { "color": "#000000", "alpha": 0.6 },
+    "trace": { "color": "#4be8f5", "alpha": 0.04 }
+  },
+  "marks": {
+    "rule": "laser",
+    "leader": "dashed",
+    "glow": 0.7,
+    "underline": 85
+  }
+}

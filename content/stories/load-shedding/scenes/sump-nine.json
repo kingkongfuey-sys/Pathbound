@@ -1,0 +1,635 @@
+{
+  "scenes": [
+    {
+      "id": "sump-notice",
+      "chapterId": "sump-nine",
+      "type": "narrative",
+      "prose": [
+        "The notice is taped to your door at the height of someone who has never had to stoop. District 9 is to be shed at 05:00, it says, permanently, in a typeface chosen for people who have already lost.",
+        "Below the stamp there is a paragraph in a size you could count rice with. Down the landing the next door has a red tag on it and the number 9-114, which is, you work out, that door’s new name.",
+        "{player.name} has until dawn, and a stairwell that smells of onion and hot dust."
+      ],
+      "unlocksLore": [
+        "shed-schedule"
+      ],
+      "choices": [
+        {
+          "text": "Read the small print",
+          "target": "sump-stairwell",
+          "hint": "wits 4",
+          "conditions": [
+            {
+              "type": "stat",
+              "stat": "wits",
+              "op": ">=",
+              "value": 4
+            }
+          ],
+          "effects": [
+            {
+              "type": "flag",
+              "flag": "knows-clause",
+              "value": true
+            }
+          ]
+        },
+        {
+          "text": "Take the rent tin from under the floorboard and go",
+          "target": "sump-stairwell",
+          "effects": [
+            {
+              "type": "gold",
+              "delta": 8,
+              "note": "The rent tin yields 8 {currency.name} and a receipt for a month that no longer exists."
+            }
+          ]
+        },
+        {
+          "text": "Go down as you are",
+          "target": "sump-stairwell"
+        }
+      ]
+    },
+    {
+      "id": "sump-stairwell",
+      "chapterId": "sump-nine",
+      "type": "narrative",
+      "prose": [
+        "Sump Nine is eight floors of stairwell with flats hung off it like pockets. At dusk the block lights its lamps, one saucer of oil or one bulb to a window, because load is the only argument the Dispatch will hear.",
+        "Three windows are dark tonight, and you know whose they are. Above you a tag-gun clicks, patiently, like a clock with a grudge."
+      ],
+      "unlocksLore": [
+        "window-lamps"
+      ],
+      "choices": [
+        {
+          "text": "Knock at Ma Sato’s stall",
+          "target": "sato-stall"
+        },
+        {
+          "text": "Cross to the twins’ landing",
+          "target": "twins-landing",
+          "conditions": [
+            {
+              "type": "flag",
+              "flag": "lit-twins",
+              "is": false
+            }
+          ],
+          "encounterChance": 30
+        },
+        {
+          "text": "Climb to Old Dov’s door",
+          "target": "dov-door",
+          "conditions": [
+            {
+              "type": "flag",
+              "flag": "lit-dov",
+              "is": false
+            }
+          ],
+          "encounterChance": 30
+        },
+        {
+          "text": "Go up to the roof hatch, where the tagging is",
+          "target": "hobb-doorstep"
+        }
+      ]
+    },
+    {
+      "id": "sato-stall",
+      "chapterId": "sump-nine",
+      "type": "narrative",
+      "prose": [
+        "Ma Sato’s stall is a hotplate, a charge rack and a laminated tariff she has pinned up in self-defence. Phones hang from the rack like bats, drinking.",
+        "She runs the hotplate off the last good battery she owns. The lamp in her window is the first thing she gives up when it runs low, and she has not asked anyone to notice."
+      ],
+      "unlocksLore": [
+        "the-tariff"
+      ],
+      "choices": [
+        {
+          "text": "Look at what she sells",
+          "target": "sato-shop"
+        },
+        {
+          "text": "Pay for two charge-minutes to put a lamp in her window",
+          "target": "sato-stall",
+          "hint": "5 joules",
+          "conditions": [
+            {
+              "type": "gold",
+              "op": ">=",
+              "value": 5
+            },
+            {
+              "type": "flag",
+              "flag": "lit-sato",
+              "is": false
+            }
+          ],
+          "effects": [
+            {
+              "type": "gold",
+              "delta": -5,
+              "note": "Sato takes the five {currency.name} without looking at them, and the window lights behind you."
+            },
+            {
+              "type": "item",
+              "itemId": "lamp-token",
+              "change": "give",
+              "note": "She presses a warm token into your hand: a washer she has charged and scratched with a lamp."
+            },
+            {
+              "type": "flag",
+              "flag": "lit-sato",
+              "value": true
+            }
+          ]
+        },
+        {
+          "text": "Carry her empty charge rack up to the roof pump",
+          "target": "sato-stall",
+          "hint": "costs HP",
+          "conditions": [
+            {
+              "type": "stat",
+              "stat": "hp",
+              "op": ">=",
+              "value": 5
+            },
+            {
+              "type": "flag",
+              "flag": "lit-sato",
+              "is": false
+            }
+          ],
+          "effects": [
+            {
+              "type": "hp",
+              "delta": -2,
+              "note": "The rack is awkward and heavy and bites your shin on every landing."
+            },
+            {
+              "type": "item",
+              "itemId": "lamp-token",
+              "change": "give",
+              "note": "She presses a warm token into your hand: a washer she has charged and scratched with a lamp."
+            },
+            {
+              "type": "flag",
+              "flag": "lit-sato",
+              "value": true
+            }
+          ]
+        },
+        {
+          "text": "Back to the stairwell",
+          "target": "sump-stairwell"
+        }
+      ]
+    },
+    {
+      "id": "sato-shop",
+      "chapterId": "sump-nine",
+      "type": "shop",
+      "prose": [
+        "Sato prices everything honestly, which is not the same as cheaply. The noodles come in flasks so they can be drunk on the stairs.",
+        "On a shelf behind the rack she keeps what the block has sold her over the years. She does not say where it came from, and you do not ask."
+      ],
+      "shop": {
+        "stock": [
+          {
+            "itemId": "noodle-flask",
+            "price": 5
+          },
+          {
+            "itemId": "battery-tea",
+            "price": 3
+          },
+          {
+            "itemId": "medgel-strip",
+            "price": 14
+          },
+          {
+            "itemId": "welders-visor",
+            "price": 10
+          },
+          {
+            "itemId": "hardhat-lamp",
+            "price": 14
+          }
+        ],
+        "leaveSceneId": "sato-stall"
+      }
+    },
+    {
+      "id": "twins-landing",
+      "chapterId": "sump-nine",
+      "type": "narrative",
+      "prose": [
+        "Two kids sit on a dead fuse-box as if it were a throne. The younger wears a cracked monocle and writes down everything you do; the older charges a toll on the landing.",
+        "Behind them the box that feeds their lamp has been shorted, and the window above it is dark. Neither of them looks as if they intend to fix it."
+      ],
+      "choices": [
+        {
+          "text": "Stare the older twin off the box",
+          "target": "twins-won",
+          "hint": "nerve 3",
+          "conditions": [
+            {
+              "type": "stat",
+              "stat": "nerve",
+              "op": ">=",
+              "value": 3
+            }
+          ],
+          "effects": [
+            {
+              "type": "flag",
+              "flag": "lit-twins",
+              "value": true
+            }
+          ]
+        },
+        {
+          "text": "Pay their toll",
+          "target": "twins-won",
+          "hint": "3 joules",
+          "conditions": [
+            {
+              "type": "gold",
+              "op": ">=",
+              "value": 3
+            }
+          ],
+          "effects": [
+            {
+              "type": "gold",
+              "delta": -3,
+              "note": "The older twin counts the toll with her thumb and nods once, like a customs officer."
+            },
+            {
+              "type": "flag",
+              "flag": "lit-twins",
+              "value": true
+            }
+          ]
+        },
+        {
+          "text": "Take the box from them",
+          "target": "twins-fight",
+          "hint": "combat"
+        },
+        {
+          "text": "Leave them to it",
+          "target": "sump-stairwell"
+        }
+      ]
+    },
+    {
+      "id": "twins-fight",
+      "chapterId": "sump-nine",
+      "type": "fight",
+      "prose": [
+        "The older twin slides off the box with the air of someone who has been waiting for this. The younger one starts writing.",
+        "A fuse-kid fights the way a fuse fails: all at once, without notice, and generally from the side."
+      ],
+      "fight": {
+        "monsterId": "fuse-kid",
+        "onVictory": {
+          "sceneId": "twins-won",
+          "effects": [
+            {
+              "type": "flag",
+              "flag": "lit-twins",
+              "value": true
+            }
+          ]
+        },
+        "onFlee": {
+          "sceneId": "sump-stairwell",
+          "effects": [
+            {
+              "type": "stat",
+              "stat": "nerve",
+              "delta": -1,
+              "note": "The monocle follows you down the stairs, writing, and takes a little of your nerve with it."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "twins-won",
+      "chapterId": "sump-nine",
+      "type": "narrative",
+      "prose": [
+        "The fuse-box coughs and then holds. Upstairs a window turns the colour of weak tea, and a lamp comes up in it with the slow dignity of something that has been waiting its turn.",
+        "The younger twin crosses something out in her notebook. “Hobb pays for information,” she says, not looking at you. “We have not decided what ours is worth.”"
+      ],
+      "choices": [
+        {
+          "text": "Back to the stairwell",
+          "target": "sump-stairwell"
+        }
+      ]
+    },
+    {
+      "id": "dov-door",
+      "chapterId": "sump-nine",
+      "type": "narrative",
+      "prose": [
+        "Old Dov sits in a kitchen chair on his landing under a lamp that has no oil, holding a cup that has no tea. His stove lies on its side behind him, where it fell and where he has decided to leave it.",
+        "He talks about the notice the way other men talk about a bad knee: with relish, and from experience."
+      ],
+      "choices": [
+        {
+          "text": "Give Dov a battery-tea",
+          "target": "sump-stairwell",
+          "conditions": [
+            {
+              "type": "item",
+              "itemId": "battery-tea",
+              "has": true
+            }
+          ],
+          "effects": [
+            {
+              "type": "item",
+              "itemId": "battery-tea",
+              "change": "take",
+              "note": "Dov drinks it in two swallows and finally tells you which paragraph on the notice is worth reading."
+            },
+            {
+              "type": "flag",
+              "flag": "lit-dov",
+              "value": true
+            },
+            {
+              "type": "flag",
+              "flag": "knows-clause",
+              "value": true
+            }
+          ]
+        },
+        {
+          "text": "Stand his stove back up and carry it in",
+          "target": "sump-stairwell",
+          "hint": "costs HP",
+          "conditions": [
+            {
+              "type": "stat",
+              "stat": "hp",
+              "op": ">=",
+              "value": 5
+            }
+          ],
+          "effects": [
+            {
+              "type": "hp",
+              "delta": -2,
+              "note": "The stove weighs more than the argument for it. Dov lights the lamp himself, with great ceremony."
+            },
+            {
+              "type": "flag",
+              "flag": "lit-dov",
+              "value": true
+            }
+          ]
+        },
+        {
+          "text": "Leave him to the chair",
+          "target": "sump-stairwell"
+        }
+      ]
+    },
+    {
+      "id": "hobb-doorstep",
+      "chapterId": "sump-nine",
+      "type": "narrative",
+      "prose": [
+        "Assessor Hobb is on the landing below the roof hatch, tagging doors with a clipboard and a pen on a chain. He does it politely, like a man seating guests.",
+        "“Resident,” he says, without looking up. “The block is owed one assessment. I can take it in cash or I can take it in inconvenience. I am told both are accepted.”",
+        "His tag-gun hangs at his hip. He looks at you the way a ledger looks at a blot."
+      ],
+      "unlocksLore": [
+        "hobbs-tab"
+      ],
+      "choices": [
+        {
+          "text": "Pay the assessment",
+          "target": "hobb-paid",
+          "hint": "10 joules",
+          "conditions": [
+            {
+              "type": "gold",
+              "op": ">=",
+              "value": 10
+            }
+          ],
+          "effects": [
+            {
+              "type": "gold",
+              "delta": -10,
+              "note": "Hobb counts the ten {currency.name} twice and writes them into a column you cannot see."
+            },
+            {
+              "type": "flag",
+              "flag": "paid-hobb",
+              "value": true
+            }
+          ]
+        },
+        {
+          "text": "Slip past while he is counting doors",
+          "target": "hobb-slipped",
+          "hint": "wits 3",
+          "conditions": [
+            {
+              "type": "stat",
+              "stat": "wits",
+              "op": ">=",
+              "value": 3
+            }
+          ],
+          "effects": [
+            {
+              "type": "flag",
+              "flag": "slipped-hobb",
+              "value": true
+            }
+          ]
+        },
+        {
+          "text": "Argue until it becomes a fight",
+          "target": "hobb-one",
+          "hint": "combat"
+        }
+      ]
+    },
+    {
+      "id": "hobb-one",
+      "chapterId": "sump-nine",
+      "type": "fight",
+      "prose": [
+        "Hobb sets the clipboard on the rail like a man putting down a glass. “Then we will do it the long way,” he says.",
+        "The pen comes off its chain and is, you realise, sharpened."
+      ],
+      "fight": {
+        "monsterId": "hobb-tagger",
+        "onVictory": {
+          "sceneId": "hobb-one-won",
+          "effects": [
+            {
+              "type": "flag",
+              "flag": "beat-hobb-1",
+              "value": true
+            }
+          ]
+        },
+        "onFlee": {
+          "sceneId": "sump-ladder",
+          "effects": [
+            {
+              "type": "flag",
+              "flag": "fled-hobb-1",
+              "value": true
+            },
+            {
+              "type": "stat",
+              "stat": "nerve",
+              "delta": -1,
+              "note": "Hobb’s pen scratches a new line on the tab behind you. It is not a line you want to be on."
+            }
+          ]
+        },
+        "onDefeat": "hobbs-tab-settled"
+      }
+    },
+    {
+      "id": "hobb-one-won",
+      "chapterId": "sump-nine",
+      "type": "narrative",
+      "prose": [
+        "Hobb folds the clipboard shut with great care, the way a man closes the door on a room he intends to return to. “That will be added,” he says, and does not say to what.",
+        "He goes down the stairs one tag at a time, and the sound of it follows you up."
+      ],
+      "choices": [
+        {
+          "text": "Climb to the roof ladder",
+          "target": "sump-ladder"
+        }
+      ]
+    },
+    {
+      "id": "hobb-paid",
+      "chapterId": "sump-nine",
+      "type": "narrative",
+      "prose": [
+        "He stamps the notice on your door PAID, NOT EXEMPT. It is the most generous thing a stamp has ever said to you.",
+        "“I will be above you,” Hobb says, brushing the clipboard against his sleeve. “We will speak again. It will go better if you have kept the receipt.”"
+      ],
+      "choices": [
+        {
+          "text": "Climb to the roof ladder",
+          "target": "sump-ladder"
+        }
+      ]
+    },
+    {
+      "id": "hobb-slipped",
+      "chapterId": "sump-nine",
+      "type": "narrative",
+      "prose": [
+        "You are two landings up before he reaches the end of the row. Behind you the tag-gun clicks, once, on a door you have only just left.",
+        "He will know by morning. He knows everything by morning; it is the one thing the Dispatch has ever been quick about."
+      ],
+      "choices": [
+        {
+          "text": "Climb to the roof ladder",
+          "target": "sump-ladder"
+        }
+      ]
+    },
+    {
+      "id": "sump-ladder",
+      "chapterId": "sump-nine",
+      "type": "narrative",
+      "prose": [
+        "The roof hatch opens on the Stack: a wall of piled floors lit like a ledger, each window a different rent. Somewhere inside it the lifts hum.",
+        "Below you Sump Nine’s lamps make a few small, stubborn squares. Whichever ones are lit, they are yours."
+      ],
+      "choices": [
+        {
+          "text": "Climb into the Stack",
+          "target": "stack-queue"
+        }
+      ]
+    },
+    {
+      "id": "sump-bins",
+      "chapterId": "sump-nine",
+      "type": "narrative",
+      "prose": [
+        "Someone has left a bucket of copper offcuts on the stair, perhaps as a joke. A spool of fine wire sits on top, still bright.",
+        "It would sell. It would also be missed by somebody, and in Sump Nine that is usually the better reason."
+      ],
+      "choices": [
+        {
+          "text": "Take the wire",
+          "target": "$return",
+          "effects": [
+            {
+              "type": "gold",
+              "delta": 6,
+              "note": "The copper is worth six {currency.name} to anyone who does not ask where it came from."
+            },
+            {
+              "type": "flag",
+              "flag": "found-spool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "text": "Leave it for whoever needs it",
+          "target": "$return",
+          "effects": [
+            {
+              "type": "flag",
+              "flag": "found-spool",
+              "value": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sump-flicker",
+      "chapterId": "sump-nine",
+      "type": "narrative",
+      "prose": [
+        "Every lamp in the stairwell sags at once, as if the whole block had been asked a question. Then they recover, and the air smells of warm dust.",
+        "Nothing else happens. It is the kind of nothing you remember."
+      ],
+      "choices": [
+        {
+          "text": "Wait for the lamps to steady",
+          "target": "$return",
+          "effects": [
+            {
+              "type": "hp",
+              "delta": 1,
+              "note": "You breathe in the warm dust and feel, absurdly, a little better."
+            }
+          ]
+        },
+        {
+          "text": "Keep moving",
+          "target": "$return"
+        }
+      ]
+    }
+  ]
+}

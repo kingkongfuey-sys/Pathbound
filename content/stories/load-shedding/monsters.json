@@ -1,0 +1,408 @@
+{
+  "monsters": [
+    {
+      "id": "meter-rat",
+      "name": "Meter-rat",
+      "codexEntry": "A rat that has lived its whole life on the live side of a meter and gone round the bend with it. It is warm to the touch and quite fat, and it bites in a straight line because nobody has ever taught it anything else. Sump Nine tolerates the rats the way a hospital tolerates its smell. They are most dangerous when you are tired and the stairs are dark, and the one thing to say for them is that they are honest.",
+      "hp": 9,
+      "damage": {
+        "min": 2,
+        "max": 4
+      },
+      "styleTendencies": {
+        "strike": 6,
+        "guard": 1,
+        "feint": 2
+      },
+      "skills": [],
+      "lootTable": {
+        "items": [
+          {
+            "itemId": "battery-tea",
+            "weight": 3
+          }
+        ],
+        "gold": {
+          "min": 1,
+          "max": 4
+        },
+        "noneWeight": 4
+      },
+      "boss": false
+    },
+    {
+      "id": "fuse-kid",
+      "name": "Fuse-kid",
+      "codexEntry": "A child of the stairwell who has learned that a spark is a currency. Fuse-kids work in pairs: one distracts and one takes, and the roles change in the middle of the sentence. They fight like a fuse fails, all at once and from the side, with a little flash of foil in the eyes. Most of them mean no harm. The ones who mean some are the ones you remember.",
+      "hp": 13,
+      "damage": {
+        "min": 3,
+        "max": 6
+      },
+      "styleTendencies": {
+        "strike": 2,
+        "guard": 1,
+        "feint": 6
+      },
+      "skills": [
+        {
+          "id": "pocket-flash",
+          "name": "Pocket flash",
+          "description": "A foil flash in the face and a boot where you were not looking.",
+          "stance": "feint",
+          "effect": {
+            "kind": "bonusDamage",
+            "amount": 2
+          },
+          "cooldown": 3
+        }
+      ],
+      "lootTable": {
+        "items": [
+          {
+            "itemId": "noodle-flask",
+            "weight": 2
+          },
+          {
+            "itemId": "welders-visor",
+            "weight": 1
+          }
+        ],
+        "gold": {
+          "min": 3,
+          "max": 6
+        },
+        "noneWeight": 3
+      },
+      "boss": false
+    },
+    {
+      "id": "stack-drone",
+      "name": "Stack-drone",
+      "codexEntry": "A four-legged inspection unit bolted to the underside of the Stack’s main stair. It checks floor passes and, where none are found, its own mercy. Its voice was recorded in a better decade by someone who has since stopped speaking. It leads with its plate and waits to see what you do about it, which makes it patient in the way of things that have never been in a hurry to be useful.",
+      "hp": 22,
+      "damage": {
+        "min": 7,
+        "max": 11
+      },
+      "styleTendencies": {
+        "strike": 2,
+        "guard": 6,
+        "feint": 1
+      },
+      "skills": [
+        {
+          "id": "plate-down",
+          "name": "Plate down",
+          "description": "Drops the shoulder plate and lets the blow find a sheet of steel.",
+          "stance": "guard",
+          "effect": {
+            "kind": "reduceDamage",
+            "amount": 2
+          },
+          "cooldown": 3
+        }
+      ],
+      "lootTable": {
+        "items": [
+          {
+            "itemId": "medgel-strip",
+            "weight": 2
+          },
+          {
+            "itemId": "sump-brew",
+            "weight": 1
+          }
+        ],
+        "gold": {
+          "min": 4,
+          "max": 8
+        },
+        "noneWeight": 3
+      },
+      "boss": false
+    },
+    {
+      "id": "ticket-hound",
+      "name": "Ticket-hound",
+      "codexEntry": "A collections animal grown from a greyhound and a tariff. Its collar lights when it has found a debtor, and the colour of the light is the amount. It runs flat out and bites straight, and it has never been known to doubt a number. Residents of the Stack say you can hear one three floors away: the click of claws, and the patter of a fine being read aloud.",
+      "hp": 16,
+      "damage": {
+        "min": 8,
+        "max": 12
+      },
+      "styleTendencies": {
+        "strike": 6,
+        "guard": 1,
+        "feint": 2
+      },
+      "skills": [
+        {
+          "id": "fine-issued",
+          "name": "Fine issued",
+          "description": "A lunge that arrives with the paperwork already filled in.",
+          "stance": "strike",
+          "effect": {
+            "kind": "bonusDamage",
+            "amount": 2
+          },
+          "cooldown": 4
+        }
+      ],
+      "lootTable": {
+        "items": [
+          {
+            "itemId": "sump-brew",
+            "weight": 2
+          },
+          {
+            "itemId": "noodle-flask",
+            "weight": 2
+          }
+        ],
+        "gold": {
+          "min": 4,
+          "max": 8
+        },
+        "noneWeight": 3
+      },
+      "boss": false
+    },
+    {
+      "id": "grid-warden",
+      "name": "Grid-warden",
+      "codexEntry": "The Dispatch’s own doormen, built in grey with a lamp for a head. A warden does not care about you, only about whether you are drawing load, and it has a ruling for every kind of answer. It will block, strike and bluff in turns, so that no stance feels safe for long, and when it closes a door it stays closed. Its voice is the voice of a lift that has had enough.",
+      "hp": 28,
+      "damage": {
+        "min": 9,
+        "max": 14
+      },
+      "styleTendencies": {
+        "strike": 3,
+        "guard": 3,
+        "feint": 3
+      },
+      "skills": [
+        {
+          "id": "lockdown",
+          "name": "Lockdown",
+          "description": "Drops the shutters and the blow with them.",
+          "stance": "guard",
+          "effect": {
+            "kind": "reduceDamage",
+            "amount": 2
+          },
+          "cooldown": 3
+        }
+      ],
+      "lootTable": {
+        "items": [
+          {
+            "itemId": "medgel-strip",
+            "weight": 2
+          },
+          {
+            "itemId": "battery-tea",
+            "weight": 1
+          }
+        ],
+        "gold": {
+          "min": 6,
+          "max": 10
+        },
+        "noneWeight": 3
+      },
+      "boss": false
+    },
+    {
+      "id": "hobb-tagger",
+      "name": "Assessor Hobb",
+      "codexEntry": "A clerk on the landing with a clipboard and a pen on a chain, tagging the doors of District 9 one at a time in the manner of a man seating guests. He keeps to his guard like a man behind a counter and prefers to be asked. He is not cruel; cruelty would need an opinion. The first meeting with him is always civil, because that is the first line of the tab.",
+      "hp": 18,
+      "damage": {
+        "min": 5,
+        "max": 7
+      },
+      "styleTendencies": {
+        "strike": 2,
+        "guard": 5,
+        "feint": 1
+      },
+      "skills": [
+        {
+          "id": "red-pen",
+          "name": "Red pen",
+          "description": "Strikes a line through the blow and writes a smaller one.",
+          "stance": "guard",
+          "effect": {
+            "kind": "reduceDamage",
+            "amount": 1
+          },
+          "cooldown": 3
+        }
+      ],
+      "lootTable": {
+        "items": [
+          {
+            "itemId": "battery-tea",
+            "weight": 1
+          }
+        ],
+        "gold": {
+          "min": 6,
+          "max": 10
+        },
+        "noneWeight": 1
+      },
+      "boss": false
+    },
+    {
+      "id": "hobb-augur",
+      "name": "Assessor Hobb, augmented",
+      "codexEntry": "The same man, promoted by the same machine he inspects. He has a second clipboard with a handle, a lamp on a stand and a new habit of baiting: the pen is somewhere else whenever you reach for it. He feints because he has read your file, and in the file you are a person who reaches. He has learned from you. He sends the lesson on at cost.",
+      "hp": 32,
+      "damage": {
+        "min": 9,
+        "max": 14
+      },
+      "styleTendencies": {
+        "strike": 2,
+        "guard": 2,
+        "feint": 5
+      },
+      "skills": [
+        {
+          "id": "bait-the-clause",
+          "name": "Bait the clause",
+          "description": "Offers a clause, and takes the arm that reaches for it.",
+          "stance": "feint",
+          "effect": {
+            "kind": "bonusDamage",
+            "amount": 2
+          },
+          "cooldown": 3
+        }
+      ],
+      "lootTable": {
+        "items": [
+          {
+            "itemId": "foreclosure-stamp",
+            "weight": 1
+          }
+        ],
+        "gold": {
+          "min": 8,
+          "max": 12
+        },
+        "noneWeight": 0
+      },
+      "boss": false
+    },
+    {
+      "id": "hobb-unmetered",
+      "name": "Assessor Hobb, unmetered",
+      "codexEntry": "What is left of Hobb when the tab has been run down to the bone. He has stopped billing and begun to collect. Whatever pen he carries now has a point you could hang a coat from, and he strikes first and invoices later. The meters near him dim to feed his load, which is rude, and legal. By this point his courtesy is a matter of habit rather than conviction.",
+      "hp": 44,
+      "damage": {
+        "min": 11,
+        "max": 17
+      },
+      "styleTendencies": {
+        "strike": 5,
+        "guard": 3,
+        "feint": 2
+      },
+      "skills": [
+        {
+          "id": "back-billing",
+          "name": "Back-billing",
+          "description": "Reaches back through the tab and lands a charge you had forgotten.",
+          "stance": "strike",
+          "effect": {
+            "kind": "bonusDamage",
+            "amount": 3
+          },
+          "cooldown": 4
+        },
+        {
+          "id": "interest-accrues",
+          "name": "Interest accrues",
+          "description": "Takes the blow and lets it compound for later.",
+          "stance": "guard",
+          "effect": {
+            "kind": "reduceDamage",
+            "amount": 2
+          },
+          "cooldown": 3
+        }
+      ],
+      "lootTable": {
+        "items": [
+          {
+            "itemId": "grid-badge",
+            "weight": 1
+          }
+        ],
+        "gold": {
+          "min": 10,
+          "max": 14
+        },
+        "noneWeight": 0
+      },
+      "boss": false
+    },
+    {
+      "id": "the-dispatch",
+      "name": "The Dispatch",
+      "codexEntry": "A desk that has grown a voice. It speaks from every vent in the Dispatch floor at once, mildly, in the register of someone who has been asked to be fair. It feints with load: a surge here, a brownout there, and the swing is the thing you never see coming. It has never lost an argument. It has simply, on occasion, been out of the office. It regrets what it does. It does it anyway.",
+      "hp": 60,
+      "damage": {
+        "min": 11,
+        "max": 17
+      },
+      "styleTendencies": {
+        "strike": 4,
+        "guard": 3,
+        "feint": 3
+      },
+      "skills": [
+        {
+          "id": "phantom-load",
+          "name": "Phantom load",
+          "description": "Feeds you a surge that was never on any meter.",
+          "stance": "feint",
+          "effect": {
+            "kind": "bonusDamage",
+            "amount": 2
+          },
+          "cooldown": 3
+        },
+        {
+          "id": "shed-the-surplus",
+          "name": "Shed the surplus",
+          "description": "Discards the blow as unbilled.",
+          "stance": "guard",
+          "effect": {
+            "kind": "reduceDamage",
+            "amount": 3
+          },
+          "cooldown": 3
+        }
+      ],
+      "lootTable": {
+        "items": [
+          {
+            "itemId": "sump-brew",
+            "weight": 1
+          }
+        ],
+        "gold": {
+          "min": 20,
+          "max": 30
+        },
+        "noneWeight": 1
+      },
+      "boss": true
+    }
+  ]
+}

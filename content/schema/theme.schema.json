@@ -1,0 +1,257 @@
+{
+  "$id": "theme.schema.json",
+  "title": "A binding: one file in content/themes, the whole look of the app's own chrome",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "name",
+    "note",
+    "order",
+    "scheme",
+    "colors",
+    "fonts",
+    "type",
+    "surface",
+    "marks"
+  ],
+  "properties": {
+    "id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 24
+    },
+    "note": {
+      "$ref": "common.schema.json#/$defs/shortText"
+    },
+    "order": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 99
+    },
+    "default": {
+      "const": true
+    },
+    "scheme": {
+      "enum": [
+        "light",
+        "dark"
+      ]
+    },
+    "colors": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "paper",
+        "ink",
+        "inkFaded",
+        "rule",
+        "accent",
+        "accentWet"
+      ],
+      "properties": {
+        "paper": {
+          "$ref": "common.schema.json#/$defs/hexColor"
+        },
+        "ink": {
+          "$ref": "common.schema.json#/$defs/hexColor"
+        },
+        "inkFaded": {
+          "$ref": "common.schema.json#/$defs/hexColor"
+        },
+        "rule": {
+          "$ref": "common.schema.json#/$defs/hexColor"
+        },
+        "accent": {
+          "$ref": "common.schema.json#/$defs/hexColor"
+        },
+        "accentWet": {
+          "$ref": "common.schema.json#/$defs/hexColor"
+        },
+        "choices": {
+          "$ref": "common.schema.json#/$defs/hexColor"
+        },
+        "statsBar": {
+          "$ref": "common.schema.json#/$defs/hexColor"
+        },
+        "combatLog": {
+          "$ref": "common.schema.json#/$defs/hexColor"
+        },
+        "inkRule": {
+          "$ref": "common.schema.json#/$defs/hexColor"
+        },
+        "marginRule": {
+          "$ref": "common.schema.json#/$defs/hexColor"
+        }
+      }
+    },
+    "fonts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "display",
+        "text",
+        "load"
+      ],
+      "properties": {
+        "display": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 200
+        },
+        "text": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 200
+        },
+        "load": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 6,
+          "items": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 80
+          }
+        }
+      }
+    },
+    "type": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "emphasis",
+        "scale",
+        "displayScale"
+      ],
+      "properties": {
+        "emphasis": {
+          "enum": [
+            "italic",
+            "normal"
+          ]
+        },
+        "scale": {
+          "type": "number",
+          "minimum": 0.8,
+          "maximum": 1.2
+        },
+        "displayScale": {
+          "type": "number",
+          "minimum": 0.6,
+          "maximum": 1.2
+        },
+        "figures": {
+          "enum": [
+            "lining",
+            "oldstyle"
+          ]
+        }
+      }
+    },
+    "surface": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "lit",
+        "edge"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "paper",
+            "screen",
+            "glade"
+          ]
+        },
+        "lit": {
+          "$ref": "#/$defs/wash"
+        },
+        "edge": {
+          "$ref": "#/$defs/wash"
+        },
+        "trace": {
+          "$ref": "#/$defs/wash"
+        }
+      },
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "paper"
+          }
+        }
+      },
+      "then": {
+        "not": {
+          "required": [
+            "trace"
+          ]
+        }
+      },
+      "else": {
+        "required": [
+          "trace"
+        ]
+      }
+    },
+    "marks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rule",
+        "leader",
+        "glow",
+        "underline"
+      ],
+      "properties": {
+        "rule": {
+          "enum": [
+            "hand",
+            "laser",
+            "vine"
+          ]
+        },
+        "leader": {
+          "enum": [
+            "dotted",
+            "dashed"
+          ]
+        },
+        "glow": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "underline": {
+          "type": "integer",
+          "minimum": 30,
+          "maximum": 100
+        }
+      }
+    }
+  },
+  "$defs": {
+    "wash": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "color",
+        "alpha"
+      ],
+      "properties": {
+        "color": {
+          "$ref": "common.schema.json#/$defs/hexColor"
+        },
+        "alpha": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    }
+  }
+}

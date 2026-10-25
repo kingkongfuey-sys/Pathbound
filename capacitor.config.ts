@@ -9,7 +9,7 @@ const config: CapacitorConfig = {
   backgroundColor: '#E1D8B6',
   plugins: {
     SystemBars: {
-      // Dark icons on the pale paper; the page reserves its own safe-area padding.
+      // Dark icons on the pale paper, until the page starts (app/theme.ts then sets this per binding); the page reserves its own safe-area padding.
       style: 'LIGHT',
       insetsHandling: 'css',
       initialViewportFitValueHint: 'cover',

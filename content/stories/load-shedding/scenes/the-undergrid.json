@@ -1,0 +1,483 @@
+{
+  "scenes": [
+    {
+      "id": "undergrid-entry",
+      "chapterId": "the-undergrid",
+      "type": "narrative",
+      "prose": [
+        "The fire stair gives out into a hall of meters. They hang in rows from a ceiling too high to see, one dial for each household the city ever billed, and the hall hums at the pitch of a held breath.",
+        "The rows are marked in chalk by someone who stopped caring whether you could read them. A painted plate for District 9 points off to the right."
+      ],
+      "unlocksLore": [
+        "undergrid-meters"
+      ],
+      "choices": [
+        {
+          "text": "Unlock the maintenance cage with the bent key",
+          "target": "maintenance-cage",
+          "conditions": [
+            {
+              "type": "item",
+              "itemId": "bent-key",
+              "has": true
+            }
+          ]
+        },
+        {
+          "text": "Walk the row into the dead districts",
+          "target": "dead-district",
+          "encounterChance": 40
+        }
+      ]
+    },
+    {
+      "id": "maintenance-cage",
+      "chapterId": "the-undergrid",
+      "type": "narrative",
+      "prose": [
+        "The cage holds a spare coil, a mop that has outlived its bucket and a crate stencilled FOR EMERGENCIES, DO NOT USE. Someone has used it. Someone has used it well.",
+        "What is left is an arc-pike wrapped in a tarpaulin, humming faintly, like a thing that has been told to wait."
+      ],
+      "choices": [
+        {
+          "text": "Take the arc-pike",
+          "target": "dead-district",
+          "conditions": [
+            {
+              "type": "item",
+              "itemId": "arc-pike",
+              "has": false
+            }
+          ],
+          "effects": [
+            {
+              "type": "item",
+              "itemId": "arc-pike",
+              "change": "give",
+              "note": "The pike is longer than you expected and wants to be pointed at something."
+            }
+          ]
+        },
+        {
+          "text": "Leave it in its tarpaulin",
+          "target": "dead-district"
+        }
+      ]
+    },
+    {
+      "id": "dead-district",
+      "chapterId": "the-undergrid",
+      "type": "narrative",
+      "prose": [
+        "District 4 has been dark long enough that its meters read zero with real conviction. The dials are clean. Somebody has been wiping them.",
+        "Beneath each dial there is a name card in a brass holder. Some of the holders are empty, and you find you are glad."
+      ],
+      "choices": [
+        {
+          "text": "Hold up the lamp token",
+          "target": "token-answered",
+          "conditions": [
+            {
+              "type": "item",
+              "itemId": "lamp-token",
+              "has": true
+            }
+          ]
+        },
+        {
+          "text": "Walk the black road without a light",
+          "target": "black-road",
+          "hint": "nerve 3",
+          "conditions": [
+            {
+              "type": "stat",
+              "stat": "nerve",
+              "op": ">=",
+              "value": 3
+            }
+          ]
+        },
+        {
+          "text": "Pick your way along the pipes",
+          "target": "meter-row-nine",
+          "encounterChance": 50
+        }
+      ]
+    },
+    {
+      "id": "token-answered",
+      "chapterId": "the-undergrid",
+      "type": "narrative",
+      "prose": [
+        "The token warms in your hand and a dial three rows over twitches, as if it recognised the scratch Sato put on it. Then another. The hall breathes out.",
+        "A path of dials lights ahead, faintly, each one reading a little above zero for as long as you look."
+      ],
+      "choices": [
+        {
+          "text": "Follow the dials",
+          "target": "meter-row-nine",
+          "effects": [
+            {
+              "type": "hp",
+              "delta": 6,
+              "note": "The dials hold their small light as you pass, and the walk costs you nothing."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "black-road",
+      "chapterId": "the-undergrid",
+      "type": "narrative",
+      "prose": [
+        "The black road runs between rows of dead meters with nothing to see by. You walk it by the sound of your own breath, which is the only load on the line.",
+        "Halfway across, something that is not a person says your name in the voice of a recorded announcement. You keep walking until it gives up and files the matter."
+      ],
+      "choices": [
+        {
+          "text": "Walk on",
+          "target": "meter-row-nine",
+          "effects": [
+            {
+              "type": "stat",
+              "stat": "nerve",
+              "delta": 1,
+              "note": "Nobody can bill you for what you did not flinch at. The nerve is yours."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "meter-row-nine",
+      "chapterId": "the-undergrid",
+      "type": "narrative",
+      "prose": [
+        "Row Nine hangs in the cold light of a single working tube. Your block’s meters are still reading, in a small voice, like people who have not been told.",
+        "A man with a cloth stands at the far end of the row, rubbing a dial to a shine. He has done most of the row already. He does not look at you."
+      ],
+      "choices": [
+        {
+          "text": "Read the last entry on your block’s meter",
+          "target": "hobb-three-meet",
+          "hint": "wits 4",
+          "conditions": [
+            {
+              "type": "stat",
+              "stat": "wits",
+              "op": ">=",
+              "value": 4
+            }
+          ],
+          "effects": [
+            {
+              "type": "flag",
+              "flag": "knows-clause",
+              "value": true
+            }
+          ]
+        },
+        {
+          "text": "Leave the dials alone",
+          "target": "hobb-three-meet"
+        }
+      ]
+    },
+    {
+      "id": "hobb-three-meet",
+      "chapterId": "the-undergrid",
+      "type": "narrative",
+      "prose": [
+        "At the end of the row Hobb is waiting beside a meter marked 9-114. He has brought a folding chair and not sat on it. He looks, for the first time, tired, and the tiredness is his own.",
+        "“The tab closes tonight,” he says. “One way or the other. I have a form for each.”"
+      ],
+      "choices": [
+        {
+          "text": "Hand him the badge, and let the tab close",
+          "target": "hobb-three-truce",
+          "conditions": [
+            {
+              "type": "flag",
+              "flag": "hobb-truce"
+            }
+          ]
+        },
+        {
+          "text": "Settle his tab outright",
+          "target": "hobb-three-truce",
+          "hint": "30 joules",
+          "conditions": [
+            {
+              "type": "gold",
+              "op": ">=",
+              "value": 30
+            },
+            {
+              "type": "flag",
+              "flag": "hobb-truce",
+              "is": false
+            }
+          ],
+          "effects": [
+            {
+              "type": "gold",
+              "delta": -30,
+              "note": "Hobb takes thirty {currency.name} and, for once, writes the number down in front of you."
+            },
+            {
+              "type": "flag",
+              "flag": "hobb-truce",
+              "value": true
+            }
+          ]
+        },
+        {
+          "text": "Collect the pen he owes you",
+          "target": "hobb-three-grudge",
+          "hint": "combat",
+          "conditions": [
+            {
+              "type": "flag",
+              "flag": "beat-hobb-2"
+            }
+          ]
+        },
+        {
+          "text": "Turn and face the man who has been chasing you",
+          "target": "hobb-three-chase",
+          "hint": "combat",
+          "conditions": [
+            {
+              "type": "flag",
+              "flag": "fled-hobb-2"
+            }
+          ]
+        },
+        {
+          "text": "Keep walking",
+          "target": "hobb-three-chase",
+          "hint": "risky"
+        }
+      ]
+    },
+    {
+      "id": "hobb-three-grudge",
+      "chapterId": "the-undergrid",
+      "type": "fight",
+      "prose": [
+        "Hobb has had himself rebuilt in the places you broke him. He has a new pen, a new clipboard and a coat the colour of an unpaid fine. “I stopped billing you,” he says. “This is the balance of account.”",
+        "The meters nearest him dim, to give him the load."
+      ],
+      "fight": {
+        "monsterId": "hobb-unmetered",
+        "onVictory": {
+          "sceneId": "hobb-three-won",
+          "effects": [
+            {
+              "type": "flag",
+              "flag": "hobb-settled",
+              "value": true
+            }
+          ]
+        },
+        "onFlee": {
+          "sceneId": "undergrid-exit",
+          "effects": [
+            {
+              "type": "stat",
+              "stat": "nerve",
+              "delta": -1,
+              "note": "Hobb’s pen draws a line across your coat as you go, and the line stays: it is on your account now."
+            },
+            {
+              "type": "gold",
+              "delta": -8,
+              "note": "He bills you eight {currency.name} for the inconvenience of the chase."
+            }
+          ]
+        },
+        "onDefeat": "hobbs-tab-settled"
+      }
+    },
+    {
+      "id": "hobb-three-chase",
+      "chapterId": "the-undergrid",
+      "type": "fight",
+      "prose": [
+        "He steps out of a row you thought was empty, and the folding chair, finally, goes over. “Interest,” says Hobb, “is a living thing.”",
+        "His pen has a point on it you could hang a coat from."
+      ],
+      "fight": {
+        "monsterId": "hobb-unmetered",
+        "onVictory": {
+          "sceneId": "hobb-three-won",
+          "effects": [
+            {
+              "type": "flag",
+              "flag": "hobb-settled",
+              "value": true
+            }
+          ]
+        },
+        "onFlee": {
+          "sceneId": "undergrid-exit",
+          "effects": [
+            {
+              "type": "stat",
+              "stat": "nerve",
+              "delta": -1,
+              "note": "Hobb’s pen draws a line across your coat as you go, and the line stays: it is on your account now."
+            },
+            {
+              "type": "gold",
+              "delta": -8,
+              "note": "He bills you eight {currency.name} for the inconvenience of the chase."
+            }
+          ]
+        },
+        "onDefeat": "hobbs-tab-settled"
+      }
+    },
+    {
+      "id": "hobb-three-won",
+      "chapterId": "the-undergrid",
+      "type": "narrative",
+      "prose": [
+        "Hobb leans against meter 9-114 and slides slowly down it. The dial reads zero, with feeling. “Settled,” he says, and the word lands somewhere like a dropped coin.",
+        "He hands you what hangs from his lanyard without being asked, the way a man hands over a coat he has stopped being able to wear."
+      ],
+      "choices": [
+        {
+          "text": "Take it and go",
+          "target": "undergrid-exit"
+        }
+      ]
+    },
+    {
+      "id": "hobb-three-truce",
+      "chapterId": "the-undergrid",
+      "type": "narrative",
+      "prose": [
+        "Hobb sits, finally, on the folding chair. “I have reviewed your file,” he says. “It is the thinnest I have seen. I am not sure whether that is a compliment.”",
+        "He signs something with the pen he keeps for tagging. “Settled,” he says. It sounds like a door being left ajar."
+      ],
+      "choices": [
+        {
+          "text": "Take his spare badge",
+          "target": "undergrid-exit",
+          "conditions": [
+            {
+              "type": "item",
+              "itemId": "grid-badge",
+              "has": false
+            }
+          ],
+          "effects": [
+            {
+              "type": "item",
+              "itemId": "grid-badge",
+              "change": "give",
+              "note": "He passes the badge over without looking at it, as one hands a stranger the time."
+            },
+            {
+              "type": "flag",
+              "flag": "hobb-settled",
+              "value": true
+            }
+          ]
+        },
+        {
+          "text": "Go on",
+          "target": "undergrid-exit",
+          "effects": [
+            {
+              "type": "flag",
+              "flag": "hobb-settled",
+              "value": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "undergrid-exit",
+      "chapterId": "the-undergrid",
+      "type": "narrative",
+      "prose": [
+        "A cage lift rises from the end of the row, big enough for six and hung with a sign that says it carries four. It goes up through the dark with the sound of money.",
+        "Over the sound you can hear, faintly, the floor you are headed for: a cold, regular, patient hum. The sound of something that has never been asked a question."
+      ],
+      "choices": [
+        {
+          "text": "Ride up",
+          "target": "dispatch-lobby"
+        }
+      ]
+    },
+    {
+      "id": "cold-draught",
+      "chapterId": "the-undergrid",
+      "type": "narrative",
+      "prose": [
+        "A draught comes down the row from nowhere, cold as a rejected application. It turns the dials a little, so that for a moment each reads a different number.",
+        "Then it stops, and they settle back to their zeroes."
+      ],
+      "choices": [
+        {
+          "text": "Wait it out",
+          "target": "$return",
+          "effects": [
+            {
+              "type": "hp",
+              "delta": 1,
+              "note": "The cold clears your head. For a moment you are almost rested."
+            }
+          ]
+        },
+        {
+          "text": "Press on",
+          "target": "$return"
+        }
+      ]
+    },
+    {
+      "id": "forgotten-dial",
+      "chapterId": "the-undergrid",
+      "type": "narrative",
+      "prose": [
+        "A meter has fallen off its hook and lies face-up in the grit. Its glass is cracked and its card, in a neat hand, reads PAID IN FULL.",
+        "Under it is a fold of notes that someone, long ago, was saving for the next bill."
+      ],
+      "choices": [
+        {
+          "text": "Take the notes",
+          "target": "$return",
+          "effects": [
+            {
+              "type": "gold",
+              "delta": 8,
+              "note": "Eight {currency.name} of other people’s foresight."
+            },
+            {
+              "type": "flag",
+              "flag": "found-dial",
+              "value": true
+            }
+          ]
+        },
+        {
+          "text": "Hang the dial back on its hook",
+          "target": "$return",
+          "effects": [
+            {
+              "type": "flag",
+              "flag": "found-dial",
+              "value": true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

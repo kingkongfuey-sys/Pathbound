@@ -1,0 +1,572 @@
+{
+  "scenes": [
+    {
+      "id": "dispatch-lobby",
+      "chapterId": "dispatch-floor",
+      "type": "narrative",
+      "prose": [
+        "The lobby of the Dispatch is cold on purpose, because the machines upstairs run warm and the building has chosen sides. A desk sits under a banner that says YOUR LOAD IS OUR CONCERN. Nobody is visibly concerned.",
+        "Beyond the desk is a staff door with a badge reader, and beyond the door the sound of the wall: lit squares, slowly changing."
+      ],
+      "unlocksLore": [
+        "dispatch-floor"
+      ],
+      "choices": [
+        {
+          "text": "Badge through the staff door",
+          "target": "hall-corridor",
+          "conditions": [
+            {
+              "type": "item",
+              "itemId": "grid-badge",
+              "has": true
+            }
+          ]
+        },
+        {
+          "text": "Go to the front desk",
+          "target": "lobby-desk"
+        },
+        {
+          "text": "Take the service stair",
+          "target": "warden-gate"
+        }
+      ]
+    },
+    {
+      "id": "lobby-desk",
+      "chapterId": "dispatch-floor",
+      "type": "narrative",
+      "prose": [
+        "The desk clerk has a stamp for every condition and a form for every stamp. She does not look up. The forms are in order of how little you want them.",
+        "“Petitions,” she says, “are taken on the Dispatch floor, in person, under a clause. The clause is the clerk’s concern. The clerk is me, and I am not at liberty.”"
+      ],
+      "unlocksLore": [
+        "appeal-clause"
+      ],
+      "choices": [
+        {
+          "text": "Quote clause 41(c) back at her",
+          "target": "hall-corridor",
+          "hint": "knows the clause",
+          "conditions": [
+            {
+              "type": "flag",
+              "flag": "knows-clause"
+            }
+          ]
+        },
+        {
+          "text": "Take a number and wait",
+          "target": "warden-gate"
+        }
+      ]
+    },
+    {
+      "id": "warden-gate",
+      "chapterId": "dispatch-floor",
+      "type": "fight",
+      "prose": [
+        "The service stair is blocked by a warden in a grey coat that is also a door. “You are drawing load without a ticket,” it says, in the voice of a lift.",
+        "You are not drawing load. You are drawing breath. It does not recognise the distinction."
+      ],
+      "fight": {
+        "monsterId": "grid-warden",
+        "onVictory": {
+          "sceneId": "hall-corridor"
+        },
+        "onFlee": {
+          "sceneId": "dispatch-lobby",
+          "effects": [
+            {
+              "type": "stat",
+              "stat": "nerve",
+              "delta": -1,
+              "note": "The warden’s lamp sweeps the lobby behind you, and your nerve comes away with the heat of it."
+            },
+            {
+              "type": "gold",
+              "delta": -6,
+              "note": "The warden levies six {currency.name} for the intrusion as you go."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "hall-corridor",
+      "chapterId": "dispatch-floor",
+      "type": "narrative",
+      "prose": [
+        "The corridor behind the staff door is lined with routing slates and cooling vents, and a first-aid cabinet bolted shut with an old-fashioned clasp. The hum of the wall is louder here, and has a pulse.",
+        "Ahead, through a pair of doors, the squares of the city turn on and off in patterns that look almost like thought."
+      ],
+      "choices": [
+        {
+          "text": "Read the routing slate and learn the wall’s habits",
+          "target": "lamps-wall",
+          "hint": "wits 4",
+          "conditions": [
+            {
+              "type": "stat",
+              "stat": "wits",
+              "op": ">=",
+              "value": 4
+            }
+          ],
+          "effects": [
+            {
+              "type": "stat",
+              "stat": "wits",
+              "delta": 1,
+              "note": "The slate shows how the wall decides. You now read it the way it reads you."
+            }
+          ]
+        },
+        {
+          "text": "Break the cabinet’s clasp with a shoulder",
+          "target": "lamps-wall",
+          "hint": "defense 3",
+          "conditions": [
+            {
+              "type": "stat",
+              "stat": "defense",
+              "op": ">=",
+              "value": 3
+            }
+          ],
+          "effects": [
+            {
+              "type": "item",
+              "itemId": "medgel-strip",
+              "change": "give",
+              "note": "The clasp gives with a sound like a bad idea. The cabinet holds a medgel strip, intact."
+            }
+          ]
+        },
+        {
+          "text": "Go through the doors",
+          "target": "lamps-wall",
+          "encounterChance": 40
+        }
+      ]
+    },
+    {
+      "id": "lamps-wall",
+      "chapterId": "dispatch-floor",
+      "type": "narrative",
+      "prose": [
+        "The wall is the size of a car park and shows Vantry as lit squares. District 9 is a cluster at the lower left, going out one square at a time as the countdown ticks toward five.",
+        "Where the windows of Sump Nine are lit they show on the wall as small stubborn squares with something in them. Each one looks back at you."
+      ],
+      "choices": [
+        {
+          "text": "Let Sato’s window answer",
+          "target": "pre-boss",
+          "conditions": [
+            {
+              "type": "flag",
+              "flag": "lit-sato"
+            }
+          ],
+          "effects": [
+            {
+              "type": "hp",
+              "delta": 9,
+              "note": "A square the colour of weak broth flares up. Somewhere far below, Sato’s hotplate is feeding you."
+            }
+          ]
+        },
+        {
+          "text": "Let the twins’ window answer",
+          "target": "pre-boss",
+          "conditions": [
+            {
+              "type": "flag",
+              "flag": "lit-twins"
+            }
+          ],
+          "effects": [
+            {
+              "type": "stat",
+              "stat": "attack",
+              "delta": 1,
+              "note": "A hard white square flashes twice. The younger twin has put a number next to you, and the number is high."
+            }
+          ]
+        },
+        {
+          "text": "Let Dov’s window answer",
+          "target": "pre-boss",
+          "conditions": [
+            {
+              "type": "flag",
+              "flag": "lit-dov"
+            }
+          ],
+          "effects": [
+            {
+              "type": "stat",
+              "stat": "defense",
+              "delta": 1,
+              "note": "A slow orange square settles. Old Dov’s stove, upright and warm, takes the first blow for you."
+            }
+          ]
+        },
+        {
+          "text": "Let all three answer together",
+          "target": "pre-boss",
+          "hint": "keeps the chorus",
+          "conditions": [
+            {
+              "type": "flag",
+              "flag": "lit-sato"
+            },
+            {
+              "type": "flag",
+              "flag": "lit-twins"
+            },
+            {
+              "type": "flag",
+              "flag": "lit-dov"
+            }
+          ],
+          "effects": [
+            {
+              "type": "flag",
+              "flag": "window-chorus",
+              "value": true
+            },
+            {
+              "type": "hp",
+              "delta": 4,
+              "note": "The three squares meet in the middle and hold, and the wall does something it has not done before: it pauses."
+            }
+          ]
+        },
+        {
+          "text": "Look away from the wall",
+          "target": "pre-boss"
+        }
+      ]
+    },
+    {
+      "id": "pre-boss",
+      "chapterId": "dispatch-floor",
+      "type": "narrative",
+      "prose": [
+        "The Dispatch door is double-glazed and hums, and has been fitted with a small brass plaque that says KNOCK ONLY IF EXPECTED. Beyond it the voice of the wall is a single patient drone, like someone reading a list.",
+        "You are not expected. You are, however, on the schedule."
+      ],
+      "choices": [
+        {
+          "text": "Drink a noodle-flask first",
+          "target": "pre-boss",
+          "conditions": [
+            {
+              "type": "item",
+              "itemId": "noodle-flask",
+              "has": true
+            }
+          ],
+          "effects": [
+            {
+              "type": "item",
+              "itemId": "noodle-flask",
+              "change": "take",
+              "note": "You drink the flask standing, one hand on the door. It is the best meal you have had in a day."
+            },
+            {
+              "type": "hp",
+              "delta": 5,
+              "note": "The broth is hot and thin and exactly enough."
+            }
+          ]
+        },
+        {
+          "text": "Open the door",
+          "target": "dispatch-boss"
+        }
+      ]
+    },
+    {
+      "id": "dispatch-boss",
+      "chapterId": "dispatch-floor",
+      "type": "fight",
+      "prose": [
+        "The Dispatch is not a man or a machine so much as a desk that has grown a voice. It speaks from every vent in the hall at once, mildly, in the register of someone who has been asked to be fair.",
+        "“Load is load,” it says. “I regret that it is you.” The lit squares behind it reorder themselves into something that tries to look like a hand."
+      ],
+      "fight": {
+        "monsterId": "the-dispatch",
+        "onVictory": {
+          "sceneId": "dispatch-quiet"
+        },
+        "onFlee": {
+          "sceneId": "dispatch-retreat",
+          "effects": [
+            {
+              "type": "flag",
+              "flag": "lit-dov",
+              "value": false
+            },
+            {
+              "type": "flag",
+              "flag": "window-chorus",
+              "value": false
+            },
+            {
+              "type": "stat",
+              "stat": "nerve",
+              "delta": -1,
+              "note": "The wall dims one square as you run. The sound of Old Dov’s stove going quiet is almost audible, and it costs you some nerve."
+            }
+          ]
+        },
+        "onDefeat": "dispatch-closes"
+      }
+    },
+    {
+      "id": "dispatch-retreat",
+      "chapterId": "dispatch-floor",
+      "type": "narrative",
+      "prose": [
+        "You are back at the door with your lungs on fire and the wall visibly smaller. One of the squares on the lower left is out, the way a tooth is out.",
+        "The Dispatch does not follow. It does not need to. It has the schedule, and the schedule has you."
+      ],
+      "choices": [
+        {
+          "text": "Go back to the door",
+          "target": "pre-boss"
+        }
+      ]
+    },
+    {
+      "id": "dispatch-quiet",
+      "chapterId": "dispatch-floor",
+      "type": "narrative",
+      "prose": [
+        "The Dispatch hums down by degrees, like a fridge at night. The vents go silent one by one and the wall holds its last shape a moment, then lets it go.",
+        "On the desk where its voice used to come from there is a keyboard, a stamp and a schedule with nothing on it but District 9."
+      ],
+      "choices": [
+        {
+          "text": "Pick up the schedule",
+          "target": "the-schedule"
+        }
+      ]
+    },
+    {
+      "id": "the-schedule",
+      "chapterId": "dispatch-floor",
+      "type": "narrative",
+      "prose": [
+        "The schedule is a single sheet, the paper warm at the edges. District 9 is at the bottom, with a time against it and a column for objections. The column is empty in the way a collection plate is empty.",
+        "You have the pen. The Dispatch cannot stop you now, though it might feel it should."
+      ],
+      "choices": [
+        {
+          "text": "Light every window and have Hobb witness it",
+          "target": "schedule-chorus",
+          "hint": "needs every lamp",
+          "conditions": [
+            {
+              "type": "flag",
+              "flag": "window-chorus"
+            },
+            {
+              "type": "flag",
+              "flag": "hobb-settled"
+            }
+          ]
+        },
+        {
+          "text": "Petition under clause 41(c)",
+          "target": "schedule-petition",
+          "hint": "knows the clause",
+          "conditions": [
+            {
+              "type": "flag",
+              "flag": "knows-clause"
+            }
+          ]
+        },
+        {
+          "text": "Move the shed one district over",
+          "target": "schedule-shift"
+        }
+      ]
+    },
+    {
+      "id": "schedule-chorus",
+      "chapterId": "dispatch-floor",
+      "type": "narrative",
+      "prose": [
+        "You write Sump Nine’s lamps into the schedule as load, one at a time, and the Dispatch’s own wall counts them. Hobb signs as witness, with the pen he keeps for tags.",
+        "The shed time against District 9 shivers, as if it had been written in a hurry, and is not there."
+      ],
+      "choices": [
+        {
+          "text": "Hand the sheet to the clerk",
+          "target": "end-every-window"
+        }
+      ]
+    },
+    {
+      "id": "schedule-petition",
+      "chapterId": "dispatch-floor",
+      "type": "narrative",
+      "prose": [
+        "You fill in the petition in the box meant for the clerk. Clause 41(c) lets the district burn for one more cycle, and the Dispatch, by its own rules, must agree.",
+        "The sheet takes the amendment without complaint. It is the sort of thing a form can say to a person who has finally read it."
+      ],
+      "unlocksLore": [
+        "appeal-clause"
+      ],
+      "choices": [
+        {
+          "text": "Hand the sheet to the clerk",
+          "target": "end-rescheduled"
+        }
+      ]
+    },
+    {
+      "id": "schedule-shift",
+      "chapterId": "dispatch-floor",
+      "type": "narrative",
+      "prose": [
+        "There is a district further down the list that nobody has lit a lamp for. You read its number, and you read the time against it, and you write one over the other.",
+        "It takes a second. The pen does not complain. That is the worst of it."
+      ],
+      "choices": [
+        {
+          "text": "Hand in the sheet",
+          "target": "end-rescheduled",
+          "effects": [
+            {
+              "type": "stat",
+              "stat": "nerve",
+              "delta": -1,
+              "note": "Some things you do cheaply and carry anyway."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "end-rescheduled",
+      "chapterId": "dispatch-floor",
+      "type": "ending",
+      "prose": [
+        "Sump Nine is held for one further cycle. The notice on your door has a new date on it, in a font you can read, and an apology so small it is almost a joke.",
+        "It is not a victory so much as an extension. The block lights its lamps at dusk, and the lamps are counted, and for one more night the count comes out in your favour.",
+        "Hobb sends a receipt, unsolicited."
+      ]
+    },
+    {
+      "id": "end-every-window",
+      "chapterId": "dispatch-floor",
+      "type": "ending",
+      "prose": [
+        "The notice comes down off your door. It is not replaced. At dusk every window in Sump Nine lights, and the squares on the Dispatch wall meet and hold like a handclasp.",
+        "Sato’s hotplate runs on load nobody bills. Dov’s stove stands upright.",
+        "On the Dispatch floor a clerk finds a form for this and files it where nobody will look. The block does not need it filed. The lamps are on."
+      ]
+    },
+    {
+      "id": "end-brownout",
+      "chapterId": "dispatch-floor",
+      "type": "ending",
+      "prose": [
+        "The lamp in your window goes out, and then the one beside it. For a moment the block holds the dark like a held breath, and then the schedule closes over it like water.",
+        "Somewhere above the Stack a clerk strikes a line through a number. It is not personal; it is rolling.",
+        "Hobb, for the record, did not enter your name. He rarely does."
+      ]
+    },
+    {
+      "id": "end-hobbs-tab",
+      "chapterId": "dispatch-floor",
+      "type": "ending",
+      "prose": [
+        "Hobb assesses you with the care he gives a door. He finds you in arrears, and the arrears are of a kind that cannot be paid.",
+        "“Settled,” he says, and the word has an edge on it no stamp should have. He writes your name on the tag and stands back, as if it were a thing he had made.",
+        "In the morning the tag is on the door, and the door is a number, and the number is shed."
+      ]
+    },
+    {
+      "id": "end-dispatch",
+      "chapterId": "dispatch-floor",
+      "type": "ending",
+      "prose": [
+        "The Dispatch regrets it. It regrets it mildly, from every vent, in the register it uses for everything.",
+        "The wall rearranges itself while you watch. The square that was you goes out, and the others do not notice, because they are not made to.",
+        "District 9 goes dark at 05:00, as scheduled. It is one of the more punctual things in Vantry."
+      ]
+    },
+    {
+      "id": "floor-hum",
+      "chapterId": "dispatch-floor",
+      "type": "narrative",
+      "prose": [
+        "The hum from the wall drops a note, as if the building had thought of something. A few of the dials on the nearest rack turn the way a head turns.",
+        "Then it picks up again, a little warmer, and you are not sure what happened."
+      ],
+      "choices": [
+        {
+          "text": "Hold still until it passes",
+          "target": "$return",
+          "effects": [
+            {
+              "type": "hp",
+              "delta": 1,
+              "note": "For a moment the hum is only warm, and you are only tired."
+            }
+          ]
+        },
+        {
+          "text": "Keep moving",
+          "target": "$return"
+        }
+      ]
+    },
+    {
+      "id": "unplugged-desk",
+      "chapterId": "dispatch-floor",
+      "type": "narrative",
+      "prose": [
+        "A desk by the wall has been left unplugged, its tray full of tickets stamped VOID. In the drawer there is a flask nobody has claimed.",
+        "It is still warm. In this building that almost counts as a criminal record."
+      ],
+      "choices": [
+        {
+          "text": "Take the flask",
+          "target": "$return",
+          "effects": [
+            {
+              "type": "item",
+              "itemId": "sump-brew",
+              "change": "give",
+              "note": "A flask in the drawer, sump brew from a lunch hour that no one came back from."
+            },
+            {
+              "type": "flag",
+              "flag": "found-desk",
+              "value": true
+            }
+          ]
+        },
+        {
+          "text": "Leave the drawer shut",
+          "target": "$return",
+          "effects": [
+            {
+              "type": "flag",
+              "flag": "found-desk",
+              "value": true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

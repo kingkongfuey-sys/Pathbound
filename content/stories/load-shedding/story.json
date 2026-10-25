@@ -1,0 +1,241 @@
+{
+  "id": "load-shedding",
+  "title": "Load Shedding",
+  "blurb": "Your block, Sump Nine, goes dark for good at 05:00. Climb the Stack to the Dispatch floor, keep your neighbours’ lamps burning, and settle an account with Assessor Hobb, who has been tagging doors and has views on how you will pay.",
+  "rating": "teen",
+  "toneLine": "Dry, itemised and unhurried about the end of the world.",
+  "version": 1,
+  "start": "sump-notice",
+  "theme": {
+    "colors": {
+      "prose": "#1b1f24",
+      "choices": "#0b5560",
+      "statsBar": "#2a3139",
+      "combatLog": "#454b52",
+      "background": "#e3dfd0",
+      "accent": "#b3261e"
+    },
+    "typefaceFeel": "old-print"
+  },
+  "currency": {
+    "name": "joules",
+    "symbol": "J"
+  },
+  "archetypes": [
+    {
+      "id": "linewright",
+      "name": "Linewright",
+      "tagline": "Keeps the lines live and takes the shock so the block doesn’t have to.",
+      "stats": {
+        "hp": 18,
+        "attack": 3,
+        "defense": 2,
+        "wits": 2,
+        "nerve": 3
+      },
+      "startingSkills": [
+        {
+          "id": "ground-it",
+          "name": "Ground it",
+          "description": "Plant your boots, let the current run through the coat, and send the worst of it into the floor.",
+          "stance": "guard",
+          "effect": {
+            "kind": "reduceDamage",
+            "amount": 3
+          },
+          "cooldown": 3
+        }
+      ],
+      "startingEquipment": [
+        "lineman-spanner",
+        "rubber-coat"
+      ],
+      "suggestedNames": [
+        "Okoro",
+        "Tam",
+        "Ines",
+        "Brisk"
+      ],
+      "pronouns": {
+        "default": "they",
+        "selectable": true
+      }
+    },
+    {
+      "id": "courier",
+      "name": "Courier",
+      "tagline": "Runs parcels through the gaps the city forgot to meter. Quick, and thin on cushioning.",
+      "stats": {
+        "hp": 14,
+        "attack": 3,
+        "defense": 1,
+        "wits": 3,
+        "nerve": 2
+      },
+      "startingSkills": [
+        {
+          "id": "short-the-seam",
+          "name": "Short the seam",
+          "description": "Find the join where the city was patched and put the blade through it.",
+          "stance": "feint",
+          "effect": {
+            "kind": "bonusDamage",
+            "amount": 3
+          },
+          "cooldown": 3
+        }
+      ],
+      "startingEquipment": [
+        "seam-cutter",
+        "courier-jacket",
+        "noodle-flask"
+      ],
+      "suggestedNames": [
+        "Dace",
+        "Pell",
+        "Wren",
+        "Jory"
+      ],
+      "pronouns": {
+        "default": "he",
+        "selectable": true
+      }
+    },
+    {
+      "id": "tab-reader",
+      "name": "Tab-reader",
+      "tagline": "Reads a tariff the way other people read a face, and finds the clause that was meant to be missed.",
+      "stats": {
+        "hp": 12,
+        "attack": 1,
+        "defense": 1,
+        "wits": 5,
+        "nerve": 3
+      },
+      "startingSkills": [
+        {
+          "id": "run-the-numbers",
+          "name": "Run the numbers",
+          "description": "Add up the blow and the breath, and come out ahead of both.",
+          "stance": "any",
+          "effect": {
+            "kind": "heal",
+            "amount": 4
+          },
+          "cooldown": 4
+        }
+      ],
+      "startingEquipment": [
+        "tariff-slate",
+        "cracked-fob"
+      ],
+      "suggestedNames": [
+        "Sabine",
+        "Lio",
+        "Oriel",
+        "Hesk"
+      ],
+      "pronouns": {
+        "default": "she",
+        "selectable": true
+      }
+    }
+  ],
+  "chapters": [
+    {
+      "id": "sump-nine",
+      "title": "Sump Nine, Last Scheduled Night",
+      "summary": "A notice on your door, a stairwell of neighbours who still have lamps, and an assessor with a clipboard who has already tagged half the landing."
+    },
+    {
+      "id": "the-stack",
+      "title": "Up the Stack",
+      "summary": "A vertical market that sells floors, queues and lungfuls of air, where every route up has a price and a gate, and Hobb is somewhere above you with a pen."
+    },
+    {
+      "id": "the-undergrid",
+      "title": "The Undergrid",
+      "summary": "Under the Stack the city keeps its meters in rows. You cross the districts that were shed before yours and learn what the zero looks like when it has had time to settle."
+    },
+    {
+      "id": "dispatch-floor",
+      "title": "The Dispatch Floor",
+      "summary": "A cold hall with a wall of lit squares. One schedule, one hearing, and a clause in a very small font that nobody expected you to find."
+    }
+  ],
+  "loreEntries": [
+    {
+      "id": "shed-schedule",
+      "title": "The shed schedule",
+      "text": "Every evening at 18:00 the Dispatch pins the night’s schedule to the lamp-posts of Vantry, in a typeface chosen for people who have already lost. Districts are listed by number and by load, and the shedding is called rolling, which suggests it comes back round. For District 9 the word was a courtesy. Nothing in Sump Nine was ever going to roll back."
+    },
+    {
+      "id": "the-tariff",
+      "title": "The tariff",
+      "text": "Power in Vantry is sold by the minute, water by the cup, and air in the Stack by the lungful at floor rates posted inside the lift. The tariff runs to four hundred pages. Nobody has read it all, and the people who wrote it have, on principle, not tried to. Its authors regard clarity as a form of generosity and have budgeted accordingly."
+    },
+    {
+      "id": "hobbs-tab",
+      "title": "Hobb’s tab",
+      "text": "Assessor Hobb carries a clipboard, a pen on a chain and the face of a man who has been invoiced for it. He is not cruel; cruelty would need an opinion. He tags doors because a tagged door becomes a number, and a number can be shed without anybody having to say a name. Those who have paid him describe the experience as being politely stood next to. Those who have not describe it differently, and later."
+    },
+    {
+      "id": "window-lamps",
+      "title": "The window lamps",
+      "text": "A lamp in a window draws about what a fan draws. Legally that is load, and load is the only argument the Dispatch will hear. Sump Nine has always lit its lamps at dusk for that reason, and for the other reason, the one nobody files. From the Dispatch wall a lit district looks like a handful of squares with something stubborn in them."
+    },
+    {
+      "id": "stack-lifts",
+      "title": "The lifts of the Stack",
+      "text": "The lifts stop at every floor whose rent is current. The buttons for the others are still there, under tape, and the tape is replaced each month by a man who has never been seen going up. Residents say the lift hums a different note when it passes a floor it is not allowed to stop at. Residents say a good many things, in the lift, because it is the one place the meter is not listening."
+    },
+    {
+      "id": "undergrid-meters",
+      "title": "The undergrid meters",
+      "text": "Beneath the Stack the meters hang in long rows, one for each household the city ever billed. When a district is shed its meters are not taken down. They are left to read zero until the zero becomes a habit, and then a man comes with a cloth and writes the district off. You can tell how long a district has been dark by how clean its dials are."
+    },
+    {
+      "id": "dispatch-floor",
+      "title": "The Dispatch floor",
+      "text": "The floor is kept cold because the machines run warm. A wall the size of a car park shows Vantry as lit squares, and the squares do not mean people; they mean load. Someone once asked the floor to tell the two apart and was issued a form for the purpose. The form is still outstanding. The staff say this is because nobody has found the right desk."
+    },
+    {
+      "id": "appeal-clause",
+      "title": "Clause 41(c)",
+      "text": "Printed at the foot of every shed notice, in a size chosen by the people who did not want it read: a district drawing demonstrable load at the hour of review may be held for one further cycle on petition, in person, at the Dispatch floor. It has been used twice. Both times the petitioner was a clerk who had misread the notice and arrived early. The Dispatch honoured it, to be safe, and then amended the font."
+    }
+  ],
+  "endings": {
+    "victory": [
+      {
+        "id": "rescheduled",
+        "sceneId": "end-rescheduled",
+        "title": "Rescheduled"
+      },
+      {
+        "id": "every-window",
+        "sceneId": "end-every-window",
+        "title": "Every window lit"
+      }
+    ],
+    "death": [
+      {
+        "id": "brownout",
+        "sceneId": "end-brownout",
+        "title": "Brownout"
+      },
+      {
+        "id": "hobbs-tab-settled",
+        "sceneId": "end-hobbs-tab",
+        "title": "Hobb’s tab, settled"
+      },
+      {
+        "id": "dispatch-closes",
+        "sceneId": "end-dispatch",
+        "title": "The Dispatch closes the account"
+      }
+    ],
+    "defaultDeath": "brownout"
+  },
+  "codexSummary": "Vantry sells its power by the minute and chooses each night which districts go dark. Sump Nine, a block of stairwells and stubborn lamps, has been chosen for good. The tale runs four chapters up from the block, through the Stack and under it, to the Dispatch floor where the schedule is kept. Along the way an assessor named Hobb keeps a tab on you, and the neighbours whose lamps you light keep a tab of their own."
+}

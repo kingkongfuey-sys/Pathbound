@@ -1,0 +1,41 @@
+{
+  "id": "parchment",
+  "name": "Parchment",
+  "note": "Foxed paper, iron-gall ink and a red margin. The book as I found it.",
+  "order": 1,
+  "default": true,
+  "scheme": "light",
+  "colors": {
+    "paper": "#e1d8b6",
+    "ink": "#22201c",
+    "inkFaded": "#5b5340",
+    "rule": "#a89a6c",
+    "accent": "#6b1e24",
+    "accentWet": "#8e2e35"
+  },
+  "fonts": {
+    "display": "'IM Fell French Canon', 'Iowan Old Style', Georgia, serif",
+    "text": "'IM Fell English', 'Iowan Old Style', Georgia, serif",
+    "load": [
+      "64px \"IM Fell French Canon\"",
+      "20px \"IM Fell English\"",
+      "italic 20px \"IM Fell English\""
+    ]
+  },
+  "type": {
+    "emphasis": "italic",
+    "scale": 1,
+    "displayScale": 1
+  },
+  "surface": {
+    "kind": "paper",
+    "lit": { "color": "#fff9dc", "alpha": 0.5 },
+    "edge": { "color": "#5c4018", "alpha": 0.34 }
+  },
+  "marks": {
+    "rule": "hand",
+    "leader": "dotted",
+    "glow": 0,
+    "underline": 55
+  }
+}

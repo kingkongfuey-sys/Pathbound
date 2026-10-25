@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Base application theme: paper and ink, light only (the page is always parchment). -->
+    <!-- Base application theme: paper and ink. This is only the native window before the page paints; the page then dresses itself in the reader's binding (content/themes), so on Cyberpunk the window is briefly parchment. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/ink</item>
         <item name="colorPrimaryDark">@color/ink</item>

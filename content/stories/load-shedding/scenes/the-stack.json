@@ -1,0 +1,596 @@
+{
+  "scenes": [
+    {
+      "id": "stack-queue",
+      "chapterId": "the-stack",
+      "type": "narrative",
+      "prose": [
+        "The Stack stands on Sump Nine like a boot on a wall. Its lift hall is a queue about the length of a mortgage, and everybody in it holds a ticket that says where they are in the line and no more.",
+        "A marshal in a mustard vest guards the lift. Other ways up exist, and each has its price. To one side the Resale Yard sells what the Stack’s residents would rather not be reminded of."
+      ],
+      "unlocksLore": [
+        "stack-lifts"
+      ],
+      "choices": [
+        {
+          "text": "Cut through the pipe-run behind the noodle counters",
+          "target": "pipe-run",
+          "hint": "wits 3",
+          "conditions": [
+            {
+              "type": "stat",
+              "stat": "wits",
+              "op": ">=",
+              "value": 3
+            }
+          ]
+        },
+        {
+          "text": "Shoulder through the live gate by the stairs",
+          "target": "live-gate",
+          "hint": "defense 3",
+          "conditions": [
+            {
+              "type": "stat",
+              "stat": "defense",
+              "op": ">=",
+              "value": 3
+            }
+          ]
+        },
+        {
+          "text": "Stare down the lift marshal",
+          "target": "lobby-staredown",
+          "hint": "nerve 3",
+          "conditions": [
+            {
+              "type": "stat",
+              "stat": "nerve",
+              "op": ">=",
+              "value": 3
+            }
+          ]
+        },
+        {
+          "text": "Quote clause 41(c) at the ticket window",
+          "target": "hobb-two-meet",
+          "hint": "knows the clause",
+          "conditions": [
+            {
+              "type": "flag",
+              "flag": "knows-clause"
+            }
+          ],
+          "effects": [
+            {
+              "type": "item",
+              "itemId": "medgel-strip",
+              "change": "give",
+              "note": "The clerk reads the clause, goes pale, and hands over a first-aid strip in what he hopes is goodwill."
+            }
+          ]
+        },
+        {
+          "text": "Browse the Resale Yard",
+          "target": "resale-shop",
+          "encounterChance": 25
+        },
+        {
+          "text": "Take the main stair, where the drone watches",
+          "target": "drone-ambush",
+          "encounterChance": 40
+        }
+      ]
+    },
+    {
+      "id": "resale-shop",
+      "chapterId": "the-stack",
+      "type": "shop",
+      "prose": [
+        "The Resale Yard is a covered ramp of folding tables, with the prices chalked on tin lids. Everything on it was once someone’s plan.",
+        "The man at the far end has an arc-pike on a hook and a look that says he has seen better days than yours."
+      ],
+      "shop": {
+        "stock": [
+          {
+            "itemId": "noodle-flask",
+            "price": 6
+          },
+          {
+            "itemId": "medgel-strip",
+            "price": 16
+          },
+          {
+            "itemId": "lineman-spanner",
+            "price": 13
+          },
+          {
+            "itemId": "arc-pike",
+            "price": 42
+          },
+          {
+            "itemId": "ballistic-quilt",
+            "price": 36
+          },
+          {
+            "itemId": "reader-lenses",
+            "price": 30
+          }
+        ],
+        "leaveSceneId": "stack-queue"
+      }
+    },
+    {
+      "id": "pipe-run",
+      "chapterId": "the-stack",
+      "type": "narrative",
+      "prose": [
+        "The pipe-run is a gap the width of a person and a half, lined with warm lagging and the smell of soup. It is not on any map because the people who made it were avoiding a map.",
+        "Halfway up, a bent key hangs from a grating where someone dropped it and then stopped being a person who could come back."
+      ],
+      "choices": [
+        {
+          "text": "Pocket the key and keep climbing",
+          "target": "hobb-two-meet",
+          "effects": [
+            {
+              "type": "item",
+              "itemId": "bent-key",
+              "change": "give",
+              "note": "The key is bent into a question mark. It will open something that was once locked out of spite."
+            }
+          ]
+        },
+        {
+          "text": "Leave it and climb on",
+          "target": "hobb-two-meet"
+        }
+      ]
+    },
+    {
+      "id": "live-gate",
+      "chapterId": "the-stack",
+      "type": "narrative",
+      "prose": [
+        "The turnstile sells floors by the touch, and the bar across it is a live conductor. The queue behind you watches the way people watch a stranger test the ice.",
+        "You take the bar in both hands and let the coat do the work. The current finds your body unrewarding and goes to the floor instead.",
+        "On the far side a man hands back the ticket nobody was meant to need."
+      ],
+      "choices": [
+        {
+          "text": "Take the fare tin on the far side",
+          "target": "hobb-two-meet",
+          "effects": [
+            {
+              "type": "gold",
+              "delta": 10,
+              "note": "Whoever kept this gate kept a fare tin, and it holds ten {currency.name}."
+            }
+          ]
+        },
+        {
+          "text": "Walk on",
+          "target": "hobb-two-meet"
+        }
+      ]
+    },
+    {
+      "id": "lobby-staredown",
+      "chapterId": "the-stack",
+      "type": "narrative",
+      "prose": [
+        "The lift marshal has been told to be immovable. He has never been looked at by someone who does not intend to be moved either.",
+        "It takes a few seconds. His vest is the colour of an unpaid fine, and his eyes go to the ceiling before yours do."
+      ],
+      "choices": [
+        {
+          "text": "Take the visor from the lost-property crate",
+          "target": "hobb-two-meet",
+          "conditions": [
+            {
+              "type": "item",
+              "itemId": "welders-visor",
+              "has": false
+            }
+          ],
+          "effects": [
+            {
+              "type": "item",
+              "itemId": "welders-visor",
+              "change": "give",
+              "note": "The marshal gives up a welder’s visor from the crate, still warm from the last person who needed it."
+            }
+          ]
+        },
+        {
+          "text": "Step into the lift",
+          "target": "hobb-two-meet"
+        }
+      ]
+    },
+    {
+      "id": "drone-ambush",
+      "chapterId": "the-stack",
+      "type": "fight",
+      "prose": [
+        "The drone drops from a bracket over the main stair on four legs, plate down, the way a ticket inspector would if he were also a staircase. “Floor pass,” it says, in a voice recorded by someone who had given up.",
+        "It does not wait for the pass."
+      ],
+      "fight": {
+        "monsterId": "stack-drone",
+        "onVictory": {
+          "sceneId": "hobb-two-meet"
+        },
+        "onFlee": {
+          "sceneId": "hobb-two-meet",
+          "effects": [
+            {
+              "type": "stat",
+              "stat": "nerve",
+              "delta": -1,
+              "note": "The drone’s recorded voice chases you up three floors asking for a pass, and being chased is a habit that takes some shaking."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "hobb-two-meet",
+      "chapterId": "the-stack",
+      "type": "narrative",
+      "prose": [
+        "Hobb is on the mezzanine above the lift hall, with a second clipboard now and a lamp on a stand so that he can be seen assessing. He has the look of a man promoted by the same machine he inspects.",
+        "The queue below him has stopped, as queues do in the presence of paperwork."
+      ],
+      "choices": [
+        {
+          "text": "Let Hobb stamp you through",
+          "target": "hobb-truce",
+          "conditions": [
+            {
+              "type": "flag",
+              "flag": "paid-hobb"
+            }
+          ],
+          "effects": [
+            {
+              "type": "flag",
+              "flag": "hobb-truce",
+              "value": true
+            }
+          ]
+        },
+        {
+          "text": "Pay the second assessment",
+          "target": "hobb-truce",
+          "hint": "20 joules",
+          "conditions": [
+            {
+              "type": "gold",
+              "op": ">=",
+              "value": 20
+            },
+            {
+              "type": "flag",
+              "flag": "hobb-truce",
+              "is": false
+            }
+          ],
+          "effects": [
+            {
+              "type": "gold",
+              "delta": -20,
+              "note": "Hobb accepts twenty {currency.name} with the face of someone being thanked for a thing he took."
+            },
+            {
+              "type": "flag",
+              "flag": "hobb-truce",
+              "value": true
+            }
+          ]
+        },
+        {
+          "text": "Face the man you already beat",
+          "target": "hobb-two-vendetta",
+          "hint": "combat",
+          "conditions": [
+            {
+              "type": "flag",
+              "flag": "beat-hobb-1"
+            }
+          ]
+        },
+        {
+          "text": "Turn and meet him; the running is done",
+          "target": "hobb-two-ambush",
+          "hint": "combat",
+          "conditions": [
+            {
+              "type": "flag",
+              "flag": "fled-hobb-1"
+            }
+          ]
+        },
+        {
+          "text": "Meet the man who remembers the door you slipped",
+          "target": "hobb-two-ambush",
+          "hint": "combat",
+          "conditions": [
+            {
+              "type": "flag",
+              "flag": "slipped-hobb"
+            }
+          ]
+        },
+        {
+          "text": "Walk into the queue and hope",
+          "target": "hobb-two-ambush",
+          "hint": "risky"
+        }
+      ]
+    },
+    {
+      "id": "hobb-two-vendetta",
+      "chapterId": "the-stack",
+      "type": "fight",
+      "prose": [
+        "“You hit a civil servant,” Hobb says, touching the edge of his mouth. “It was entered into the record. The record has since been strengthened.” His clipboard has acquired a handle.",
+        "He has learned to bait. Each time you reach, the pen is somewhere else."
+      ],
+      "fight": {
+        "monsterId": "hobb-augur",
+        "onVictory": {
+          "sceneId": "hobb-two-won",
+          "effects": [
+            {
+              "type": "flag",
+              "flag": "beat-hobb-2",
+              "value": true
+            }
+          ]
+        },
+        "onFlee": {
+          "sceneId": "stack-rest",
+          "effects": [
+            {
+              "type": "flag",
+              "flag": "fled-hobb-2",
+              "value": true
+            },
+            {
+              "type": "stat",
+              "stat": "nerve",
+              "delta": -1,
+              "note": "Hobb lets you go the way one lets a coin roll under a table, to be found later."
+            }
+          ]
+        },
+        "onDefeat": "hobbs-tab-settled"
+      }
+    },
+    {
+      "id": "hobb-two-ambush",
+      "chapterId": "the-stack",
+      "type": "fight",
+      "prose": [
+        "He steps out from behind the queue in a way that suggests the queue was arranged for the purpose. “The tab accrues,” he says. “Interest has also been calculated.”",
+        "His pen is out. His smile has been filed."
+      ],
+      "fight": {
+        "monsterId": "hobb-augur",
+        "onVictory": {
+          "sceneId": "hobb-two-won",
+          "effects": [
+            {
+              "type": "flag",
+              "flag": "beat-hobb-2",
+              "value": true
+            }
+          ]
+        },
+        "onFlee": {
+          "sceneId": "stack-rest",
+          "effects": [
+            {
+              "type": "flag",
+              "flag": "fled-hobb-2",
+              "value": true
+            },
+            {
+              "type": "stat",
+              "stat": "nerve",
+              "delta": -1,
+              "note": "Hobb lets you go the way one lets a coin roll under a table, to be found later."
+            }
+          ]
+        },
+        "onDefeat": "hobbs-tab-settled"
+      }
+    },
+    {
+      "id": "hobb-two-won",
+      "chapterId": "the-stack",
+      "type": "narrative",
+      "prose": [
+        "Hobb sits on the mezzanine rail with his pen in two pieces and his dignity in more. “I will have to requisition another,” he says, to nobody.",
+        "Somewhere under the lift hall a siren starts, then thinks better of it. The queue begins, very slowly, to move again."
+      ],
+      "choices": [
+        {
+          "text": "Climb the fire stair",
+          "target": "stack-rest"
+        }
+      ]
+    },
+    {
+      "id": "hobb-truce",
+      "chapterId": "the-stack",
+      "type": "narrative",
+      "prose": [
+        "“A reasonable resident,” Hobb says, and presses a stamp to your wrist that smells of toner. “Let it be known that you were assessed, found in arrears and not a nuisance.”",
+        "He holds out a laminated badge on a lanyard. “For the staff doors,” he says. “Do not tell them I said so.”"
+      ],
+      "choices": [
+        {
+          "text": "Take the badge",
+          "target": "stack-rest",
+          "conditions": [
+            {
+              "type": "item",
+              "itemId": "grid-badge",
+              "has": false
+            }
+          ],
+          "effects": [
+            {
+              "type": "item",
+              "itemId": "grid-badge",
+              "change": "give",
+              "note": "The badge is warm from his pocket. It bears someone else’s photograph, signed over to you without a word."
+            }
+          ]
+        },
+        {
+          "text": "Decline and go on",
+          "target": "stack-rest"
+        }
+      ]
+    },
+    {
+      "id": "stack-rest",
+      "chapterId": "the-stack",
+      "type": "narrative",
+      "prose": [
+        "The fire stair has a bunk-hour on every landing: a mat, a hook and a clock that charges by the minute. The attendant sits on a stool with a cash box and the patience of long practice.",
+        "The next flight goes down, not up. The Stack runs deeper than the lift hall lets on."
+      ],
+      "choices": [
+        {
+          "text": "Pay for a bunk-hour",
+          "target": "undergrid-entry",
+          "hint": "4 joules",
+          "conditions": [
+            {
+              "type": "gold",
+              "op": ">=",
+              "value": 4
+            }
+          ],
+          "effects": [
+            {
+              "type": "gold",
+              "delta": -4,
+              "note": "You lie down and the clock runs. You get up feeling the cost, and then the benefit."
+            },
+            {
+              "type": "hp",
+              "delta": 8,
+              "note": "Eight hours of sleep arrive in the length of one."
+            }
+          ]
+        },
+        {
+          "text": "Go on without sleeping",
+          "target": "undergrid-entry"
+        }
+      ]
+    },
+    {
+      "id": "stack-bins",
+      "chapterId": "the-stack",
+      "type": "narrative",
+      "prose": [
+        "A bin outside a flat has been left open and loaded with things that did not survive a rent review. Under a mat is a bag with a weight in it.",
+        "Nobody is about. Nobody is ever about, in the Stack, at the moment it would help."
+      ],
+      "choices": [
+        {
+          "text": "Take the bag",
+          "target": "$return",
+          "effects": [
+            {
+              "type": "gold",
+              "delta": 7,
+              "note": "The bag holds seven {currency.name} and a note that says only: sorry."
+            },
+            {
+              "type": "flag",
+              "flag": "scavenged-bins",
+              "value": true
+            }
+          ]
+        },
+        {
+          "text": "Close the bin",
+          "target": "$return",
+          "effects": [
+            {
+              "type": "flag",
+              "flag": "scavenged-bins",
+              "value": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "stack-busker",
+      "chapterId": "the-stack",
+      "type": "narrative",
+      "prose": [
+        "A busker plays a one-note tune on a pipe, steadily, to a queue that cannot leave. Every few bars she lowers the pipe and says the same word, which is “next”.",
+        "Nobody tips. Nobody has the right change."
+      ],
+      "choices": [
+        {
+          "text": "Drop a joule in her cap",
+          "target": "$return",
+          "conditions": [
+            {
+              "type": "gold",
+              "op": ">=",
+              "value": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "gold",
+              "delta": -1,
+              "note": "She says “next” to you, kindly, and you feel obscurely seen."
+            }
+          ]
+        },
+        {
+          "text": "Walk past",
+          "target": "$return"
+        }
+      ]
+    },
+    {
+      "id": "stack-receipt",
+      "chapterId": "the-stack",
+      "type": "narrative",
+      "prose": [
+        "A strip of receipt paper unrolls down the stairwell from a landing above, curling in the draught. It reads PAID, NOT EXEMPT forty times.",
+        "Somebody up there is stamping with great enthusiasm. It is not the sort of work that ends."
+      ],
+      "choices": [
+        {
+          "text": "Tear off a strip for luck",
+          "target": "$return",
+          "effects": [
+            {
+              "type": "hp",
+              "delta": 2,
+              "note": "You fold the strip into your cuff. It fits your sense of the situation exactly, and warms you a little."
+            }
+          ]
+        },
+        {
+          "text": "Step round it",
+          "target": "$return"
+        }
+      ]
+    }
+  ]
+}

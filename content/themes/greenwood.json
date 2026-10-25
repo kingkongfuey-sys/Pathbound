@@ -1,0 +1,46 @@
+{
+  "id": "greenwood",
+  "name": "Greenwood",
+  "note": "The same ledger, kept under a canopy. The ink has gone to moss, and I have given up objecting.",
+  "order": 3,
+  "scheme": "dark",
+  "colors": {
+    "paper": "#0e1812",
+    "ink": "#e2e9d2",
+    "inkFaded": "#9db08f",
+    "rule": "#2b4333",
+    "accent": "#f0885c",
+    "accentWet": "#ffb690",
+    "choices": "#c9e58e",
+    "statsBar": "#a9d08c",
+    "inkRule": "#6aa86a",
+    "marginRule": "#4c7f58"
+  },
+  "fonts": {
+    "display": "'Almendra', 'Iowan Old Style', Georgia, serif",
+    "text": "'Alegreya', 'Iowan Old Style', Georgia, serif",
+    "load": [
+      "64px \"Almendra\"",
+      "20px \"Alegreya\"",
+      "italic 20px \"Alegreya\""
+    ]
+  },
+  "type": {
+    "emphasis": "italic",
+    "scale": 1.06,
+    "displayScale": 0.92,
+    "figures": "lining"
+  },
+  "surface": {
+    "kind": "glade",
+    "lit": { "color": "#d6eaa8", "alpha": 0.11 },
+    "edge": { "color": "#000000", "alpha": 0.55 },
+    "trace": { "color": "#f2e58b", "alpha": 0.55 }
+  },
+  "marks": {
+    "rule": "vine",
+    "leader": "dotted",
+    "glow": 0.25,
+    "underline": 70
+  }
+}

@@ -1,0 +1,213 @@
+{
+  "pools": [
+    {
+      "chapterId": "sump-nine",
+      "entries": [
+        {
+          "type": "fight",
+          "monsterId": "meter-rat",
+          "weight": 5,
+          "fleeEffects": [
+            {
+              "type": "stat",
+              "stat": "nerve",
+              "delta": -1,
+              "note": "Running costs you some nerve, and the habit of it lingers."
+            }
+          ]
+        },
+        {
+          "type": "fight",
+          "monsterId": "fuse-kid",
+          "weight": 2,
+          "fleeEffects": [
+            {
+              "type": "stat",
+              "stat": "nerve",
+              "delta": -1,
+              "note": "Running costs you some nerve, and the habit of it lingers."
+            }
+          ]
+        },
+        {
+          "type": "flavor",
+          "sceneId": "sump-flicker",
+          "weight": 2
+        },
+        {
+          "type": "discovery",
+          "sceneId": "sump-bins",
+          "weight": 2,
+          "conditions": [
+            {
+              "type": "flag",
+              "flag": "found-spool",
+              "is": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "chapterId": "the-stack",
+      "entries": [
+        {
+          "type": "fight",
+          "monsterId": "ticket-hound",
+          "weight": 3,
+          "fleeEffects": [
+            {
+              "type": "stat",
+              "stat": "nerve",
+              "delta": -1,
+              "note": "Running costs you some nerve, and the habit of it lingers."
+            }
+          ]
+        },
+        {
+          "type": "fight",
+          "monsterId": "ticket-hound",
+          "weight": 4,
+          "conditions": [
+            {
+              "type": "flag",
+              "flag": "fled-hobb-1"
+            }
+          ],
+          "fleeEffects": [
+            {
+              "type": "stat",
+              "stat": "nerve",
+              "delta": -1,
+              "note": "Running costs you some nerve, and the habit of it lingers."
+            }
+          ]
+        },
+        {
+          "type": "flavor",
+          "sceneId": "stack-busker",
+          "weight": 2
+        },
+        {
+          "type": "flavor",
+          "sceneId": "stack-receipt",
+          "weight": 3,
+          "conditions": [
+            {
+              "type": "flag",
+              "flag": "paid-hobb"
+            }
+          ]
+        },
+        {
+          "type": "discovery",
+          "sceneId": "stack-bins",
+          "weight": 2,
+          "conditions": [
+            {
+              "type": "flag",
+              "flag": "scavenged-bins",
+              "is": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "chapterId": "the-undergrid",
+      "entries": [
+        {
+          "type": "fight",
+          "monsterId": "ticket-hound",
+          "weight": 3,
+          "fleeEffects": [
+            {
+              "type": "stat",
+              "stat": "nerve",
+              "delta": -1,
+              "note": "Running costs you some nerve, and the habit of it lingers."
+            }
+          ]
+        },
+        {
+          "type": "fight",
+          "monsterId": "grid-warden",
+          "weight": 2,
+          "fleeEffects": [
+            {
+              "type": "stat",
+              "stat": "nerve",
+              "delta": -1,
+              "note": "Running costs you some nerve, and the habit of it lingers."
+            }
+          ]
+        },
+        {
+          "type": "flavor",
+          "sceneId": "cold-draught",
+          "weight": 2
+        },
+        {
+          "type": "discovery",
+          "sceneId": "forgotten-dial",
+          "weight": 2,
+          "conditions": [
+            {
+              "type": "flag",
+              "flag": "found-dial",
+              "is": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "chapterId": "dispatch-floor",
+      "entries": [
+        {
+          "type": "fight",
+          "monsterId": "grid-warden",
+          "weight": 3,
+          "fleeEffects": [
+            {
+              "type": "stat",
+              "stat": "nerve",
+              "delta": -1,
+              "note": "Running costs you some nerve, and the habit of it lingers."
+            }
+          ]
+        },
+        {
+          "type": "fight",
+          "monsterId": "ticket-hound",
+          "weight": 2,
+          "fleeEffects": [
+            {
+              "type": "stat",
+              "stat": "nerve",
+              "delta": -1,
+              "note": "Running costs you some nerve, and the habit of it lingers."
+            }
+          ]
+        },
+        {
+          "type": "flavor",
+          "sceneId": "floor-hum",
+          "weight": 2
+        },
+        {
+          "type": "discovery",
+          "sceneId": "unplugged-desk",
+          "weight": 2,
+          "conditions": [
+            {
+              "type": "flag",
+              "flag": "found-desk",
+              "is": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

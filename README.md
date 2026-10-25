@@ -3,7 +3,7 @@
 A text-first RPG kept as a ledger. Android app built with Capacitor; every word of story is data, every
 word of chrome is in one voice. Personal project, never published, fully offline.
 
-Current stage: **7 of 8** (the codex and House rules: bestiary, items, lore, tales and run history unlocking as met, and a writing-speed setting; on top of Stage 6 growth, Stage 5 saves and Stage 4 combat). Build plan: see the stage report.
+Current stage: **8 of 8, complete, plus bindings and a second story (0.11.0).** The app's look is selectable in Settings: Parchment (the original), Cyberpunk or Greenwood (a dark fantasy forest), all data (`content/themes`). Two stories ship: *Low Tide at Saltwick* (the demo) and *Load Shedding* (four chapters, in `content/stories/load-shedding`). A story's own palette is worn over any binding while it is played, unless the reader ticks "Always keep my binding" in Settings (`bindingOverStory`). On top of Stage 8 (dev mode, text size, the content-authoring guide, a polish pass), Stage 7 (codex and settings), Stage 6 (growth, shops, theming), Stage 5 (saves), Stage 4 (combat). Build plan: see the stage report.
 
 ## Getting the app onto a phone
 
@@ -15,13 +15,15 @@ No local Android tools are needed. To preview in a desktop browser instead: `npm
 
 ## Identity (do not drift)
 
+Everything below describes **Parchment**, the default binding and the app's identity. Other bindings (see *Bindings* under Subsystem notes) change how the book is dressed, never the voice, the layout, the rhythm or the signature details: each re-draws them in its own medium.
+
 **Voice: the Weary Chronicler.** A tired scribe keeping your record. Dry, wry, quietly fond. Plain sentences,
 sentence case, no exclamation marks, no emoji, no apologies, no "welcome", no "loading". Menus are named like
-a ledger: *Begin an entry*, *The ledger*, *House rules* (settings). Dying closes an entry. All UI copy
+a ledger: *Begin an entry*, *The ledger*, *Settings*. Dying closes an entry. All UI copy
 lives in `src/copy/voice.ts`; `npm run validate` rejects banned phrases, exclamation marks, emoji and straight
 apostrophes in it.
 
-**Colour** (tokens in `src/styles/tokens.css`):
+**Colour** (tokens in `src/styles/tokens.css`, which are Parchment's values and the fallback; `content/themes/parchment.json` holds the same ones and `scripts/themetest.mjs` fails if they drift apart. Paper lit and paper burnt are now the `surface.lit` and `surface.edge` washes of the binding):
 
 | Role | Hex | Use |
 |---|---|---|
@@ -35,7 +37,7 @@ apostrophes in it.
 | Oxblood wet | `#8E2E35` | pressed links |
 
 **Typefaces** (bundled, Latin subset, no network): *IM Fell French Canon* for titles; *IM Fell English*
-(roman for prose, italic for every link, epigraph and aside).
+(roman for prose, italic for every link, epigraph and aside). Cyberpunk's are *Tektur* (titles and names) and *Jura* (everything read); Greenwood's are *Almendra* (titles and names) and *Alegreya*, roman and italic (everything read). All kept in `src/assets/fonts` with their OFL licences.
 
 **Rhythm:** one ledger line unit, `--line: 32px`. Vertical spacing is built from it; a tap row is two lines (64px).
 
@@ -61,26 +63,34 @@ centre and burnt radial edges, painted once on a fixed layer behind the content 
 ```
 src/
   main.ts            entry: error handler, font wait, home screen, Android back button
-  app/               router.ts (screen stack), session.ts (the run as screens hold it), settings.ts (house rules as data), codex.ts (what the codex shows), book.ts (the record book as the
-                     app uses it: write queue, resume, history), fatal.ts (error screen), theme.ts (story colours)
+  app/               bindings.ts (the bindings as the app reads them), router.ts (screen stack), session.ts (the run as screens hold it), settings.ts (settings as data), codex.ts (what the codex shows), book.ts (the record book as the
+                     app uses it: write queue, resume, history), fatal.ts (error screen), theme.ts (the binding, and story colours)
   save/              types, snapshot (save envelope, integrity gates), record (history row, unlocks, what a save writes),
                      sqliteStore (all the SQL), capacitorDriver (the plugin glue), documentStore (browser preview only)
-  content/           types, token grammar, schema validators, integrity checks, validate.ts, loader.ts
+  content/           types, token grammar, schema validators, integrity checks, validate.ts, themes.ts (bindings: checks and
+                     the stylesheet rule), loader.ts
   engine/            rng, run state, conditions, effects, play (the narrative loop), combat (the duel), inventory
-                     (equip, use), growth (experience and levels), shop (buy and sell), status (numbers for the strip); no DOM
+                     (equip, use), growth (experience and levels), shop (buy and sell), status (numbers for the strip),
+                     dev (jump, reseed, listings: dev mode only); no DOM
   copy/voice.ts      all UI copy
-  screens/           one file per screen (home, shelf, hero, play, satchel, closing, ledger, codex, entries, houseRules, resumeProblem, bookTrouble,
-                     contentError)
+  screens/           one file per screen (home, shelf, hero, play, satchel, closing, ledger, codex, entries, settings, dev, resumeProblem,
+                     bookTrouble, contentError)
   ui/                dom.ts, page.ts (page frame), inkRule.ts, typewriter.ts, tally.ts, statsStrip.ts,
                      stanceMark.ts, combatLog.ts (the account), combatPanel.ts (the fight panel), shopPanel.ts (the stall),
                      itemText.ts (one way of describing an item, shared by satchel and stall)
-  styles/            fonts, tokens, paper (texture), screens (layout and type)
-content/             schemas (content/schema) and stories (content/stories/<id>); see docs/schemas.md
+  styles/            fonts, tokens, paper (the surface), screens (layout and type)
+  assets/fonts/      the Cyberpunk and Greenwood typefaces and their licences
+content/             schemas (content/schema), stories (content/stories/<id>) and bindings (content/themes/<id>.json); see docs/schemas.md
+docs/themes.md       the binding format, its validator rules, how to add one
 docs/schemas.md      the content format, token grammar and validator rules
+docs/authoring.md    how to write a story: the order to do it in, the traps, how to test it with dev mode
 docs/saves.md        the record book: tables, save format, the integrity gates, recovery
 scripts/validate.mjs voice check plus validation of every story
 scripts/selftest.mjs checks that the validator catches broken content and that the engine behaves
 scripts/savetest.mjs checks the record book: the real SQL (Node's built-in SQLite), integrity gates, save/reload soak
+scripts/devtest.mjs  checks dev mode (jump, reseed, god-mode, forced encounters) and how settings are read
+scripts/themetest.mjs checks bindings: shipped ones pass (all three), broken ones are caught, Parchment still equals the fallback tokens, typefaces are bundled
+scripts/voice.mjs    the voice rules, shared by validate (voice.ts and every binding's name and note)
 android/             Capacitor Android project (committed; generated bits are git-ignored)
 .github/workflows/   debug APK build
 ```
@@ -186,7 +196,7 @@ fits. Bumping a story's `version` is therefore a decision: if the change could s
 **Run history and unlocks.** The history row is created with the run and updated at every save, so an entry is in the ledger
 from its first page, however it ends: victory, death, abandoned (confirmed, or by beginning another entry over it), or lost
 (set aside). Unlocks are derived from the run at each save, and saves happen after every change, so nothing met can slip
-between two saves. The seed is stored in the save and in the history row (it is shown only in dev mode, Stage 8).
+between two saves. The seed is stored in the save and in the history row (it is shown and settable only in dev mode).
 
 **The codex (`screens/ledger.ts`, `codex.ts`, `entries.ts`, `app/codex.ts`).** "The ledger" is the codex's front page: the
 tales, the bestiary, items, lore, and the history of entries, each with how much is written. It reads the same
@@ -196,11 +206,25 @@ the story's own order and how many there are in all. A section lists only what h
 rest ("3 more are still unwritten"), so the codex gives nothing away. Entries open in place instead of becoming screens. An
 unlock under an id the story no longer defines is left out of the view and kept in the book.
 
-**House rules (`screens/houseRules.ts`, `app/settings.ts`).** Settings live in a `settings` table (schema 3) as plain text under
-a key. Reading them back never trusts them: `settingsFrom` falls back to the default for anything missing or unknown, so a bad
-value can't break a page. The one rule so far is writing speed (slow, steady, quick, instant), which feeds the typewriter; it
-takes effect at once, is written to the book, and previews itself by writing a sample line at the chosen pace. Stage 8's hidden
-dev switch goes in the same table.
+**Settings (`screens/settings.ts`, `app/settings.ts`).** Settings live in a `settings` table (schema 3) as plain text under a
+key. Reading them back never trusts them: `settingsFrom` falls back to the default for anything missing or unknown, so a bad
+value can't break a page. Two reader-facing settings: writing speed (slow, steady, quick, instant; it feeds the typewriter,
+and a reader who has asked their phone for reduced motion gets the instant page regardless) and text size (small, standard,
+large, largest). Each takes effect at once, is written to the book, and shows itself in a sample line. Text size is one CSS
+variable, `--size-scale`, which with the binding's own allowance (`--type-scale`) makes `--text-scale`, which multiplies every reading size and the ledger-line rhythm (`--line`), so ruled lines and text
+stay in step at every size; the large titles keep their own responsive sizes.
+
+**Dev mode (hidden).** Seven quick taps on the version line on the home screen open or shut it (a line under the version
+says which). While open: a seed field on hero creation (blank means random), and a "Dev" link on a run's page leading to the dev
+screen. Its tools: show and set the run's seed (every random stream restarts from it); god-mode (the hero loses no HP, in fights
+or out of them; the dice are still drawn, so the stream is unchanged); skip story text (scenes show their choices at once with
+the prose behind a tap); force the next encounter (pick an entry of the chapter's pool and the next encounter-capable choice
+brings it, whatever the dice say); jump to any scene by id. The switches the loop honours are an optional `DevOptions` argument
+to `choose`, `fightAction` and `fleeFight` (play.ts), so with dev mode off the engine runs exactly as before; jump and reseed are
+pure functions in `engine/dev.ts`. Every dev action produces an ordinary run that passes the same integrity check and is saved
+as usual, which is also why jumping into an encounter scene supplies a place to return to. Dev-mode runs are not marked: they
+appear in the ledger like any other entry. God-mode and skipped text are stored as settings but do nothing while the hidden
+switch is off. Switch it off in Settings.
 
 **The closing account (`screens/closing.ts`).** Victory and death end on the same page: dotted leaders from label to exact
 figure, the chapter reached as tally marks, and a line of what is new to the ledger. The run is finalised when its last page
@@ -218,6 +242,26 @@ thing can never make money; the validator refuses a stall whose price is below w
 sold (take it off first); items worth under 2 are not bought at all. Each deal is recorded in the account. Leaving carries
 only the deals to the next page, and nothing else.
 
+**Bindings (`content/themes`, `src/content/themes.ts`, `src/app/theme.ts`, `src/app/bindings.ts`).** A binding is one JSON file: colours, a display and a text typeface,
+how asides are set (italic or upright), which figures the face uses, a size allowance, a surface (`paper`, `screen` or `glade`), and the marks (the rule under titles, the leaders, glow,
+underline strength, and optionally the margin rule's own colour). It is checked by `theme.schema.json` and by rules a schema can't hold (readable contrast, exactly one default, typefaces really bundled, scheme
+agreeing with the paper); the app runs the same code at start, and if any binding is wrong it offers none and runs on the fallback tokens, which are
+Parchment's. `themeCss` turns a binding into one rule, `:root[data-theme='<id>'] { ... }`, which `applyBinding` swaps into a `<style>` element, plus `data-surface`,
+`data-rule` and `data-glow` on the root (a `glade` surface is shafts of light, leaf-shade dapple and fixed fireflies, a `vine` rule a swaying stem with leaves); screens read only variables, so none knows which binding is on. The choice is the `theme` setting (an id, kept like any
+setting; a book that has none, or one this build lacks, reads as Parchment; no migration, no save change). Startup order is now: open the book, apply binding and
+text size, wait for that binding's typefaces, show home. Decisions worth knowing: (1) the voice does not change per binding, only the dress; (2) sentence case holds
+in every binding, so no uppercase transforms; (3) a story's own palette is worn over any binding while it is played, unless the reader ticks "Always keep my binding" in Settings (`bindingOverStory`, off by default); the binding's surface, glow and rules are quieted to suit the story's page meanwhile; (4) each of Parchment's signature details has a counterpart rather than being dropped: the ink
+rule becomes a straight laser rule with a square node and a dashed second line, the margin rule a glowing double magenta rule, the paper a screen with a violet bloom,
+vignette and scanlines, the dotted leaders dashed ones, the italic links upright cyan ones; tally marks, stance marks and the account carry over unchanged. Greenwood's counterparts: the ink rule becomes the vine, the margin rule moss green, the paper a forest glade with fireflies, the italic links stay italic in leaf green; its design reasons are in `docs/themes.md`. The binding validator also checks text contrast where the surface is brightest, not only on the bare paper. See `docs/themes.md`.
+
 **Per-story colours.** `story.theme.colors` is applied by `app/theme.ts` while a story is played, and on the hero screen.
 The validator checks the contrast of every readable role against the background (4.5 to 1 for text, 3 to 1 for the accent),
 so a story cannot ship a palette that cannot be read.
+
+**Performance (R14).** Cold start measured in headless Chromium with a 4x CPU slowdown reached the home screen in about 1.4
+seconds, including the font wait and opening the book. That is a proxy: it was not measured on an Android phone. The typewriter
+updates two text nodes per frame and never reflows.
+
+**Known limits.** Bindings: the native splash and window are still parchment (Android resources, not data), so on Cyberpunk the first instants are paper-coloured before the page paints; the system bar icon style is set through Capacitor's `SystemBars` plugin (now imported with its typings; it had failed the type check) and is untested on a device; Greenwood's two typefaces have no slashed zero, so a gold of `0p` still looks close to `Op` (the figures are lining, which helps); Cyberpunk's two typefaces are kept in the repo as WOFF, and Greenwood's three as the `@fontsource` WOFF2 files, rather than as installed packages. Android was never exercised from here: the SQLite plugin glue, the Gradle changes and the APK need the
+first CI run and a phone to confirm. A save can be lost if the OS kills the app within milliseconds of a tap (writes are queued,
+not awaited). The browser build keeps its book in localStorage and is for previewing only.
